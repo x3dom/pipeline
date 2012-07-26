@@ -4,7 +4,7 @@ PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
 #PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 
 # set this to false in deployment
-DEVELOPMENT = True  
+DEVELOPMENT = False  
 
 DEBUG = DEVELOPMENT
 
@@ -13,9 +13,13 @@ ADMINS = frozenset(['http://x3dom.org'])
 
 MAX_CONTENT_LENGTH = 16 * 1024 * 1024 # 16Meg upload limit
 
-UPLOAD_PATH = os.path.join(PROJECT_ROOT, 'uploads')
+UPLOAD_PATH = '/var/www/modelconvert/htdocs/uploads'
 AOPT_BINARY = '/usr/local/bin/aopt'
 
 ALLOWED_EXTENSIONS = set(['x3d','ply'])
+
+if DEVELOPMENT:
+    UPLOAD_PATH = os.path.join(PROJECT_ROOT, 'uploads')
+    
 
 del os
