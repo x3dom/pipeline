@@ -1,0 +1,6 @@
+TODO:
+
+after upload: rename file to hash, return this to user so check status
+
+Cleanup files after 10 minutes or so. Still security risk, attacker could flood server.
+

@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>Model Conversion</h1>
+<p>This utility converts your X3D file into a X3DOM compatible HTML.</p>
+<h4>How does it work?</h4>
+
+<p>After uploading your source file using the form below, a download
+    will start and send you a HTML file containing your X3D scene ready
+    to deploy on a webserver of your choice.</p>
+
+<h4>Supported Formats</h4>
+<p>The following file formats are currently supported:</p>
+<ul>
+    <li>X3D</li>
+    <li>X3D</li>
+    <li>X3D</li>
+    <li>X3D</li>
+    <li>X3D</li>
+</ul>
+
+<h3>Upload your model file</h3>
+
+{% with messages = get_flashed_messages(with_categories=True) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            <div class="alert alert-{{ category }} fade in" data-alert="alert">
+                {% if category == 'error' %}<strong>Oh snap!</strong>{% endif%}
+                {{ message }}
+            </div>
+        {% endfor %}
+      {% endif %}
+{% endwith %}
+
+<form action="{{ url_for('upload_file') }}" method="post" enctype="multipart/form-data">
+    <input type="file" name="file">
+    <input type="submit" value="Upload" class="btn btn-primary">
+</form>
+
+{% endblock %}

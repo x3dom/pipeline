@@ -1,0 +1,4 @@
+Flask >= 0.9, <= 1.0
+Flask-WTF >= 0.8, <= 1.0
+request
+fabric

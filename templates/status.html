@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block head %}
+<meta http-equiv="refresh" content="10; URL={{url_for('download', hash=hash)}}"> 
+{% endblock %}
+
+{% block content %}
+<h1>Please wait...</h1>
+
+<p>The file you are looking for does either not exist anymore or is not yet converted. 
+    If you just uploaded a file for conversion, please the download will start 
+    automatically as soon as your file is ready.</p>
+
+<a href="{{ url_for('index') }}" button class="btn btn-danger">Abort and upload another file</a>
+
+
+{% endblock %}
