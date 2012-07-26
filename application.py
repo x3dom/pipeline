@@ -25,6 +25,9 @@ def home():
     return render_template('index.html')
 
 
+# ratelimit access to the upload function in order to prevent
+# DoS and spammers. Someone who wants to bulk convert his models
+# should use aopt directly.
 @ratelimit(limit=300, per=60 * 15)
 def upload():
     if request.method == 'POST':
@@ -51,7 +54,9 @@ def upload():
             
             return redirect(url_for('download', hash=hash))
         else:
-            flash("Please upload a file of the following type: %s" % ",".join(app.config['ALLOWED_EXTENSIONS']), 'error')
+            flash("Please upload a file of the following type: %s" % \
+                ",".join(app.config['ALLOWED_EXTENSIONS']), 'error')
+
     return render_template('index.html')
 
 
@@ -65,8 +70,6 @@ def download(hash):
         return send_from_directory(app.config['UPLOAD_PATH'], filename)
     else:
         return render_template('status.html', hash=hash)
-
-
 
 
 

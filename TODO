@@ -1,0 +1,6 @@
+TODOs
+=====
+
+- do the actual processing
+- Management task: Cleanup files after 10 minutes or so. Still security risk, attacker could flood server.
+- API
