@@ -34,3 +34,12 @@ the following command:
     python manage.py runserver
 
 Point your browser to http://localhost:5000
+
+
+
+Code structure
+--------------
+
+This app is using the great flask (flask.pocoo.org) and is using the
+simple file layout (no modules). You will find almost all important code
+in application.py
