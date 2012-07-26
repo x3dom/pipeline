@@ -16,3 +16,4 @@ Thumbs.db
 cache/
 logs/
 uploads/
+tmp/

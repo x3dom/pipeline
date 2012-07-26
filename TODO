@@ -2,5 +2,13 @@ TODOs
 =====
 
 - do the actual processing
-- Management task: Cleanup files after 10 minutes or so. Still security risk, attacker could flood server.
+- use cerlery for offline processing
+- Management task: Cleanup files after 10 minutes or so. Still 
+- fix rate limit code to work on server
+- store meta info in redis
+- convert deployment to virtualenv on server
+
+Sugar
+- standard project layout
+- upload progress bar
 - API

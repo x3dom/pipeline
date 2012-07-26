@@ -38,9 +38,8 @@ def upload():
 
             # anonymize filename, keep extension and save
             hash = "%032x" % random.getrandbits(128)
-            filename = hash + os.path.splitext(file.filename)[1]
-            file.save(os.path.join(app.config['UPLOAD_PATH'], filename))
-            
+            filename = os.path.join(app.config['UPLOAD_PATH'], hash + os.path.splitext(file.filename)[1])
+            file.save(filename)
             # convert and delete original after successful conversion
             # if conversion errors out, show the relevant source portion of the
             # code
@@ -51,8 +50,14 @@ def upload():
             
             
             # assumption: contents of file matches extension
-            # call(["ls", "-l"])
+            output_filename = os.path.join(app.config['DOWNLOAD_PATH'], hash + '.html')
+            status = call([app.config['AOPT_BINARY'], "-i", filename, '-N', output_filename])
             
+
+            if status < 0:
+                flash("There has been an error converting your file")
+                return render_template('index.html')
+                
             return redirect(url_for('download', hash=hash))
         else:
             flash("Please upload a file of the following type: %s" % \
@@ -66,8 +71,8 @@ def download(hash):
     # display waiting template
     filename = "%s.html" % hash
     
-    if os.path.exists(os.path.join(app.config['UPLOAD_PATH'], filename)):
-        return send_from_directory(app.config['UPLOAD_PATH'], filename)
+    if os.path.exists(os.path.join(app.config['DOWNLOAD_PATH'], filename)):
+        return send_from_directory(app.config['DOWNLOAD_PATH'], filename)
     else:
         return render_template('status.html', hash=hash)
 

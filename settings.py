@@ -23,5 +23,6 @@ ALLOWED_EXTENSIONS = set(['x3d','ply'])
 if DEVELOPMENT_MODE:
     UPLOAD_PATH = os.path.join(PROJECT_ROOT, 'tmp/uploads')
     DOWNLOAD_PATH = os.path.join(PROJECT_ROOT, 'tmp/downloads')
+    AOPT_BINARY = '/Users/andi/Storage/instant_player/Contents/MacOS/aopt'
 
 del os
