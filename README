@@ -4,3 +4,11 @@ after upload: rename file to hash, return this to user so check status
 
 Cleanup files after 10 minutes or so. Still security risk, attacker could flood server.
 
+
+
+Getting started
+===============
+
+First install requirements (you need to install pip if you don't already have):
+
+  pip install -r requirements.txt

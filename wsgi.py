@@ -7,4 +7,4 @@ from barrel import cooper
 logins = [('x3dom', 'x3dom')]
 
 
-application = cooper.formauth(users=logins)(application)
+application = cooper.basicauth(users=logins)(application)
