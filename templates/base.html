@@ -23,14 +23,14 @@
         <div class="span12">
             {% block content %}
             {% endblock %}
+
+            {% if config['DEVELOPMENT_MODE'] %}
+            <p>Running in development mode</p>
+            {% endif %}
         </div>
       </div>
     </div>
 
-
 </body>
 </html>
 
-{% if config['DEVELOPMENT_MODE'] %}
-Running in development mode
-{% endif %}

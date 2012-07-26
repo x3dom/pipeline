@@ -1,4 +1,5 @@
-from __future__ import with_statement  # remove this as soon as sever has latest python 2.x
+# remove this as soon as sever has latest python 2.x
+from __future__ import with_statement  
 
 from fabric.api import *
 

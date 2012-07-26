@@ -1,8 +1,9 @@
 import time
 from functools import update_wrapper
-from flask import request, g
 
+from flask import request, g
 from redis import Redis
+
 redis = Redis()
 
 class RateLimit(object):
