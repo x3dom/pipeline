@@ -7,7 +7,7 @@ env.user = 'local'
 # the servers where the commands are executed
 env.hosts = ['x3dom.org']
 
-env.APP_ROOT = '/var/www/modelconvert/app'
+env.APP_ROOT = '/var/www/modelconvert/apps/modelconvert'
 
 # expects the app to be cloned once there manually
 # fix this in the future and deliver a package vs. git checkout
