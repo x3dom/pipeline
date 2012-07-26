@@ -15,4 +15,5 @@ def deploy():
     local('git push')
     with cd(env.APP_ROOT):
         run('git pull')
+        run('python -c "import compileall; compileall.compile_dir(\'.\')"')
         run('touch wsgi.py')

@@ -25,6 +25,7 @@ def home():
     return render_template('index.html')
 
 
+@app.route("/upload/", methods=['GET', 'POST'])
 # ratelimit access to the upload function in order to prevent
 # DoS and spammers. Someone who wants to bulk convert his models
 # should use aopt directly.
@@ -59,8 +60,7 @@ def upload():
 
     return render_template('index.html')
 
-
-@app.route('/download/<hash>')
+@app.route('/download/<hash>', methods=['GET'])
 def download(hash):
     # check if file exists, then send it, otherwise
     # display waiting template
@@ -74,10 +74,6 @@ def download(hash):
 
 
 
-# ~ routes ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-app.add_url_rule('/', 'home', home, methods=['GET'])
-app.add_url_rule("/upload/", 'upload', upload, methods=['GET', 'POST'])
-app.add_url_rule('/download/<hash>',  'download', download, methods=['GET'])
 
 
 if __name__ == "__main__":
