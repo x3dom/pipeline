@@ -89,6 +89,9 @@ def queue():
     """ Show the processing queue """
     pass
 
+def status(hash):
+    """ Check status of a specific job. JSON request only """
+    pass
 
 @app.route('/download/<hash>/', methods=['GET'])
 def download(hash):
