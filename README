@@ -5,10 +5,34 @@ after upload: rename file to hash, return this to user so check status
 Cleanup files after 10 minutes or so. Still security risk, attacker could flood server.
 
 
-
 Getting started
 ===============
 
-First install requirements (you need to install pip if you don't already have):
+This project follows the ususal python- and web development practices.
 
-  pip install -r requirements.txt
+System requirements (make sure you install them first):
+
+ * Python 2.6
+ * Redis
+ * InstantReality
+
+This applications requires a locally running redis instance.
+
+
+Installing Python requirements
+------------------------------
+It is recommended you use virtualenv+pip for your development and
+deployment enviroments.
+
+First install requirements:
+
+    pip install -r requirements.txt
+  
+
+Then you should be able to run the development server by issuing
+the following command:
+
+    python manage.py runserver
+
+
+Point your browser to http://localhost:5000

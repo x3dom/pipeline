@@ -8,6 +8,7 @@ from flask import send_from_directory
 
 from werkzeug import secure_filename
 
+from util.ratelimit import ratelimit
 
 app = Flask(__name__)
 app.config.from_object('settings')
@@ -20,12 +21,12 @@ def is_allowed_file(filename):
 
 
 @app.route("/")
-def index():
+def home():
     return render_template('index.html')
 
 
-@app.route("/upload/", methods=['GET', 'POST'])
-def upload_file():
+@ratelimit(limit=300, per=60 * 15)
+def upload():
     if request.method == 'POST':
         file = request.files['file']
         if file and is_allowed_file(file.filename):
@@ -66,5 +67,15 @@ def download(hash):
         return render_template('status.html', hash=hash)
 
 
+
+
+
+
+# ~ routes ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+app.add_url_rule('/', 'home', home, methods=['GET'])
+app.add_url_rule("/upload/", 'upload', upload, methods=['GET', 'POST'])
+app.add_url_rule('/download/<hash>',  'download', download, methods=['GET'])
+
+
 if __name__ == "__main__":
-    app.run(debug=app.config['DEVELOPMENT'])
+    app.run()
