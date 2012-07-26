@@ -20,11 +20,11 @@ AOPT_BINARY = '/usr/local/bin/aopt'
 
 ALLOWED_EXTENSIONS = set(['x3d','ply'])
 
-USE_X_SENDFILE = True
+#USE_X_SENDFILE = True
 SERVER_NAME = 'modelconvert.x3dom.org'
 
 # only for production debugging
-#PROPAGATE_EXCEPTIONS = True
+PROPAGATE_EXCEPTIONS = True
 #TRAP_HTTP_EXCEPTIONS = True
 #TRAP_BAD_REQUEST_ERRORS = True
 
