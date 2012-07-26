@@ -2,4 +2,4 @@ Flask >= 0.9, <= 1.0
 Flask-WTF >= 0.8, <= 1.0
 Flask-Script >= 0.3.3, <= 1.0
 requests >= 0.13.3, <= 1.0
-redis >= 2.6, <= 3.0
+redis >= 2.6.0, <= 3.0.0
