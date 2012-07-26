@@ -29,7 +29,7 @@ def home():
 # ratelimit access to the upload function in order to prevent
 # DoS and spammers. Someone who wants to bulk convert his models
 # should use aopt directly.
-@ratelimit(limit=300, per=60 * 15)
+#@ratelimit(limit=300, per=60 * 15)
 def upload():
     if request.method == 'POST':
         file = request.files['file']
