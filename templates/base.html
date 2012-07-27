@@ -10,9 +10,13 @@
     <meta name="index" content="follow">
     <meta name="revisit-after" content="2 days">
     <title>{% block title %}{% endblock %}</title>
-    <script src="/static/js/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
     <link rel="stylesheet" href="/static/css/bootstrap.min.css" type="text/css" media="screen" title="no title" charset="utf-8">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css')}}" type="text/css" media="screen" title="no title" charset="utf-8">
+    
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <script>window.jQuery || document.write("<script src='{{ url_for("static", filename="js/jquery-1.7.2.min.js") }}'><\/script>")</script>
+    <script type="text/javascript">var $j = jQuery.noConflict();</script>
+    <script src="/static/js/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
     {% block head %} {%endblock%}
 
 </head>
@@ -25,7 +29,7 @@
             {% endblock %}
 
             {% if config['DEVELOPMENT_MODE'] %}
-            <p>Running in development mode</p>
+            <p>--- Running in development mode ---</p>
             {% endif %}
         </div>
       </div>

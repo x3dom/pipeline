@@ -3,25 +3,18 @@
 {% block content %}
 
 <h1>Model Conversion</h1>
-<p>This utility converts your X3D file into a X3DOM compatible HTML.</p>
+<p>This web service converts your X3D file into a X3DOM compatible HTML.</p>
 <h4>How does it work?</h4>
 
 <p>After uploading your source file using the form below, a download
     will start and send you a HTML file containing your X3D scene ready
     to deploy on a webserver of your choice.</p>
 
-<h4>Supported Formats</h4>
-<p>The following file formats are currently supported:</p>
-<ul>
-    <li>X3D</li>
-    <li>X3D</li>
-    <li>X3D</li>
-    <li>X3D</li>
-    <li>X3D</li>
-</ul>
 
 <h3>Upload your model file</h3>
-
+<p>Start the conversion by selecting the model file from your disk and then
+    press the Convert button. Depending on the size of your model and the 
+    server load, it may take a while.</p>
 {% with messages = get_flashed_messages(with_categories=True) %}
     {% if messages %}
         {% for category, message in messages %}
@@ -33,9 +26,13 @@
       {% endif %}
 {% endwith %}
 
-<form action="{{ url_for('upload') }}" method="POST" enctype="multipart/form-data">
+<form action="{{ url_for('upload') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
     <input type="file" name="file">
-    <input type="submit" value="Upload" class="btn btn-primary">
+    <input type="submit" value="Convert" class="btn btn-primary" data-loading-text="Processing..." onclick="$j(this).button('loading')" >
 </form>
+
+<p><small>Supported formats: X3D, PLY, STL, OFF, 
+OBJ, 3DS, COLLADA, PTX, V3D, PTS, APTS, XYZ, GTS, TRI, ASC, X3D, X3DV, 
+VRML, ALN</small></p>
 
 {% endblock %}

@@ -28,12 +28,15 @@ PROPAGATE_EXCEPTIONS = True
 #TRAP_HTTP_EXCEPTIONS = True
 #TRAP_BAD_REQUEST_ERRORS = True
 
+# redis
+BROKER_URL = 'redis://localhost:6379/0'
+CELERY_RESULT_BACKEND = BROKER_URL
 
 if DEVELOPMENT_MODE:
     SERVER_NAME = 'localhost:5000'
     UPLOAD_PATH = path('tmp/uploads')
     DOWNLOAD_PATH = path('tmp/downloads')
-    AOPT_BINARY = '~/Storage/tmp/instant_player/Contents/MacOS/aopt'
+    AOPT_BINARY = '/Users/andi/Storage/tmp/instant_player/Contents/MacOS/aopt'
 
 del os
 del platform
