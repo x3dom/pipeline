@@ -11,7 +11,7 @@ from werkzeug import secure_filename
 from utils.ratelimit import ratelimit
 
 app = Flask(__name__)
-app.config.from_object('settings')
+app.config.from_object('modelconvert.settings')
 
 
 def is_allowed_file(filename):

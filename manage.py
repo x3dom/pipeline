@@ -2,7 +2,7 @@
 # manage.py
 from flaskext.script import Manager
 
-from application import app
+from modelconvert.application import app
 
 manager = Manager(app)
 
