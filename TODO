@@ -2,6 +2,9 @@ TODOs
 =====
 
 - do the actual processing
+- the converted model should be wrapped in a zip package
+- serve from media location so apache does the heavy lifting
+  or utilize sendfile
 - use cerlery for offline processing
 - Management task: Cleanup files after 10 minutes or so. Still 
 - fix rate limit code to work on server
