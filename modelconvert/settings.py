@@ -18,7 +18,10 @@ UPLOAD_PATH = '/var/www/modelconvert/tmp/uploads'
 DOWNLOAD_PATH = '/var/www/modelconvert/tmp/downloads'
 AOPT_BINARY = '/usr/local/bin/aopt'
 
-ALLOWED_EXTENSIONS = set(['x3d','ply'])
+ALLOWED_EXTENSIONS = set(['x3d','ply', 'x3db', 'wrl', 'bin', 'fhb', 'off',
+                          'osb', 'osg', 'raw', 'slp', 'stl', 'jt', '3ds', 
+                          'dae', 'dxf', 'lxo', 'obj', 'x', 'bin', 'fhb',
+                          'off', 'osb', 'osg'])
 
 #USE_X_SENDFILE = True
 SERVER_NAME = 'modelconvert.x3dom.org'
@@ -34,8 +37,8 @@ CELERY_RESULT_BACKEND = BROKER_URL
 
 if DEVELOPMENT_MODE:
     SERVER_NAME = 'localhost:5000'
-    UPLOAD_PATH = path('tmp/uploads')
-    DOWNLOAD_PATH = path('tmp/downloads')
+    UPLOAD_PATH = path('../tmp/uploads')
+    DOWNLOAD_PATH = path('../tmp/downloads')
     AOPT_BINARY = '/Users/andi/Storage/tmp/instant_player/Contents/MacOS/aopt'
 
 del os

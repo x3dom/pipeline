@@ -1,17 +1,20 @@
 {% extends "base.html" %}
 
 {% block head %}
-<meta http-equiv="refresh" content="10; URL={{url_for('download', hash=hash)}}"> 
+{# <meta http-equiv="refresh" content="10; URL={{url_for('download', hash=hash)}}">  #}
 {% endblock %}
 
 {% block content %}
-<h1>Please wait...</h1>
 
-<p>The file you are looking for does either not exist anymore or is not yet converted. 
-    If you just uploaded a file for conversion, please the download will start 
-    automatically as soon as your file is ready.</p>
+<h2>Your file is ready</h2>
 
-<a href="{{ url_for('home') }}" button class="btn btn-danger">Abort and upload another file</a>
+<p class="big"><a href="{{ url_for('download', hash=hash) }}">{{ hash }}.html</a></p>
+<p>Click on the link above to download the converted model file or <a href="{{ url_for('home') }}">convert another file</a></p>
 
+{# <h1>Please wait...</h1> #}
+{#  #}
+{# <p>The file you are looking for does either not exist anymore or is not yet converted.  #}
+{#     If you just uploaded a file for conversion, please the download will start  #}
+{#     automatically as soon as your file is ready.</p> #}
 
 {% endblock %}

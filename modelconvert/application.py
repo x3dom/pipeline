@@ -77,7 +77,7 @@ def upload():
                 pass
                 
                 
-            return redirect(url_for('download', hash=hash))
+            return redirect(url_for('status', hash=hash))
         else:
             flash("Please upload a file of the following type: %s" %
                 ", ".join(app.config['ALLOWED_EXTENSIONS']), 'error')
@@ -89,9 +89,11 @@ def queue():
     """ Show the processing queue """
     pass
 
+@app.route('/status/<hash>/', methods=['GET'])
 def status(hash):
-    """ Check status of a specific job. JSON request only """
-    pass
+    """ Check status of a specific job, display download link when ready """
+    return render_template('status.html', hash=hash)
+
 
 @app.route('/download/<hash>/', methods=['GET'])
 def download(hash):
@@ -104,7 +106,7 @@ def download(hash):
     filename = "%s.html" % hash
     
     if os.path.exists(os.path.join(app.config['DOWNLOAD_PATH'], filename)):
-        return send_from_directory(app.config['DOWNLOAD_PATH'], filename)
+        return send_from_directory(app.config['DOWNLOAD_PATH'], filename, as_attachment=True)
     else:
         return render_template('status.html', hash=hash)
 
