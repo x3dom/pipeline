@@ -1,0 +1,66 @@
+http://examples.x3dom.org/v-must/ipad_metadata_visitor/index.html#view
+<!DOCTYPE html>
+{# 
+    Note URLs to Web resources are haredcoded in this template to allow
+    indepented location of html file 
+#}
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+    <title>v-must</title>
+
+    <link rel='stylesheet' type='text/css' href='../../files/x3dom.css' />
+    <script type='text/javascript' src='../../files/x3dom.js'></script>
+
+    <script type="text/javascript" src="inc/JQuery/js/jquery-1.7.1.min.js"></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.5/jquery-ui.min.js"></script>
+    <link rel="stylesheet" href="inc/JQuery/css/vader/jquery-ui-1.8.18.custom.css">
+    <!--<script src="inc/JQuery/js/jquery-ui.js"></script>-->
+
+    <style type="text/css" media="screen">@import "inc/jqtouch/themes/css/v_must.css";</style>
+    <script src="inc/jqtouch/src/jqtouch.js" type="text/javascript" charset="utf-8"></script>
+    <script src="inc/jqtouch/src/jqtouch-jquery.js" type="text/javascript" charset="utf-8"></script>
+
+    <script type="text/javascript" src="ipad.js"></script>
+    <style type="text/css" media="screen">@import "ipad.css";</style>
+</head>
+
+<body>
+<div id="jqt">
+    <div id="view">
+        <div id="viewContainer">
+            <div id="metaDataContainer">
+                <ul id="metaData" class="edgetoedge"> </ul>
+            </div>
+
+            {{ X3D_SCENE }}
+
+            <div id="links">
+                <p>
+                    <a id="helpOpen" class="button" href="#" onclick="showHelp();">Help</a>
+                    <a target="_blank" id="twitter" class="button" href="http://twitter.com/"><img src="img/twitter.png" /> </a>
+                    <a target="_blank" id="facebook" class="button" href="http://www.facebook.com/"><img src="img/facebook.png" /> </a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="help" title="Help">
+    <p>
+        <strong>Zoom:</strong>      <br/>
+        <img src="img/Help_Icon_zoom.png" />
+    </p>
+    <p>
+        <strong>Swipe:</strong>     <br/>
+        <img src="img/Help_Icon_swipe.png" />
+    </p>
+    <p>
+        <strong>Rotate:</strong>    <br/>
+        <img src="img/Help_Icon_rotate.png" />
+    </p>
+</div>
+
+</body>
+</html>

@@ -27,3 +27,20 @@ h1 {
  h2 {
   margin-bottom:.8em;
 }
+
+
+form {
+  background-color:rgba(128,128,128,0.05);
+  padding:1em;
+  margin:1em -1em 1em -1em;
+  border:2px solid rgba(157,126,38,0.1);
+  border-radius:4px;
+
+}
+
+form input[type="submit"] {
+}
+
+fieldset {
+  margin-bottom:1em;
+}

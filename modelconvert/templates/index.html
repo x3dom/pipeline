@@ -4,35 +4,46 @@
 
 <h1>Model Conversion</h1>
 <p>This web service converts your 3D model into X3DOM compatible HTML5.</p>
-<h4>How does it work?</h4>
 
-<p>After uploading your source file using the form below, a download
-    will start and send you a HTML file containing your model as X3D 
-    scene ready to deploy on a webserver of your choice.</p>
-
-
-<h3>Upload your model file</h3>
 <p>Start the conversion by selecting the model file from your disk and then
     press the Convert button. Depending on the size of your model and the 
-    server load, it may take a while.</p>
-{% with messages = get_flashed_messages(with_categories=True) %}
-    {% if messages %}
-        {% for category, message in messages %}
-            <div class="alert alert-{{ category }} fade in" data-alert="alert">
-                {% if category == 'error' %}<strong>Oh snap!</strong>{% endif%}
-                {{ message }}
-            </div>
-        {% endfor %}
-      {% endif %}
-{% endwith %}
+    server load, it may take a while.
+</p>
+
 
 <form action="{{ url_for('upload') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
-    <input type="file" name="file">
-    <input type="submit" value="Convert" class="btn btn-primary" data-loading-text="Processing..." onclick="$j(this).button('loading')" >
+    {% with messages = get_flashed_messages(with_categories=True) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }} fade in" data-alert="alert">
+                    {% if category == 'error' %}<strong>Oh snap!</strong>{% endif%}
+                    {{ message }}
+                </div>
+            {% endfor %}
+          {% endif %}
+    {% endwith %}
+
+    <fieldset>
+        <h4>Choose file to upload</h4>
+        <p><small>Supported formats are X3D, PLY, STL, OFF, 
+            OBJ, 3DS, COLLADA, PTX, V3D, PTS, APTS, XYZ, GTS, TRI, ASC, X3D, X3DV, 
+            VRML, ALN</small></p>
+            <input type="file" name="file">
+    </fieldset>
+    
+    <fieldset>
+        <h4>Select a template</h4>
+        <input type="radio" name="template" value="plain" checked> plain
+        <input type="radio" name="template" value="ios"> v-must iPad
+        {# TODO upload own template #}
+    </fieldset>
+        <input type="submit" value="Convert" class="btn btn-primary" data-loading-text="Processing..." onclick="$j(this).button('loading')" >
 </form>
 
-<p><small>Supported formats: X3D, PLY, STL, OFF, 
-OBJ, 3DS, COLLADA, PTX, V3D, PTS, APTS, XYZ, GTS, TRI, ASC, X3D, X3DV, 
-VRML, ALN</small></p>
+<h4>What happens next?</h4>
+<p>After uploading your source file using the form above, a new page
+    will be displayed with a link to download the converted model as
+    HTML file.</p>
+
 
 {% endblock %}
