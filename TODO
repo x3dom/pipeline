@@ -1,17 +1,18 @@
 TODOs
 =====
 
-- do the actual processing
-- the converted model should be wrapped in a zip package
+- the converted model should be wrapped in a zip package, optionally
 - serve from media location so apache does the heavy lifting
   or utilize sendfile
-- use cerlery for offline processing
+- use a cerlery task for offline processing (inluding error handling)
 - Management task: Cleanup files after 10 minutes or so. Still 
 - fix rate limit code to work on server
 - store meta info in redis
 - convert deployment to virtualenv on server
 
 Sugar
-- standard project layout
+- uploadable user templates
+- package all resources for default templates in zipfile instead of hotlinking
 - upload progress bar
 - API
+- use WTforms to simplify form/error handling

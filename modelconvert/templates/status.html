@@ -7,10 +7,12 @@
 
 {% block content %}
 
-<h2>Your file is ready</h2>
+<h2>Your files are ready</h2>
+{% for file in filenames %}
+    <p class="big"><a href="{{ url_for('download', filename=file) }}">{{ file }}</a></p>
+{% endfor %}
 
-<p class="big"><a href="{{ url_for('download', hash=hash) }}">{{ hash }}.html</a></p>
-<p>Click on the link above to download the converted model file or <a href="{{ url_for('home') }}">convert another file</a></p>
+<p>Click on the links above to download the converted model files or <a href="{{ url_for('home') }}">convert another file</a></p>
 
 {# <h1>Please wait...</h1> #}
 {#  #}
