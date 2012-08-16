@@ -113,7 +113,7 @@ def upload():
             
             if not app.config['DEBUG']:
                 # delete the uploaded file
-                pass
+                os.remove(filename)
             ##
             # END CELERY TASK
             ##
