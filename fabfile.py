@@ -18,4 +18,4 @@ def deploy():
         run('git pull')
 #        run('python -c "import compileall; compileall.compile_dir(\'.\')"')
         run('touch wsgi.py')
-       run('sudo /etc/init.d/apache2 restart', pty=False)
+        sudo('/etc/init.d/apache2 restart', pty=False)
