@@ -1,0 +1,158 @@
+body {  
+  font-family: "Helvetica Neue", Helvetica, "Trebuchet MS", Arial, "Nimbus Sans L", FreeSans, sans-serif;
+  color: #666;
+  background: #F8F8F8 url(../img/bg-wall.png) repeat-x left top;
+  font-size: 12px;
+}
+
+p a,
+p a:visited,
+p a:link {
+  color: rgb(106,90,26);
+}
+
+.big {
+  font-size:150%;
+}
+
+h1 {
+  margin-bottom:.2em;
+  
+}
+ h2 {
+  margin-bottom:.8em;
+}
+p {
+  font-size: 1em;
+  margin-bottom: 1.2em;
+}
+
+
+form {
+  background-color:rgba(128,128,128,0.05);
+  padding:1em;
+  margin:1em 0 1em 0;
+  border:2px solid rgba(157,126,38,0.1);
+  border-radius:4px;
+
+}
+
+form input[type="submit"] {
+}
+
+fieldset {
+  margin-bottom:1em;
+}
+
+#wrapper {
+  width: 1020px;
+  margin:0 auto;
+  background: #f8f8f8;
+  -webkit-box-shadow: 0 0 10px rgba(76, 76, 76, 0.7);
+  -moz-box-shadow: 0 0 10px rgba(76, 76, 76, 0.7);
+  box-shadow: 0 0 10px rgba(76, 76, 76, 0.7);
+}
+
+#header {
+  margin-bottom: 20px;
+}
+
+#logo {
+  padding: 10px;
+}
+
+#nav {
+  background: url(../img/menu-tile.png) repeat-x 0 0 #E9E9E9;
+  height: 32px;
+  padding: 0 15px;
+  list-style: none;
+  margin: 0px;
+}
+#nav li {
+  float: left;
+  padding: 0 15px 0 0;
+  line-height: 32px;
+}
+#nav #login {
+  float: right;
+}
+
+#nav li a {
+  color: #FDFDFD;
+}
+
+#content {
+  padding: 10px;
+}
+
+#content_column_right {
+  float: left;
+}
+
+#follow {
+  background: #E6E7E8;
+  width: 220px;
+  padding-bottom: 10px;
+}
+
+#follow h2 {
+  background-color: #36436F;
+  font-size: 1.167em;
+  margin: 0px;
+  padding: 5px 10px 4px;
+  color: #FFFFFC;
+  line-height: 1.5em;
+  margin-bottom: 10px;
+}
+
+#follow a {
+  margin: 0px 10px 0px 10px;
+  height: 30px;
+  display: block;
+  line-height: 26px;
+  padding-left: 28px;
+  color: #783F04;
+  font-weight: bold;
+}
+#rss {
+  background: url(../img/icon-feed.png) 0 0 no-repeat;
+}
+
+#twitter {
+  background: url(../img/icon-twitter.png) 0 0 no-repeat;
+}
+
+#vimeo {
+  background: url(../img/icon-vimeo.png) 0 0 no-repeat;
+}
+
+#linkedin {
+  background: url(../img/icon-linkedin.png) 0 0 no-repeat;
+}
+
+#facebook {
+  background: url(../img/icon-facebook.png) 0 0 no-repeat;
+}
+
+#flickr {
+  background: url(../img/icon-flickr.png) 0 0 no-repeat;
+}
+
+#content_column_left {
+  margin-left: 240px;
+  min-height: 300px;
+background-color: white;
+border: 1px solid #E9E9E9;
+padding: 10px;
+}
+
+#footer_top {
+  text-align: center;
+  padding: 10px;
+}
+
+#footer_bottom {
+  height: 150px;
+  background: transparent url(../img/v-must-footer.png) no-repeat;
+  border-top: 1px dotted #DDD;
+}
