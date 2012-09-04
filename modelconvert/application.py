@@ -76,34 +76,52 @@ def upload():
             
             # straight forward and simplistic way of selecting a template 
             # and generating inline style output
+
+            output_directory = os.path.join(app.config['DOWNLOAD_PATH'] + "/" + hash)
+
+            call(["mkdir", "-p", output_directory])
+
+            output_directory_binGeo = os.path.join(output_directory + "/binGeo")
+
+            call(["mkdir", "-p", output_directory_binGeo])
+
+            os.chdir(output_directory)
+
             if template == 'ios':
                 output_extension = '.x3d'
                 aopt_switch = '-x'
                 
                 # render the template with inline
                 output_template_filename = os.path.join(
-                                            app.config['DOWNLOAD_PATH'], 
+                                            app.config['DOWNLOAD_PATH'] + "/" + hash, 
                                             hash + '.html')
 
                 user_tpl_env = app.create_jinja_environment()
-                user_tpl = user_tpl_env.get_template('vmust_ipad_template.html')
+                user_tpl = user_tpl_env.get_template('vmust/vmust_ipad_template.html')
                 
                 with open(output_template_filename, 'w+') as f:
                     f.write(user_tpl.render(X3D_INLINE_URL='%s.x3d' % hash))
+
+            # file für vmust in den Ordener hash reinpacken
 
             else:
                 output_extension = '.html'
                 aopt_switch = '-N'
                 
-            output_filename = os.path.join(app.config['DOWNLOAD_PATH'], 
-                                           hash + output_extension)
+            output_filename = hash + output_extension          
+
+
             status = call([
-                app.config['AOPT_BINARY'], 
-                "-i", 
-                filename, 
-                aopt_switch, 
-                output_filename
+              app.config['AOPT_BINARY'], 
+              "-i", 
+              filename, 
+              "-G", 
+              'binGeo/:saI', 
+               aopt_switch, 
+               output_filename
             ])
+
+            os.getcwd()
             
             if status < 0:
                 flash("There has been an error converting your file", 'error')
@@ -134,31 +152,45 @@ def queue():
 @app.route('/status/<hash>/', methods=['GET'])
 def status(hash):
     """ Check status of a specific job, display download link when ready """
-
-    filenames = ['%s.html' % hash]
-    if os.path.exists(os.path.join(app.config['DOWNLOAD_PATH'], "%s.x3d" % hash)):
-        # we know it's an inlined conversion
-        filenames = ['%s.html' % hash, '%s.x3d' % hash]
         
-    return render_template('status.html', filenames=filenames)
+    return render_template('status.html', hash=hash)
 
 
-@app.route('/download/<filename>/', methods=['GET'])
-def download(filename):
+@app.route('/show/<hash>.html/', methods=['GET'])
+def show(hash):
     """
-    Allows to download a file from the DOWNLOAD_FOLDER.
+    Allows to show a file from the DOWNLOAD_FOLDER.
     The file is identified by a hash value and can only be
     a .html file.
 
     """
 #    filename = "%s.html" % hash
     # secuirty
-    filename = os.path.basename(filename)
+    filename = os.path.basename(hash + ".html")
+    
+    if os.path.exists(os.path.join(app.config['DOWNLOAD_PATH'] + "/" + hash, filename)):
+        return send_from_directory(app.config['DOWNLOAD_PATH'] + "/" + hash, filename, as_attachment=False)
+    else:
+        return not_found(404)
+
+
+@app.route('/download/<hash>.zip/', methods=['GET'])
+def download(hash):
+    """
+    Allows to download a file from the DOWNLOAD_FOLDER.
+    The file is identified by a hash value and can only be
+    a .zip file.
+
+    """
+#    filename = "%s.zip" % hash
+    # secuirty
+    filename = os.path.basename(hash + ".zip")
     
     if os.path.exists(os.path.join(app.config['DOWNLOAD_PATH'], filename)):
         return send_from_directory(app.config['DOWNLOAD_PATH'], filename, as_attachment=True)
     else:
         return not_found(404)
+
 
 
 if __name__ == "__main__":

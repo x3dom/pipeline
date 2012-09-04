@@ -8,9 +8,10 @@
 {% block content %}
 
 <h2>Your files are ready</h2>
-{% for file in filenames %}
-    <p class="big"><a href="{{ url_for('download', filename=file) }}">{{ file }}</a></p>
-{% endfor %}
+
+<p class="big"><a href="{{ url_for('show', hash=hash) }}" target="_blank">{{ hash + ".html" }}</a></p>
+<p class="big"><a href="{{ url_for('download', hash=hash) }}">{{ hash + ".zip" }}</a> - <span style="color: red;">not yet implemented</span></p>
+
 
 <p>Click on the links above to download the converted model files or <a href="{{ url_for('home') }}">convert another file</a></p>
 
