@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
 import random
+import shutil
 from subprocess import call
 
 from flask import Flask, g
@@ -85,7 +86,6 @@ def upload():
 
             call(["mkdir", "-p", output_directory_binGeo])
 
-            os.chdir(output_directory)
 
             if template == 'ios':
                 output_extension = '.x3d'
@@ -102,14 +102,16 @@ def upload():
                 with open(output_template_filename, 'w+') as f:
                     f.write(user_tpl.render(X3D_INLINE_URL='%s.x3d' % hash))
 
-            # file für vmust in den Ordener hash reinpacken
+                #output_directory_static = os.path.join(output_directory + "/static")
+                #shutil.copytree("modelconvert/templates/vmust/static", output_directory_static) fehler OSError: [Errno 2] No such file or directory:
 
             else:
                 output_extension = '.html'
                 aopt_switch = '-N'
                 
-            output_filename = hash + output_extension          
-
+            output_filename = hash + output_extension 
+         
+            os.chdir(output_directory)
 
             status = call([
               app.config['AOPT_BINARY'], 
@@ -152,12 +154,13 @@ def queue():
 @app.route('/status/<hash>/', methods=['GET'])
 def status(hash):
     """ Check status of a specific job, display download link when ready """
+    filenames = ['%s.html' % hash, '%s.zip' % hash]
         
-    return render_template('status.html', hash=hash)
+    return render_template('status.html', hash=hash, filenames=filenames)
 
 
-@app.route('/show/<hash>.html/', methods=['GET'])
-def show(hash):
+@app.route('/show/<hash>/<path:filename>/', methods=['GET'])
+def show(hash, filename):
     """
     Allows to show a file from the DOWNLOAD_FOLDER.
     The file is identified by a hash value and can only be
@@ -166,7 +169,7 @@ def show(hash):
     """
 #    filename = "%s.html" % hash
     # secuirty
-    filename = os.path.basename(hash + ".html")
+    filename = os.path.basename(filename)
     
     if os.path.exists(os.path.join(app.config['DOWNLOAD_PATH'] + "/" + hash, filename)):
         return send_from_directory(app.config['DOWNLOAD_PATH'] + "/" + hash, filename, as_attachment=False)
@@ -174,8 +177,19 @@ def show(hash):
         return not_found(404)
 
 
-@app.route('/download/<hash>.zip/', methods=['GET'])
-def download(hash):
+###@app.route('/show/<hash>/static/<path:filename>/', methods=['GET'])
+###def show(hash, filename):
+
+###   filename = os.path.basename(filename)
+    
+###    if os.path.exists(os.path.join(app.config['DOWNLOAD_PATH'] + "/" + hash + "/static" , filename)):
+###        return send_from_directory(app.config['DOWNLOAD_PATH'] + "/" + hash + "/static", filename, as_attachment=False)
+###    else:
+###        return not_found(404)
+
+
+@app.route('/download/<filename>/', methods=['GET'])
+def download(filename):
     """
     Allows to download a file from the DOWNLOAD_FOLDER.
     The file is identified by a hash value and can only be
@@ -184,7 +198,7 @@ def download(hash):
     """
 #    filename = "%s.zip" % hash
     # secuirty
-    filename = os.path.basename(hash + ".zip")
+    filename = os.path.basename(filename)
     
     if os.path.exists(os.path.join(app.config['DOWNLOAD_PATH'], filename)):
         return send_from_directory(app.config['DOWNLOAD_PATH'], filename, as_attachment=True)

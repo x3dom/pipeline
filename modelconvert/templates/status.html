@@ -9,8 +9,8 @@
 
 <h2>Your files are ready</h2>
 
-<p class="big"><a href="{{ url_for('show', hash=hash) }}" target="_blank">{{ hash + ".html" }}</a></p>
-<p class="big"><a href="{{ url_for('download', hash=hash) }}">{{ hash + ".zip" }}</a> - <span style="color: red;">not yet implemented</span></p>
+<p class="big"><a href="{{ url_for('show', hash=hash, filename=filenames[0]) }}" target="_blank">{{ filenames[0] }}</a></p>
+<p class="big"><a href="{{ url_for('download', filename=filenames[1]) }}">{{ filenames[1] }}</a> - <span style="color: red;">not yet implemented</span></p>
 
 
 <p>Click on the links above to download the converted model files or <a href="{{ url_for('home') }}">convert another file</a></p>
