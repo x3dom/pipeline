@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 import os
 import random
+import shutil
+from contextlib import closing
+from zipfile import ZipFile, ZIP_DEFLATED
 from subprocess import call
 
 from flask import Flask, g
@@ -15,6 +18,15 @@ from utils.ratelimit import ratelimit
 
 app = Flask(__name__)
 app.config.from_object('modelconvert.settings')
+
+# -- App setup --------------------------------------------------------------
+# serves the static downloads in development
+# in deployment apache or nginx should do that
+if app.config['DEBUG']:
+    from werkzeug.wsgi import SharedDataMiddleware
+    app.wsgi_app = SharedDataMiddleware(app.wsgi_app, {
+        '/preview': app.config["DOWNLOAD_PATH"]
+    })
 
 
 @app.errorhandler(404)
@@ -76,13 +88,20 @@ def upload():
             
             # straight forward and simplistic way of selecting a template 
             # and generating inline style output
+
+            output_directory = os.path.join(app.config['DOWNLOAD_PATH'] + "/" + hash)
+            call(["mkdir", "-p", output_directory])
+            output_directory_binGeo = os.path.join(output_directory + "/binGeo")
+            call(["mkdir", "-p", output_directory_binGeo])
+            
+
             if template == 'ios':
                 output_extension = '.x3d'
                 aopt_switch = '-x'
                 
                 # render the template with inline
                 output_template_filename = os.path.join(
-                                            app.config['DOWNLOAD_PATH'], 
+                                            app.config['DOWNLOAD_PATH'] + "/" + hash, 
                                             hash + '.html')
 
                 user_tpl_env = app.create_jinja_environment()
@@ -91,19 +110,33 @@ def upload():
                 with open(output_template_filename, 'w+') as f:
                     f.write(user_tpl.render(X3D_INLINE_URL='%s.x3d' % hash))
 
+                output_directory_static = os.path.join(output_directory, "static")
+                input_directory_static = os.path.join(app.config['PROJECT_ROOT'], 
+                                                      "templates/vmust/static")
+               
+                shutil.copytree(input_directory_static, output_directory_static) 
+
             else:
                 output_extension = '.html'
                 aopt_switch = '-N'
                 
-            output_filename = os.path.join(app.config['DOWNLOAD_PATH'], 
-                                           hash + output_extension)
+            output_filename = hash + output_extension 
+
+            os.chdir(output_directory)
+
             status = call([
-                app.config['AOPT_BINARY'], 
-                "-i", 
-                filename, 
-                aopt_switch, 
-                output_filename
+              app.config['AOPT_BINARY'], 
+              "-i", 
+              filename, 
+              "-G", 
+              'binGeo/:saI', 
+               aopt_switch, 
+               output_filename
             ])
+
+            os.getcwd()
+
+            _zipdir(app.config['DOWNLOAD_PATH'], '%s.zip' % hash)
             
             if status < 0:
                 flash("There has been an error converting your file", 'error')
@@ -134,19 +167,15 @@ def queue():
 @app.route('/status/<hash>/', methods=['GET'])
 def status(hash):
     """ Check status of a specific job, display download link when ready """
-
-    filenames = ['%s.html' % hash]
-    if os.path.exists(os.path.join(app.config['DOWNLOAD_PATH'], "%s.x3d" % hash)):
-        # we know it's an inlined conversion
-        filenames = ['%s.html' % hash, '%s.x3d' % hash]
+    filenames = ['%s.html' % hash, '%s.zip' % hash]
         
-    return render_template('status.html', filenames=filenames)
+    return render_template('status.html', hash=hash, filenames=filenames)
 
 
-@app.route('/download/<filename>/', methods=['GET'])
-def download(filename):
+@app.route('/show/<hash>/<path:filename>/', methods=['GET'])
+def show(hash, filename):
     """
-    Allows to download a file from the DOWNLOAD_FOLDER.
+    Allows to show a file from the DOWNLOAD_FOLDER.
     The file is identified by a hash value and can only be
     a .html file.
 
@@ -155,10 +184,56 @@ def download(filename):
     # secuirty
     filename = os.path.basename(filename)
     
-    if os.path.exists(os.path.join(app.config['DOWNLOAD_PATH'], filename)):
-        return send_from_directory(app.config['DOWNLOAD_PATH'], filename, as_attachment=True)
+    if os.path.exists(os.path.join(app.config['DOWNLOAD_PATH'] + "/" + hash, filename)):
+        return send_from_directory(app.config['DOWNLOAD_PATH'] + "/" + hash, filename,
+                                   as_attachment=False)
     else:
         return not_found(404)
+
+
+###@app.route('/show/<hash>/static/<path:filename>/', methods=['GET'])
+###def show(hash, filename):
+
+###   filename = os.path.basename(filename)
+    
+###    if os.path.exists(os.path.join(app.config['DOWNLOAD_PATH'] + "/" + hash + "/static" , filename)):
+###        return send_from_directory(app.config['DOWNLOAD_PATH'] + "/" + hash + "/static", filename, as_attachment=False)
+###    else:
+###        return not_found(404)
+
+
+@app.route('/download/<hash>/<filename>/', methods=['GET'])
+def download(hash, filename):
+    """
+    Allows to download a file from the DOWNLOAD_FOLDER.
+    The file is identified by a hash value and can only be
+    a .zip file.
+
+    """
+#    filename = "%s.zip" % hash
+    # secuirty
+    filename = os.path.basename(filename)
+    
+    if os.path.exists(os.path.join(app.config['DOWNLOAD_PATH'] + "/" + hash, filename)):
+        return send_from_directory(app.config['DOWNLOAD_PATH'] + "/" + hash, 
+                                   filename, as_attachment=True)
+    else:
+        return not_found(404)
+
+
+def _zipdir(basedir, archivename):
+    assert os.path.isdir(basedir)
+    with closing(ZipFile(archivename, "w", ZIP_DEFLATED)) as z:
+        for root, dirs, files in os.walk(basedir):
+            # ignore empty directories
+            for fn in files:
+                # skip self and other zip files
+                if os.path.basename(fn) == os.path.basename(archivename):
+                    continue
+                print("Zipping %s" % fn)
+                absfn = os.path.join(root, fn)
+                zfn = absfn[len(basedir)+len(os.sep):] #XXX: relative path
+                z.write(absfn, zfn)
 
 
 if __name__ == "__main__":
