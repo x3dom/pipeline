@@ -136,7 +136,7 @@ def upload():
 
             os.getcwd()
 
-            _zipdir(app.config['DOWNLOAD_PATH'], '%s.zip' % hash)
+            #_zipdir(app.config['DOWNLOAD_PATH'], '%s.zip' % hash)
             
             if status < 0:
                 flash("There has been an error converting your file", 'error')
@@ -172,8 +172,8 @@ def status(hash):
     return render_template('status.html', hash=hash, filenames=filenames)
 
 
-@app.route('/show/<hash>/<path:filename>/', methods=['GET'])
-def show(hash, filename):
+@app.route('/preview/<hash>/<path:filename>/', methods=['GET'])
+def preview(hash, filename):
     """
     Allows to show a file from the DOWNLOAD_FOLDER.
     The file is identified by a hash value and can only be
@@ -191,8 +191,8 @@ def show(hash, filename):
         return not_found(404)
 
 
-###@app.route('/show/<hash>/static/<path:filename>/', methods=['GET'])
-###def show(hash, filename):
+###@app.route('/preview/<hash>/static/<path:filename>/', methods=['GET'])
+###def preview(hash, filename):
 
 ###   filename = os.path.basename(filename)
     
