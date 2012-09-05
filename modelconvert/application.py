@@ -16,6 +16,15 @@ from utils.ratelimit import ratelimit
 app = Flask(__name__)
 app.config.from_object('modelconvert.settings')
 
+# -- App setup --------------------------------------------------------------
+# serves the static downloads in development
+# in deployment apache or nginx should do that
+if app.config['DEBUG']:
+    from werkzeug.wsgi import SharedDataMiddleware
+    app.wsgi_app = SharedDataMiddleware(app.wsgi_app, {
+        '/preview': app.config["DOWNLOAD_PATH"]
+    })
+
 
 @app.errorhandler(404)
 def not_found(error):
