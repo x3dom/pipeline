@@ -169,7 +169,7 @@ def queue():
 def status(hash):
     """ Check status of a specific job, display download link when ready """
     filenames = ['%s.html' % hash, '%s.zip' % hash]
-    preview = os.path.join(app.config['SERVER_NAME'],'preview', hash, '%s.html' % hash)
+    preview = os.path.join('http://', app.config['SERVER_NAME'],'preview', hash, '%s.html' % hash)
         
     return render_template('status.html', hash=hash, filenames=filenames, preview=preview)
 
