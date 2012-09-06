@@ -173,8 +173,8 @@ def status(hash):
     return render_template('status.html', hash=hash, filenames=filenames)
 
 
-@app.route('/preview/<hash>/<path:filename>/', methods=['GET'])
-def preview(hash, filename):
+@app.route('/show/<hash>/<filename>/', methods=['GET'])
+def show(hash, filename):
     """
     Allows to show a file from the DOWNLOAD_FOLDER.
     The file is identified by a hash value and can only be
