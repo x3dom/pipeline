@@ -9,7 +9,7 @@
 
 <h2>Your files are ready</h2>
 
-<p class="big">preview: <a href="{{ url_for('show', hash=hash, filename=filenames[0]) }}" target="_blank">{{ filenames[0] }}</a> - <span style="color: red;">not yet implemented</span></p>
+<p class="big">preview: <a href="{{ preview }}" target="_blank">{{ filenames[0] }}</a> - <span style="color: red;">not yet implemented</span></p>
 <p class="big">download: <a href="{{ url_for('download', hash=hash, filename=filenames[1]) }}">{{ filenames[1] }}</a></p>
 
 

@@ -169,38 +169,29 @@ def queue():
 def status(hash):
     """ Check status of a specific job, display download link when ready """
     filenames = ['%s.html' % hash, '%s.zip' % hash]
+    preview = os.path.join(app.config['SERVER_NAME'],'preview', hash, '%s.html' % hash)
         
-    return render_template('status.html', hash=hash, filenames=filenames)
+    return render_template('status.html', hash=hash, filenames=filenames, preview=preview)
 
 
-@app.route('/show/<hash>/<filename>/', methods=['GET'])
-def show(hash, filename):
-    """
-    Allows to show a file from the DOWNLOAD_FOLDER.
-    The file is identified by a hash value and can only be
-    a .html file.
+### @app.route('/show/<hash>/<filename>/', methods=['GET'])
+### def show(hash, filename):
+###     """
+###     Allows to show a file from the DOWNLOAD_FOLDER.
+###     The file is identified by a hash value and can only be
+###     a .html file.
+### 
+###     """
+### #    filename = "%s.html" % hash
+###     # secuirty
+###     filename = os.path.basename(filename)
+###     
+###     if os.path.exists(os.path.join(app.config['DOWNLOAD_PATH'] + "/" + hash, filename)):
+###         return send_from_directory(app.config['DOWNLOAD_PATH'] + "/" + hash, filename,
+###                                    as_attachment=False)
+###     else:
+###         return not_found(404)
 
-    """
-#    filename = "%s.html" % hash
-    # secuirty
-    filename = os.path.basename(filename)
-    
-    if os.path.exists(os.path.join(app.config['DOWNLOAD_PATH'] + "/" + hash, filename)):
-        return send_from_directory(app.config['DOWNLOAD_PATH'] + "/" + hash, filename,
-                                   as_attachment=False)
-    else:
-        return not_found(404)
-
-
-###@app.route('/preview/<hash>/static/<path:filename>/', methods=['GET'])
-###def preview(hash, filename):
-
-###   filename = os.path.basename(filename)
-    
-###    if os.path.exists(os.path.join(app.config['DOWNLOAD_PATH'] + "/" + hash + "/static" , filename)):
-###        return send_from_directory(app.config['DOWNLOAD_PATH'] + "/" + hash + "/static", filename, as_attachment=False)
-###    else:
-###        return not_found(404)
 
 
 @app.route('/download/<hash>/<filename>/', methods=['GET'])
