@@ -136,7 +136,8 @@ def upload():
 
             os.getcwd()
 
-            _zipdir(app.config['DOWNLOAD_PATH'], '%s.zip' % hash)
+            zip_path = os.path.join(app.config['DOWNLOAD_PATH'], hash)
+            _zipdir(zip_path, '%s.zip' % hash)
             
             if status < 0:
                 flash("There has been an error converting your file", 'error')
