@@ -10,7 +10,6 @@
     server load, it may take a while.
 </p>
 
-
 <form action="{{ url_for('upload') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
     {% with messages = get_flashed_messages(with_categories=True) %}
         {% if messages %}
@@ -50,6 +49,11 @@
 <p>After uploading your source file using the form above, a new page
     will be displayed with a link to download the converted model as
     HTML file.</p>
+
+<h4>Note</h4>
+<p>The converted model files will be deleted from our servers
+a couple of hours after the conversion took place. Make sure you download
+the files to your computer.</p>
 
 
 {% endblock %}
