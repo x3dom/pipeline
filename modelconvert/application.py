@@ -89,10 +89,10 @@ def upload():
             # straight forward and simplistic way of selecting a template 
             # and generating inline style output
 
-            output_directory = os.path.join(app.config['DOWNLOAD_PATH'] + "/" + hash)
-            call(["mkdir", "-p", output_directory])
-            output_directory_binGeo = os.path.join(output_directory + "/binGeo")
-            call(["mkdir", "-p", output_directory_binGeo])
+            output_directory = os.path.join(app.config['DOWNLOAD_PATH'], hash)
+            os.mkdir(output_directory)
+            output_directory_binGeo = os.path.join(output_directory, "binGeo")
+            os.mkdir(output_directory_binGeo)
             
 
             if template == 'ios':
@@ -101,7 +101,7 @@ def upload():
                 
                 # render the template with inline
                 output_template_filename = os.path.join(
-                                            app.config['DOWNLOAD_PATH'] + "/" + hash, 
+                                            app.config['DOWNLOAD_PATH'], hash, 
                                             hash + '.html')
 
                 user_tpl_env = app.create_jinja_environment()
@@ -112,7 +112,7 @@ def upload():
 
                 output_directory_static = os.path.join(output_directory, "static")
                 input_directory_static = os.path.join(app.config['PROJECT_ROOT'], 
-                                                      "templates/vmust/static")
+                                                      "templates", "vmust", "static")
                
                 shutil.copytree(input_directory_static, output_directory_static) 
 
@@ -121,6 +121,8 @@ def upload():
                 aopt_switch = '-N'
                 
             output_filename = hash + output_extension 
+
+            working_directory = os.getcwd()
 
             os.chdir(output_directory)
 
@@ -133,17 +135,16 @@ def upload():
                aopt_switch, 
                output_filename
             ])
-
-            os.getcwd()
-
-            zip_path = os.path.join(app.config['DOWNLOAD_PATH'], hash)
-            _zipdir(zip_path, '%s.zip' % hash)
+            
             
             if status < 0:
+                os.chdir(working_directory)
                 flash("There has been an error converting your file", 'error')
                 return render_template('index.html')
             else:
-                pass
+                zip_path = os.path.join(app.config['DOWNLOAD_PATH'], hash)
+                _zipdir(zip_path, '%s.zip' % hash)
+                os.chdir(working_directory)
             
             if not app.config['DEBUG']:
                 # delete the uploaded file
@@ -169,28 +170,8 @@ def queue():
 def status(hash):
     """ Check status of a specific job, display download link when ready """
     filenames = ['%s.html' % hash, '%s.zip' % hash]
-    preview = os.path.join('http://', app.config['SERVER_NAME'],'preview', hash, '%s.html' % hash)
         
-    return render_template('status.html', hash=hash, filenames=filenames, preview=preview)
-
-
-### @app.route('/show/<hash>/<filename>/', methods=['GET'])
-### def show(hash, filename):
-###     """
-###     Allows to show a file from the DOWNLOAD_FOLDER.
-###     The file is identified by a hash value and can only be
-###     a .html file.
-### 
-###     """
-### #    filename = "%s.html" % hash
-###     # secuirty
-###     filename = os.path.basename(filename)
-###     
-###     if os.path.exists(os.path.join(app.config['DOWNLOAD_PATH'] + "/" + hash, filename)):
-###         return send_from_directory(app.config['DOWNLOAD_PATH'] + "/" + hash, filename,
-###                                    as_attachment=False)
-###     else:
-###         return not_found(404)
+    return render_template('status.html', hash=hash, filenames=filenames)
 
 
 
@@ -206,9 +187,9 @@ def download(hash, filename):
     # secuirty
     filename = os.path.basename(filename)
     
-    if os.path.exists(os.path.join(app.config['DOWNLOAD_PATH'] + "/" + hash, filename)):
-        return send_from_directory(app.config['DOWNLOAD_PATH'] + "/" + hash, 
-                                   filename, as_attachment=True)
+    if os.path.exists(os.path.join(app.config['DOWNLOAD_PATH'], hash, filename)):
+        path = os.path.join(app.config['DOWNLOAD_PATH'], hash)
+        return send_from_directory(path, filename, as_attachment=True)
     else:
         return not_found(404)
 
