@@ -24,7 +24,7 @@ def cleanup():
         print("  find /your/path -mtime +30 -exec rm -rf '{}' \;\n")
         exit(-1)
 
-    longevity = 6300 * 24;
+    longevity = 6300 * 24
     current_time = time.time();
     print("Removing files older than %i seconds" % longevity)
     
@@ -39,8 +39,9 @@ def cleanup():
                 
         for name in dirs:
             dirpath = os.path.join(root, name)
-            dirtime = os.path.getmtime(dirpath)
-            if current_time - dirtime > longevity:
+            #dirtime = os.path.getmtime(dirpath)
+            #if current_time - dirtime > longevity:
+            if not os.listdir(dirpath):
                 print("Removing directory %s" % dirpath)
                 os.rmdir(dirpath)    
     
