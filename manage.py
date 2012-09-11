@@ -24,7 +24,7 @@ def cleanup():
         print("  find /your/path -mtime +30 -exec rm -rf '{}' \;\n")
         exit(-1)
 
-    longevity = 6300;
+    longevity = 6300 * 24;
     current_time = time.time();
     print("Removing files older than %i seconds" % longevity)
     
