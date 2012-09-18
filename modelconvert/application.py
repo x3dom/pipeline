@@ -60,6 +60,7 @@ def upload():
 
     """
     if request.method == 'POST':
+        aopt = request.form['aopt']
         template = request.form['template']
         file = request.files['file']
         if file and is_allowed_file(file.filename):
@@ -89,11 +90,10 @@ def upload():
             # straight forward and simplistic way of selecting a template 
             # and generating inline style output
 
+
             output_directory = os.path.join(app.config['DOWNLOAD_PATH'], hash)
             os.mkdir(output_directory)
-            output_directory_binGeo = os.path.join(output_directory, "binGeo")
-            os.mkdir(output_directory_binGeo)
-            
+
 
             if template == 'ios':
                 output_extension = '.x3d'
@@ -116,26 +116,104 @@ def upload():
                
                 shutil.copytree(input_directory_static, output_directory_static) 
 
+            elif template == 'iosblue':
+                output_extension = '.x3d'
+                aopt_switch = '-x'
+                
+                # render the template with inline
+                output_template_filename = os.path.join(
+                                            app.config['DOWNLOAD_PATH'], hash, 
+                                            hash + '.html')
+
+                user_tpl_env = app.create_jinja_environment()
+                user_tpl = user_tpl_env.get_template('vmustblue/vmustblue_ipad_template.html')
+                
+                with open(output_template_filename, 'w+') as f:
+                    f.write(user_tpl.render(X3D_INLINE_URL='%s.x3d' % hash))
+
+                output_directory_static = os.path.join(output_directory, "static")
+                input_directory_static = os.path.join(app.config['PROJECT_ROOT'], 
+                                                      "templates", "vmustblue", "static")
+               
+                shutil.copytree(input_directory_static, output_directory_static)
+
             else:
                 output_extension = '.html'
                 aopt_switch = '-N'
-                
-            output_filename = hash + output_extension 
 
+
+
+            output_filename = hash + output_extension
             working_directory = os.getcwd()
-
             os.chdir(output_directory)
 
-            status = call([
-              app.config['AOPT_BINARY'], 
-              "-i", 
-              filename, 
-              "-G", 
-              'binGeo/:saI', 
-               aopt_switch, 
-               output_filename
-            ])
-            
+            if aopt == 'restuctedBinGeo':
+                output_directory_binGeo = os.path.join(output_directory, "binGeo")
+                os.mkdir(output_directory_binGeo)
+                
+                status = call([
+                  app.config['AOPT_BINARY'], 
+                  "-i", 
+                  filename, 
+                  "-u", 
+                  "-b", 
+                  hash + '.x3db'
+                ])
+
+                if status < 0:
+                     os.chdir(working_directory)
+                     flash("There has been an error converting your file", 'error')
+                     return render_template('index.html')
+                else:
+                    status = call([
+                      app.config['AOPT_BINARY'], 
+                      "-i", 
+                      hash + '.x3db', 
+                      "-F", 
+                      "Scene",
+                      "-b", 
+                      hash + '.x3db'
+                    ])
+
+                if status < 0:
+                     os.chdir(working_directory)
+                     flash("There has been an error converting your file", 'error')
+                     return render_template('index.html')
+                else:
+                    status = call([
+                      app.config['AOPT_BINARY'], 
+                      "-i", 
+                      hash + '.x3db', 
+                      "-G", 
+                      'binGeo/:saI',              
+                      aopt_switch, 
+                      output_filename
+                    ])
+                
+            elif aopt == 'binGeo':
+                output_directory_binGeo = os.path.join(output_directory, "binGeo")
+                os.mkdir(output_directory_binGeo)
+                status = call([
+                  app.config['AOPT_BINARY'], 
+                  "-i", 
+                  filename, 
+                  "-G", 
+                  'binGeo/:saI', 
+                  aopt_switch, 
+                  output_filename
+                ])
+
+
+            else:  
+                status = call([
+                  app.config['AOPT_BINARY'], 
+                  "-i", 
+                  filename, 
+                  aopt_switch, 
+                  output_filename
+                ])
+
+   
             
             if status < 0:
                 os.chdir(working_directory)

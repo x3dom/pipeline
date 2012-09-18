@@ -28,12 +28,19 @@
             OBJ, 3DS, COLLADA, PTX, V3D, PTS, APTS, XYZ, GTS, TRI, ASC, X3D, X3DV, 
             VRML, ALN</small></p>
             <input type="file" name="file">
+    </fieldset>    
+    <fieldset>
+        <h4>Choose the conversion option</h4>
+        <input type="radio" name="aopt" value="standard" checked> standard<br>
+        <input type="radio" name="aopt" value="binGeo"> binary geometry<br>
+        <input type="radio" name="aopt" value="restuctedBinGeo"> restucted binary geometry
     </fieldset>
     
     <fieldset>
         <h4>Select a template</h4>
-        <input type="radio" name="template" value="plain" checked> plain
-        <input type="radio" name="template" value="ios"> v-must iPad
+        <input type="radio" name="template" value="plain" checked> plain<br>
+        <input type="radio" name="template" value="ios"> v-must iPad<br>
+        <input type="radio" name="template" value="iosblue"> blue v-must iPad<br>
         {# TODO upload own template #}
     </fieldset>
     
