@@ -8,7 +8,7 @@ jQuery(document).ready(function () {
 	// just to show how this function works
 	//jQuery.get("data/metaData.xml", function (jsonData){ console.log(jsonData.toString());}, "html");
 	
-	jQuery.get("data/metaData.xml", createMetaDataList, "xml");
+	jQuery.get("metadata.xml", createMetaDataList, "xml");
 	
 	jQuery(".popUp").click(function() {
 		jQuery(".popUp").fadeOut();

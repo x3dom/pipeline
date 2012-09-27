@@ -1,7 +1,7 @@
 var MYAPP = {};
 MYAPP.data = {};
 MYAPP.curID = -1;
-MYAPP.jsonFilePath = "data/data.txt";
+MYAPP.jsonFilePath = "metadata.txt";
 MYAPP.cam = "";
 MYAPP.metaStatus = 2;
 
@@ -49,7 +49,7 @@ function createDataList() {
         var element = jQuery('                                                              \
             <li class="arrow artItem">                                                      \
                 <a href="#view" class="flip" id="x3DomLinkID_' + linkCnt + '">              \
-                   <img src="data/' + ele.model + '/icon.png" alt="' + ele.title + '"/>     \
+                   <!--img src="data/' + ele.model + '/icon.png" alt="' + ele.title + '"/-->     \
                    <strong class="title">' + ele.title + '</strong><br/>                    \
                    <span class="description">' + ele.description + '</span>                 \
                 </a>                                                                        \
@@ -98,7 +98,7 @@ function switchX3DomModel(idStr) {
     MYAPP.curID = idStr.replace('x3DomLinkID_', '');
     var model = MYAPP.data[MYAPP.curID].model;
 
-    document.getElementById("x3DomInline").setAttribute('url', "data/" + model + "/model-bg.x3d");
+    //document.getElementById("x3DomInline").setAttribute('url', "data/" + model + "/model-bg.x3d");
 
     jQuery("#viewTitle").text(MYAPP.data[MYAPP.curID].title);
     MYAPP.cam = "inline__cam_" + model;

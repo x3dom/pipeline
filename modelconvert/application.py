@@ -95,7 +95,7 @@ def upload():
             os.mkdir(output_directory)
 
 
-            if template == 'ios':
+            if template == 'fullsize' or template == 'metadataBrowser':
                 output_extension = '.x3d'
                 aopt_switch = '-x'
                 
@@ -105,37 +105,21 @@ def upload():
                                             hash + '.html')
 
                 user_tpl_env = app.create_jinja_environment()
-                user_tpl = user_tpl_env.get_template('vmust/vmust_ipad_template.html')
+                user_tpl = user_tpl_env.get_template(template +'/' + template + '_template.html')
                 
                 with open(output_template_filename, 'w+') as f:
                     f.write(user_tpl.render(X3D_INLINE_URL='%s.x3d' % hash))
 
-                output_directory_static = os.path.join(output_directory, "static")
+                output_directory_static = os.path.join(output_directory, 'static')
                 input_directory_static = os.path.join(app.config['PROJECT_ROOT'], 
-                                                      "templates", "vmust", "static")
+                                                      'templates', template, 'static')
                
                 shutil.copytree(input_directory_static, output_directory_static) 
 
-            elif template == 'iosblue':
-                output_extension = '.x3d'
-                aopt_switch = '-x'
-                
-                # render the template with inline
-                output_template_filename = os.path.join(
-                                            app.config['DOWNLOAD_PATH'], hash, 
-                                            hash + '.html')
-
-                user_tpl_env = app.create_jinja_environment()
-                user_tpl = user_tpl_env.get_template('vmustblue/vmustblue_ipad_template.html')
-                
-                with open(output_template_filename, 'w+') as f:
-                    f.write(user_tpl.render(X3D_INLINE_URL='%s.x3d' % hash))
-
-                output_directory_static = os.path.join(output_directory, "static")
-                input_directory_static = os.path.join(app.config['PROJECT_ROOT'], 
-                                                      "templates", "vmustblue", "static")
-               
-                shutil.copytree(input_directory_static, output_directory_static)
+                metadata = request.files['metadata']
+                if metadata:
+                    metadatafilename = os.path.join(app.config['DOWNLOAD_PATH'], hash, 'metadata' + os.path.splitext(metadata.filename)[1])
+                    metadata.save(metadatafilename)       
 
             else:
                 output_extension = '.html'
