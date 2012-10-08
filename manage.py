@@ -4,7 +4,7 @@ import os
 import shutil
 import time
 
-from flaskext.script import Manager
+from flask.ext.script import Manager
 
 from modelconvert.application import app
 
