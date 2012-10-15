@@ -8,6 +8,7 @@ from subprocess import call
 
 from flask import Flask, g
 from flask import render_template, request, flash, session, redirect, url_for
+from flask import jsonify
 from flask import send_from_directory
 from werkzeug import secure_filename
 
@@ -15,6 +16,8 @@ from werkzeug import secure_filename
 from jinja2 import Template
 
 from utils.ratelimit import ratelimit
+
+from tasks import convert_model
 
 app = Flask(__name__)
 app.config.from_object('modelconvert.settings')
@@ -115,12 +118,14 @@ def upload():
                                                       'templates', template, 'static')
                
                 shutil.copytree(input_directory_static, output_directory_static) 
-
+                
+                # put this top top
                 metadata = request.files['metadata']
                 if metadata:
                     metadatafilename = os.path.join(app.config['DOWNLOAD_PATH'], hash, 'metadata' + os.path.splitext(metadata.filename)[1])
                     metadata.save(metadatafilename)       
-
+                # end
+                
             else:
                 output_extension = '.html'
                 aopt_switch = '-N'
@@ -254,6 +259,26 @@ def download(hash, filename):
         return send_from_directory(path, filename, as_attachment=True)
     else:
         return not_found(404)
+
+
+@app.route("/test")
+def hello_world():
+    hash = "%032x" % random.getrandbits(128)
+
+    options = dict(hash=hash)
+    testfile = app.config["PROJECT_ROOT"] + '/tests/data/flipper.x3d'
+
+    res = convert_model.apply_async((testfile, options))
+    context = {"id": res.task_id }
+    goto = context['id']
+    return jsonify(goto=goto) 
+
+
+@app.route("/test/result/<task_id>")
+def show_result(task_id):
+    retval = convert_model.AsyncResult(task_id).get(timeout=1.0)
+    return repr(retval)
+
 
 
 def _zipdir(basedir, archivename):

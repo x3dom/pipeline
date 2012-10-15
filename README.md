@@ -36,6 +36,33 @@ the following command:
 Point your browser to http://localhost:5000
 
 
+Running all required services at once
+-------------------------------------
+
+A Procfile is provided for convenience. Use this on your local machine
+to start all required services at once using foreman. 
+http://ddollar.github.com/foreman/
+
+The Procfile can also be use to deploy modelconvert to cloud services that 
+support the Procfile protocol.
+
+
+How to run a celery deamon on your production system
+----------------------------------------------------
+If you are noting using the Procfile to run the required services, you need
+to configure each service on your machine (e.g. non-cloud production servers).
+
+Redis comes as standard package with most Linux distributions. No other action
+is required, short of installing the redis server package. For debian systems
+this is usally done with this command:
+
+  $ sudo apt-get install redis-server
+
+In order to run the celery deamon on your production site, please use the
+generic init script provided with celery. For more information see
+http://docs.celeryproject.org/en/latest/tutorials/daemonizing.html or refer
+to your devops people ;)
+
 
 Code structure
 --------------
@@ -43,3 +70,4 @@ Code structure
 This app is using the Fask microframework (flask.pocoo.org) and is using 
 the module file layout. You will find almost all important code
 in modelconvert/application.py
+
