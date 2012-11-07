@@ -261,6 +261,13 @@ def download(hash, filename):
         return not_found(404)
 
 
+
+
+
+
+
+
+
 @app.route("/test")
 def hello_world():
     hash = "%032x" % random.getrandbits(128)
@@ -278,6 +285,13 @@ def hello_world():
 def show_result(task_id):
     retval = convert_model.AsyncResult(task_id).get(timeout=1.0)
     return repr(retval)
+
+
+
+
+
+
+
 
 
 

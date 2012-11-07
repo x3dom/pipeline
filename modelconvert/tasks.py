@@ -18,10 +18,7 @@ import settings
 logger = get_task_logger(__name__)
 
 celery = Celery("tasks", broker='redis://localhost:6379/0', backend='redis')
-
-# init template system
 jinja = Environment(loader=FileSystemLoader('templates'))
-
 
 AOPT_BINARY = getattr(settings, 'AOPT_BINARY', 'aopt')
 DOWNLOAD_PATH = getattr(settings, 'DOWNLOAD_PATH', '/tmp/downloads')
@@ -59,7 +56,11 @@ def convert_model(input_file, options=None):
     # the hash should always be provided, however if not
     # i.e. running outside a web application, we use the taskid
     hash = options.get('hash', task_id)
+    
+    # alternative template
     template = options.get('template', None)
+    
+    # aopt options
     aopt = options.get('aopt', None)
 
     # return OK or FAILED as well as hash for info where to 
