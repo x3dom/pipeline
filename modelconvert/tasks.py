@@ -25,7 +25,8 @@ TEMPLATE_PATH = getattr(settings, 'TEMPLATE_PATH')
 celery = Celery("tasks", 
     broker=getattr(settings, 'CELERY_BROKER_URL', 'redis://localhost:6379/0'), 
     backend=getattr(settings, 'CELERY_RESULT_BACKEND','redis'))
-jinja = Environment(loader=PackageLoader('modelconvert', 'templates'))
+
+jinja = Environment(loader=FileSystemLoader(TEMPLATE_PATH))
 
 
 
@@ -83,8 +84,6 @@ def convert_model(input_file, options=None):
         # render the template with inline
         output_template_filename = os.path.join(DOWNLOAD_PATH, 
                                                 hash, hash + '.html')
-
-        logger.info("HELLO" +os.path.join(TEMPLATE_PATH, template +'/' + template + '_template.html'))
         user_tpl = jinja.get_template(template +'/' + template + '_template.html')
         
         with open(output_template_filename, 'w+') as f:
@@ -201,14 +200,13 @@ def convert_model(input_file, options=None):
         # delete the uploaded file
         os.remove(input_file)
     
-    import time
-    time.sleep(10)
+    # import time
+    # time.sleep(10)
     result_set = dict(
         hash = hash,
         input_file = input_file,
     )
     return result_set
-#    return "My task ID is {0}, hash: {1}, sourcef: {2}".format(task_id, hash, input_file)
 
 
 
