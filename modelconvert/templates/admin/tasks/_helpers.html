@@ -1,0 +1,20 @@
+{% macro render_tasks(nodelist) %}
+{% if nodelist %}
+    {% for node in nodelist %}
+    <h3><tt>{{ node }}</tt></h3>
+    {% if nodelist[node] %}
+    <ul>
+        {% for task in nodelist[node] %}
+            <li>{{ task }}</li>
+        {% endfor%}
+    </ul>
+    {% else %}
+        <p>No tasks found.</p>
+    {% endif %}
+    
+    {% endfor %}
+
+{% else %}
+    <p>No nodes found.</p>
+{% endif %}
+{% endmacro %}

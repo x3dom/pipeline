@@ -1,0 +1,18 @@
+{% extends "admin/base.html" %}
+{% block title %}CIF Admin{% endblock %}
+
+{% block content %}
+<h1>CIF Admin</h1>
+<p>This dashboard allows you to manage aspects of the CIF.</p>
+
+<h3>Task Queue Management</h3>
+    <ul>
+        <li>Reset Pool</li>
+    </ul>
+    <ul>
+        <li>List of <a href="{{ url_for('show_active_tasks') }}">active tasks</a></li>
+        <li>List of <a href="{{ url_for('show_waiting_tasks') }}">waiting tasks</a></li>
+        <li>List of <a href="{{ url_for('show_scheduled_tasks') }}">scheduled tasks</a></li>
+        <li>List of <a href="{{ url_for('show_registered_tasks') }}">registered tasks</a></li>
+    </ul>
+{% endblock %}

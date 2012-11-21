@@ -1,0 +1,21 @@
+{% extends "base_vmust.html" %}
+
+{% block content %}
+
+<h2>Your files are ready</h2>
+
+{#### os.path.join('http://', app.config['SERVER_NAME'],'preview', hash, '%s.html' % hash)###}
+
+<p class="big">preview: <a href="{{ 'http://' + config['SERVER_NAME'] + '/preview/' + hash+ '/' + filenames[0] }}" target="_blank">{{ filenames[0] }}</a></p>
+<p class="big">download: <a href="{{ url_for('download', hash=hash, filename=filenames[1]) }}">{{ filenames[1] }}</a></p>
+
+
+<p>Click on the links above to download the converted model files or <a href="{{ url_for('home') }}">convert another file</a></p>
+
+{# <h1>Please wait...</h1> #}
+{#  #}
+{# <p>The file you are looking for does either not exist anymore or is not yet converted.  #}
+{#     If you just uploaded a file for conversion, please the download will start  #}
+{#     automatically as soon as your file is ready.</p> #}
+
+{% endblock %}

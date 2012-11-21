@@ -1,0 +1,12 @@
+{% extends "admin/base.html" %}
+{% from "admin/tasks/_helpers.html" import render_tasks %}
+
+{% block title %}Registred tasks{% endblock %}
+
+{% block content %}
+<h1>Registered Tasks</h1>
+<p>Showing system wide registered tasks for each backend node.</p>
+
+{{ render_tasks(nodelist) }}
+
+{% endblock %}
