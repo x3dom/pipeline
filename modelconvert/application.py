@@ -2,6 +2,7 @@
 import os
 import random
 import shutil
+import uuid
 from contextlib import closing
 from zipfile import ZipFile, ZIP_DEFLATED
 from subprocess import call
@@ -15,14 +16,22 @@ from werkzeug import secure_filename
 # used for user template
 from jinja2 import Template
 
+from celery import Celery
+from celery.task.control import inspect
+
 from utils.ratelimit import ratelimit
 
 from tasks import convert_model
 
+# -- App setup --------------------------------------------------------------
 app = Flask(__name__)
 app.config.from_object('modelconvert.settings')
 
-# -- App setup --------------------------------------------------------------
+celery = Celery("tasks", 
+    broker=getattr(app.config, 'CELERY_BROKER_URL', 'redis://localhost:6379/0'), 
+    backend=getattr(app.config, 'CELERY_RESULT_BACKEND','redis')
+)
+
 # serves the static downloads in development
 # in deployment apache or nginx should do that
 if app.config['DEBUG']:
@@ -30,6 +39,7 @@ if app.config['DEBUG']:
     app.wsgi_app = SharedDataMiddleware(app.wsgi_app, {
         '/preview': app.config["DOWNLOAD_PATH"]
     })
+
 
 
 @app.errorhandler(404)
@@ -63,164 +73,45 @@ def upload():
 
     """
     if request.method == 'POST':
+        # FIXME: convert this to WTForms
         aopt = request.form['aopt']
         template = request.form['template']
         file = request.files['file']
+
+        # options to pass to convertion task
+        options = dict()
+        
+
         if file and is_allowed_file(file.filename):
             filename = secure_filename(file.filename)
+            
+            # create a UUID like hash
+            #hash = "%032x" % random.getrandbits(128)
+            hash = uuid.uuid4().hex
+            options.update(hash=hash)
 
             # anonymize filename, keep extension and save
-            hash = "%032x" % random.getrandbits(128)
             filename = os.path.join(app.config['UPLOAD_PATH'], 
                                     hash + os.path.splitext(file.filename)[1])
             file.save(filename)
             
-            
-            ##
-            # THE FOLLOWING CODE SHOULD RUN IN A CELERY TASK
-            ##
-            # convert and delete original after successful conversion
-            # if conversion errors out, show the relevant source             
-            # portion of the code
-            
-            # optimization under heavy load: celery + redis
-            # however this is overkill at the moment and only necessary 
-            # if the page load is very high.
-            
-            
-            # assumption: contents of file matches extension
-            
-            # straight forward and simplistic way of selecting a template 
-            # and generating inline style output
-
-
-            output_directory = os.path.join(app.config['DOWNLOAD_PATH'], hash)
-            os.mkdir(output_directory)
-
-
-            if template == 'fullsize' or template == 'metadataBrowser':
-                output_extension = '.x3d'
-                aopt_switch = '-x'
+            # in case the user uploaded a meta file, store this as well
+            # FIXME make sure only processed when valid template selection
+            # (DoS)
+            metadata = request.files['metadata']
+            if metadata:
+                meta_filename = os.path.join(app.config['UPLOAD_PATH'], hash, 'metadata' + os.path.splitext(metadata.filename)[1])
+                metadata.save(meta_filename)
+                options.update(meta_filename=meta_filename)
                 
-                # render the template with inline
-                output_template_filename = os.path.join(
-                                            app.config['DOWNLOAD_PATH'], hash, 
-                                            hash + '.html')
+            options.update(
+                aopt=aopt, 
+                template=template
+            )
 
-                user_tpl_env = app.create_jinja_environment()
-                user_tpl = user_tpl_env.get_template(template +'/' + template + '_template.html')
-                
-                with open(output_template_filename, 'w+') as f:
-                    f.write(user_tpl.render(X3D_INLINE_URL='%s.x3d' % hash))
-
-                output_directory_static = os.path.join(output_directory, 'static')
-                input_directory_static = os.path.join(app.config['PROJECT_ROOT'], 
-                                                      'templates', template, 'static')
-               
-                shutil.copytree(input_directory_static, output_directory_static) 
-                
-                # put this top top
-                metadata = request.files['metadata']
-                if metadata:
-                    metadatafilename = os.path.join(app.config['DOWNLOAD_PATH'], hash, 'metadata' + os.path.splitext(metadata.filename)[1])
-                    metadata.save(metadatafilename)       
-                # end
-                
-            else:
-                output_extension = '.html'
-                aopt_switch = '-N'
-
-
-
-            output_filename = hash + output_extension
-            working_directory = os.getcwd()
-            os.chdir(output_directory)
-
-            if aopt == 'restuctedBinGeo':
-                output_directory_binGeo = os.path.join(output_directory, "binGeo")
-                os.mkdir(output_directory_binGeo)
-                
-                status = call([
-                  app.config['AOPT_BINARY'], 
-                  "-i", 
-                  filename, 
-                  "-u", 
-                  "-b", 
-                  hash + '.x3db'
-                ])
-
-                if status < 0:
-                     os.chdir(working_directory)
-                     flash("There has been an error converting your file", 'error')
-                     return render_template('index.html')
-                else:
-                    status = call([
-                      app.config['AOPT_BINARY'], 
-                      "-i", 
-                      hash + '.x3db', 
-                      "-F", 
-                      "Scene",
-                      "-b", 
-                      hash + '.x3db'
-                    ])
-
-                if status < 0:
-                     os.chdir(working_directory)
-                     flash("There has been an error converting your file", 'error')
-                     return render_template('index.html')
-                else:
-                    status = call([
-                      app.config['AOPT_BINARY'], 
-                      "-i", 
-                      hash + '.x3db', 
-                      "-G", 
-                      'binGeo/:saI',              
-                      aopt_switch, 
-                      output_filename
-                    ])
-                
-            elif aopt == 'binGeo':
-                output_directory_binGeo = os.path.join(output_directory, "binGeo")
-                os.mkdir(output_directory_binGeo)
-                status = call([
-                  app.config['AOPT_BINARY'], 
-                  "-i", 
-                  filename, 
-                  "-G", 
-                  'binGeo/:saI', 
-                  aopt_switch, 
-                  output_filename
-                ])
-
-
-            else:  
-                status = call([
-                  app.config['AOPT_BINARY'], 
-                  "-i", 
-                  filename, 
-                  aopt_switch, 
-                  output_filename
-                ])
-
-   
+            retval = convert_model.apply_async((filename, options))
             
-            if status < 0:
-                os.chdir(working_directory)
-                flash("There has been an error converting your file", 'error')
-                return render_template('index.html')
-            else:
-                zip_path = os.path.join(app.config['DOWNLOAD_PATH'], hash)
-                _zipdir(zip_path, '%s.zip' % hash)
-                os.chdir(working_directory)
-            
-            if not app.config['DEBUG']:
-                # delete the uploaded file
-                os.remove(filename)
-            ##
-            # END CELERY TASK
-            ##
-
-            return redirect(url_for('status', hash=hash))
+            return redirect(url_for('status', task_id=retval.task_id))
         else:
             flash("Please upload a file of the following type: %s" %
                 ", ".join(app.config['ALLOWED_EXTENSIONS']), 'error')
@@ -228,20 +119,44 @@ def upload():
     return render_template('index.html')
 
 
-def queue():
-    """ Show the processing queue """
-    pass
 
 
-@app.route('/status/<hash>/', methods=['GET'])
-def status(hash):
-    """ Check status of a specific job, display download link when ready """
+
+@app.route('/status/<task_id>/', methods=['GET'])
+def status(task_id):
+    """ 
+    Check status of a specific job.
+    
+    Note that Celery returns PENDING if the Task ID is non existant.
+    This is an optimization and could be recitified like so:
+    http://stackoverflow.com/questions/9824172/find-out-whether-celery-task-exists
+    """
+    result = convert_model.AsyncResult(task_id)
+    
+    if request.is_xhr:
+        return jsonify(state=result.state)
+    else:    
+        if result.ready() and result.successful():
+            return redirect(url_for('success', hash=result.info['hash']))
+        else:
+            return render_template('status.html', result=result)
+
+
+@app.route('/success/<hash>/', methods=['GET'])
+def success(hash):
+    """ 
+    Display download links for converted files.
+    
+    Note that this also just displays simple links and does not check for
+    validity if the files actually exist. This is not necessary since they
+    are temporary anyway.
+    """
     filenames = ['%s.html' % hash, '%s.zip' % hash]
-        
-    return render_template('status.html', hash=hash, filenames=filenames)
+    return render_template('success.html', hash=hash, filenames=filenames)
 
 
-
+# This is basically redundant, Nginx or apache should handle this
+# make this a wsgi middleware for development envs
 @app.route('/download/<hash>/<filename>/', methods=['GET'])
 def download(hash, filename):
     """
@@ -262,51 +177,63 @@ def download(hash, filename):
 
 
 
+# @app.route("/test")
+# def hello_world():
+#     """
+#     Move this to a test case. This executes a predefined model conversion
+#     use this for quick tests wihtout the form upload hassle
+#     """
+#     hash = uuid.uuid4().hex
+# 
+#     options = dict(hash=hash)
+#     testfile = app.config["PROJECT_ROOT"] + '/tests/data/flipper.x3d'
+# 
+#     res = convert_model.apply_async((testfile, options))
+#     context = {"id": res.task_id }
+#     goto = context['id']
+#     #return jsonify(goto=goto) 
+#     return redirect(url_for('status', task_id=res.task_id))
 
 
 
 
+# -- Celery API Rest interface -----------------------------------------------
+# The URLs starting with /admin/ should be guarded by the webserver
+# This is rather explict coded for better comprehnsion
+# FIXME: make a JS only dashboard using the REST api below
 
 
-@app.route("/test")
-def hello_world():
-    hash = "%032x" % random.getrandbits(128)
-
-    options = dict(hash=hash)
-    testfile = app.config["PROJECT_ROOT"] + '/tests/data/flipper.x3d'
-
-    res = convert_model.apply_async((testfile, options))
-    context = {"id": res.task_id }
-    goto = context['id']
-    return jsonify(goto=goto) 
+@app.route("/admin/")
+def admin():
+    return render_template('admin/dashboard.html')
 
 
-@app.route("/test/result/<task_id>")
-def show_result(task_id):
-    retval = convert_model.AsyncResult(task_id).get(timeout=1.0)
-    return repr(retval)
+@app.route("/admin/tasks/registered")
+def show_registered_tasks():
+    i = celery.control.inspect()
+
+    if request.is_xhr:
+        return jsonify(tasks=i.registered()) 
+    else:
+        return render_template('admin/tasks/registered.html', nodelist=i.registered())
 
 
+@app.route("/admin/tasks/active/")
+def show_active_tasks():
+    i = celery.control.inspect()
+    return jsonify(tasks=i.active()) 
+
+@app.route("/admin/tasks/scheduled/")
+def show_scheduled_tasks():
+    i = celery.control.inspect()
+    return jsonify(tasks=i.scheduled()) 
+
+@app.route("/admin/tasks/waiting/")
+def show_waiting_tasks():
+    i = celery.control.inspect()
+    return jsonify(tasks=i.reserved()) 
 
 
-
-
-
-
-
-
-def _zipdir(basedir, archivename):
-    assert os.path.isdir(basedir)
-    with closing(ZipFile(archivename, "w", ZIP_DEFLATED)) as z:
-        for root, dirs, files in os.walk(basedir):
-            # ignore empty directories
-            for fn in files:
-                # skip self and other zip files
-                if os.path.basename(fn) == os.path.basename(archivename):
-                    continue
-                absfn = os.path.join(root, fn)
-                zfn = absfn[len(basedir)+len(os.sep):] #XXX: relative path
-                z.write(absfn, zfn)
 
 
 if __name__ == "__main__":

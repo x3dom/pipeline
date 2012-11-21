@@ -17,11 +17,21 @@ import settings
 
 logger = get_task_logger(__name__)
 
-celery = Celery("tasks", broker='redis://localhost:6379/0', backend='redis')
-jinja = Environment(loader=FileSystemLoader('templates'))
-
 AOPT_BINARY = getattr(settings, 'AOPT_BINARY', 'aopt')
 DOWNLOAD_PATH = getattr(settings, 'DOWNLOAD_PATH', '/tmp/downloads')
+DEBUG = getattr(settings, 'DEBUG', False)
+TEMPLATE_PATH = getattr(settings, 'TEMPLATE_PATH')
+
+celery = Celery("tasks", 
+    broker=getattr(settings, 'CELERY_BROKER_URL', 'redis://localhost:6379/0'), 
+    backend=getattr(settings, 'CELERY_RESULT_BACKEND','redis'))
+jinja = Environment(loader=PackageLoader('modelconvert', 'templates'))
+
+
+
+class ConversionError(Exception):
+    pass
+
 
 @celery.task
 def convert_model(input_file, options=None):
@@ -40,13 +50,9 @@ def convert_model(input_file, options=None):
     task_id = current_task.request.id
     
     # options:
-    #   template name
+    #   template
     #   hash
-    #   jinja context
-    #   meta data filename
-    #   pfade:
-    #      download directory root
-    #      static files root
+    #   meta
     
     # keep the generated hash for filenames
     # use the taskid for status only
@@ -78,16 +84,21 @@ def convert_model(input_file, options=None):
         output_template_filename = os.path.join(DOWNLOAD_PATH, 
                                                 hash, hash + '.html')
 
+        logger.info("HELLO" +os.path.join(TEMPLATE_PATH, template +'/' + template + '_template.html'))
         user_tpl = jinja.get_template(template +'/' + template + '_template.html')
-
+        
         with open(output_template_filename, 'w+') as f:
             f.write(user_tpl.render(X3D_INLINE_URL='%s.x3d' % hash))
 
         output_directory_static = os.path.join(output_directory, 'static')
-        input_directory_static = os.path.join(settings['PROJECT_ROOT'], 
-                                              'templates', template, 'static')
+        input_directory_static = os.path.join(TEMPLATE_PATH, template, 'static')
 
-        shutil.copytree(input_directory_static, output_directory_static) 
+        shutil.copytree(input_directory_static, output_directory_static)
+        
+        # copy metadata to output dir if present
+        meta_filename = options.get('meta_filename', None)
+        if meta_filename:
+            shutil.copy(meta_filename, output_directory)
 
     else:
         output_extension = '.html'
@@ -96,15 +107,75 @@ def convert_model(input_file, options=None):
     output_filename = hash + output_extension
     working_directory = os.getcwd()
     os.chdir(output_directory)
+    
+    logger.info("Output filename:   {0}".format(output_filename) )
+    logger.info("Output directory: {0}".format(output_directory) )
+    logger.info("Working directory: {0}".format(working_directory) )
 
-    # don't get what she has done here
-    # we need to build up aopt parameter list programmatically
-    # and then just one call + status check/error processing at the end.
     if aopt == 'restuctedBinGeo':
-        pass
+        output_directory_binGeo = os.path.join(output_directory, "binGeo")
+        os.mkdir(output_directory_binGeo)
+        
+        status = call([
+          AOPT_BINARY, 
+          "-i", 
+          input_file, 
+          "-u", 
+          "-b", 
+          hash + '.x3db'
+        ])
+
+        if status < 0:
+            
+            # FIXME error handling and cleanup (breaking early is good but
+            # cleanup calls for try/catch/finally)
+            os.chdir(working_directory)
+            logger.error("Error converting file!!!!!!!!!!")
+            raise ConversionError('AOPT RETURNS: {0}'.format(status))
+
+        else:
+            status = call([
+              AOPT_BINARY, 
+              "-i", 
+              hash + '.x3db', 
+              "-F", 
+              "Scene",
+              "-b", 
+              hash + '.x3db'
+            ])
+
+        if status < 0:
+            # FIXME error handling and cleanup (breaking early is good but
+            # cleanup calls for try/catch/finally)
+            os.chdir(working_directory)
+            logger.error("Error converting file!!!!!!!!!!")
+            raise ConversionError('AOPT RETURNS: {0}'.format(status))
+        else:
+            status = call([
+              AOPT_BINARY, 
+              "-i", 
+              hash + '.x3db', 
+              "-G", 
+              'binGeo/:saI',              
+              aopt_switch, 
+              output_filename
+            ])
+        
     elif aopt == 'binGeo':
-        pass
-    else:
+        output_directory_binGeo = os.path.join(output_directory, "binGeo")
+        os.mkdir(output_directory_binGeo)
+        status = call([
+          AOPT_BINARY, 
+          "-i", 
+          input_file, 
+          "-G", 
+          'binGeo/:saI', 
+          aopt_switch, 
+          output_filename
+        ])
+
+
+    else:  
         status = call([
           AOPT_BINARY, 
           "-i", 
@@ -112,23 +183,32 @@ def convert_model(input_file, options=None):
           aopt_switch, 
           output_filename
         ])
-        
 
+
+    
     if status < 0:
-        # Error handling
-        pass
+        # FIXME error handling and cleanup (breaking early is good but
+        # cleanup calls for try/catch/finally)
+        os.chdir(working_directory)
+        logger.error("Error converting file!!!!!!!!!!")
+        raise ConversionError('AOPT RETURNS: {0}'.format(status))
     else:
-        zip_path = os.path.join('DOWNLOAD_PATH', hash)
+        zip_path = os.path.join(DOWNLOAD_PATH, hash)
         _zipdir(zip_path, '%s.zip' % hash)
-        
-
-    os.chdir(working_directory)
-
-    # if not settings['DEBUG']:
-    #     # delete the uploaded file
-    #     os.remove(input_file)
-
-    return "My task ID is {0}, hash: {1}, sourcef: {2}".format(task_id, hash, input_file)
+        os.chdir(working_directory)
+    
+    if not DEBUG:
+        # delete the uploaded file
+        os.remove(input_file)
+    
+    import time
+    time.sleep(10)
+    result_set = dict(
+        hash = hash,
+        input_file = input_file,
+    )
+    return result_set
+#    return "My task ID is {0}, hash: {1}, sourcef: {2}".format(task_id, hash, input_file)
 
 
 
@@ -148,6 +228,6 @@ def _zipdir(basedir, archivename):
 
 
 if __name__ == "__main__":
-    celery.start()
-#    testfile = 'tests/data/flipper.x3d'
-#    result = convert_model.apply_async((testfile,))
+#    celery.start()
+    testfile = 'tests/data/flipper.x3d'
+    result = convert_model.apply_async((testfile,))

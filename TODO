@@ -16,3 +16,9 @@ Sugar
 - upload progress bar
 - API
 - use WTforms to simplify form/error handling
+
+As this project is getting larger and more invovled, it is becoming
+increasingly difficult to maintain a sane structure with a micro-framekwork
+like Flask. It makes entry for new developers more difficult as well. Also issues like caching and celery admin, forms, etc. have been solved already by
+more stable librarlies like Django. In the future a conversion to such 
+framework might be a sensible decision.

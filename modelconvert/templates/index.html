@@ -1,4 +1,4 @@
-{% extends "base_v-must.html" %}
+{% extends "base_vmust.html" %}
 
 {% block content %}
 
@@ -38,14 +38,14 @@
     
     <fieldset>
         <h4>Select a template</h4>
-        <input type="radio" name="template" value="basic" checked> Basic Viewer<br>
-        <input type="radio" name="template" value="fullsize"> Fullsize Viewer<br>
-        <input type="radio" name="template" value="metadataBrowser"> Viewer with Metadata Browser<br>
+        <input type="radio" name="template" value="basic" id="radio-basic" checked> Basic Viewer<br>
+        <input type="radio" name="template" value="fullsize" id="radio-fullsize"> Fullsize Viewer<br>
+        <input type="radio" name="template" value="metadataBrowser" id="radio-meta"> Viewer with Metadata Browser<br>
         {# TODO upload own template #}
     </fieldset>
 
-    <fieldset>
-        <h4>If your choose the "Basic Viewer" or "Viewer with Metadata Browser" template upload a metadata file</h4>
+    <fieldset id="meta-upload">
+        <h4>If your choose the "Fullsize Viewer" or "Viewer with Metadata Browser" template upload a metadata file</h4>
         <p><small>Supported format txt for "Basic Viewer" and xml for "Viewer with Metadata Browser"</small></p>
         <input type="file" name="metadata">
     </fieldset>  

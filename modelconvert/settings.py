@@ -14,6 +14,9 @@ ADMINS = frozenset(['http://x3dom.org'])
 
 MAX_CONTENT_LENGTH = 16 * 1024 * 1024 # 16Meg upload limit
 
+# location of the user templates (fullsize, metadata, etc.)
+TEMPLATE_PATH = path('templates')
+
 UPLOAD_PATH = '/var/www/modelconvert/tmp/uploads'
 DOWNLOAD_PATH = '/var/www/modelconvert/tmp/downloads'
 AOPT_BINARY = '/usr/local/bin/aopt'
@@ -43,6 +46,7 @@ if DEVELOPMENT_MODE:
     SERVER_NAME = 'localhost:5000'
     UPLOAD_PATH = path('../tmp/uploads')
     DOWNLOAD_PATH = path('../tmp/downloads')
+    TEMPLATE_PATH = path('templates')
     AOPT_BINARY = '/Users/andi/Storage/tmp/instant_player/Contents/MacOS/aopt'
 
 del os
