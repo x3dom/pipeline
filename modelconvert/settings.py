@@ -34,12 +34,11 @@ PROPAGATE_EXCEPTIONS = True
 #TRAP_HTTP_EXCEPTIONS = True
 #TRAP_BAD_REQUEST_ERRORS = True
 
-# redis
+# -- CELERY -----------------------------------------------------------------
 CELERY_RESULT_BACKEND = "redis"
-CELERY_REDIS_HOST = "localhost"
-CELERY_REDIS_PORT = 6379
-CELERY_REDIS_DB = 0
 CELERY_BROKER_URL = 'redis://localhost:6379/0'
+BROKER_URL = CELERY_BROKER_URL
+CELERY_IMPORTS = ("tasks", )
 
 
 if DEVELOPMENT_MODE:

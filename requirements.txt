@@ -5,3 +5,4 @@ requests >= 0.13.3, < 1.0
 redis >= 2.6.0, < 2.7
 celery >= 3.0, < 3.1
 Fabric >= 1.5 < 2.0
+Flower
