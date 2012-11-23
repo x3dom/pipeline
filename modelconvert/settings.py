@@ -34,13 +34,17 @@ PROPAGATE_EXCEPTIONS = True
 #TRAP_HTTP_EXCEPTIONS = True
 #TRAP_BAD_REQUEST_ERRORS = True
 
+
 # -- CELERY -----------------------------------------------------------------
 CELERY_RESULT_BACKEND = "redis"
 CELERY_BROKER_URL = 'redis://localhost:6379/0'
 BROKER_URL = CELERY_BROKER_URL
 CELERY_IMPORTS = ("tasks", )
+#CELERY_TASK_RESULT_EXPIRES = 300 # default is one day
 
 
+
+# development specific stuff, should really be seperate file
 if DEVELOPMENT_MODE:
     SERVER_NAME = 'localhost:5000'
     UPLOAD_PATH = path('../tmp/uploads')
