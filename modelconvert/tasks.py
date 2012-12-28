@@ -19,6 +19,7 @@ logger = get_task_logger(__name__)
 
 AOPT_BINARY = getattr(settings, 'AOPT_BINARY', 'aopt')
 DOWNLOAD_PATH = getattr(settings, 'DOWNLOAD_PATH', '/tmp/downloads')
+UPLOAD_PATH = getattr(settings, 'UPLOAD_PATH', '/tmp/uploads')
 DEBUG = getattr(settings, 'DEBUG', False)
 TEMPLATE_PATH = getattr(settings, 'TEMPLATE_PATH')
 
@@ -51,6 +52,7 @@ def convert_model(input_file, options=None):
     task_id = current_task.request.id
     
     # options:
+    #   meshlab
     #   template
     #   hash
     #   meta
@@ -63,6 +65,9 @@ def convert_model(input_file, options=None):
     # the hash should always be provided, however if not
     # i.e. running outside a web application, we use the taskid
     hash = options.get('hash', task_id)
+
+    # meshlab options
+    meshlab = options.get('meshlab', None)
     
     # alternative template
     template = options.get('template', None)
@@ -110,6 +115,42 @@ def convert_model(input_file, options=None):
     logger.info("Output filename:   {0}".format(output_filename) )
     logger.info("Output directory: {0}".format(output_directory) )
     logger.info("Working directory: {0}".format(working_directory) )
+
+    #inputfile = outputfile warning
+
+    if meshlab:
+      mehlab_filter = ""
+      mehlab_filter += "<!DOCTYPE FilterScript><FilterScript>"
+
+      for item in meshlab:
+          mehlab_filter += '<filter name="' + item + '"/>' 
+
+      mehlab_filter += "<FilterScript>"
+
+      mehlab_filter_filename = os.path.join(UPLOAD_PATH, hash + '.mlx')
+      filter_file = open(mehlab_filter_filename, "w") 
+      filter_file.write(mehlab_filter) 
+      filter_file.close()
+
+      status = call([
+            "meshlabserver", 
+            "-i", 
+            input_file, 
+            "-o",
+            input_file, 
+            "-s",
+            mehlab_filter_filename,
+            "-om",
+            "ff"
+          ])
+
+      if status == 0:
+          logger.info("Meshlab optimization {0}".format(status))
+      else:
+          logger.info("Meshlab problem exit code {0}".format(status))
+    else:
+          logger.info("No Meshlab optimization")
+
 
     if aopt == 'restuctedBinGeo':
         output_directory_binGeo = os.path.join(output_directory, "binGeo")

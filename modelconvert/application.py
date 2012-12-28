@@ -74,6 +74,7 @@ def upload():
     """
     if request.method == 'POST':
         # FIXME: convert this to WTForms
+        meshlab = request.form.getlist('meshlab')
         aopt = request.form['aopt']
         template = request.form['template']
         file = request.files['file']
@@ -95,6 +96,9 @@ def upload():
                                     hash + os.path.splitext(file.filename)[1])
             file.save(filename)
             
+            if meshlab:
+                options.update(meshlab=meshlab)
+
             # in case the user uploaded a meta file, store this as well
             # FIXME make sure only processed when valid template selection
             # (DoS)

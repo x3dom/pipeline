@@ -28,7 +28,15 @@
             OBJ, 3DS, COLLADA, PTX, V3D, PTS, APTS, XYZ, GTS, TRI, ASC, X3D, X3DV, 
             VRML, ALN</small></p>
             <input type="file" name="file">
-    </fieldset>    
+    </fieldset>   
+
+    <fieldset>
+        <h4>If you want to optimitze your model, choose the optimation type</h4>
+        <input type="checkbox" name="meshlab" value="Remove Duplicate Faces"> Remove Duplicate Faces<br>
+        <input type="checkbox" name="meshlab" value="Remove Duplicated Vertex"> Remove Duplicated Vertex<br>
+        <input type="checkbox" name="meshlab" value="Remove Zero Area Faces"> Remove Zero Area Faces
+    </fieldset> 
+
     <fieldset>
         <h4>Choose the conversion option</h4>
         <input type="radio" name="aopt" value="standard" checked> standard<br>

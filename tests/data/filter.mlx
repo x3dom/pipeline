@@ -1,0 +1,10 @@
+<!DOCTYPE FilterScript>
+<FilterScript>
+ <filter name="Remove Duplicate Faces"/>
+ <filter name="Remove Duplicated Vertex"/>
+ <filter name="Remove Zero Area Faces"/>
+</FilterScript>
+
+
+
+
