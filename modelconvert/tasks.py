@@ -2,7 +2,7 @@ import os
 import shutil
 from contextlib import closing
 from zipfile import ZipFile, ZIP_DEFLATED
-from subprocess import call
+from subprocess import call, CalledProcessError
 
 # template system
 from jinja2 import Environment, FileSystemLoader, PackageLoader
@@ -153,7 +153,7 @@ def convert_model(input_file, options=None):
                 "ff"
                 ], env=env)
                 
-        except subprocess.CalledProcessError as e:
+        except CalledProcessError as e:
             logger.info("Meshlab problem exit code {0}".format(status))
             logger.error("Meshlab: " + e.output)
             
