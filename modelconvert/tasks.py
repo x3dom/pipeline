@@ -162,7 +162,7 @@ def convert_model(input_file, options=None):
         output = proc.communicate()[0]
         returncode = proc.returncode
 
-        if returncode not 0:
+        if returncode != 0:
             logger.info("Meshlab optimization {0}".format(returncode))
             logger.error(output)
         else:
