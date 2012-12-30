@@ -2,7 +2,7 @@ import os
 import shutil
 from contextlib import closing
 from zipfile import ZipFile, ZIP_DEFLATED
-from subprocess import check_call, CalledProcessError
+from subprocess import check_output, CalledProcessError
 
 # template system
 from jinja2 import Environment, FileSystemLoader, PackageLoader
@@ -141,7 +141,7 @@ def convert_model(input_file, options=None):
         filter_file.close()
         
         try:
-            check_call([
+            check_output([
                 MESHLAB_BINARY, 
                 "-i", 
                 input_file, 
