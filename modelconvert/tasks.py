@@ -157,7 +157,8 @@ def convert_model(input_file, options=None):
             "ff"
             ],
             env=env, 
-            stdout=subprocess.PIPE)
+            stdout=subprocess.PIPE,
+            shell=True)
         
         output = proc.communicate()[0]
         returncode = proc.returncode
