@@ -157,10 +157,11 @@ def convert_model(input_file, options=None):
             "ff"
             ],
             env=env, 
-            stdout=subprocess.PIPE)
+            stdout=subprocess.PIPE, 
+            stderr=subprocess.STDOUT)
         
-        (out,err) = proc.communicate()
-        returncode = proc.returncode
+        out = proc.communicate()[0]
+        err = proc.wait()
 
         logger.info(out)
 
