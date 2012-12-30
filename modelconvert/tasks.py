@@ -152,12 +152,12 @@ def convert_model(input_file, options=None):
             "ff"
         ], env=env)
 
-      if status == 0:
-          logger.info("Meshlab optimization {0}".format(status))
-      else:
-          logger.info("Meshlab problem exit code {0}".format(status))
+        if status == 0:
+            logger.info("Meshlab optimization {0}".format(status))
+        else:
+            logger.info("Meshlab problem exit code {0}".format(status))
     else:
-          logger.info("No Meshlab optimization")
+        logger.info("No Meshlab optimization")
 
 
     if aopt == 'restuctedBinGeo':
