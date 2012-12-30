@@ -18,6 +18,8 @@ import settings
 logger = get_task_logger(__name__)
 
 AOPT_BINARY = getattr(settings, 'AOPT_BINARY', 'aopt')
+MESHLAB_BINARY = getattr(settings, 'MESHLAB_BINARY', 'meshlabsever')
+MESHLAB_DISPLAY = getattr(settings, 'MESHLAB_DISPLAY', ':0')
 DOWNLOAD_PATH = getattr(settings, 'DOWNLOAD_PATH', '/tmp/downloads')
 UPLOAD_PATH = getattr(settings, 'UPLOAD_PATH', '/tmp/uploads')
 DEBUG = getattr(settings, 'DEBUG', False)
@@ -117,23 +119,29 @@ def convert_model(input_file, options=None):
     logger.info("Working directory: {0}".format(working_directory) )
 
     #inputfile = outputfile warning
+    
+    
 
     if meshlab:
-      mehlab_filter = ""
-      mehlab_filter += "<!DOCTYPE FilterScript><FilterScript>"
+        
+        env = os.environ.copy()
+        env['DISPLAY'] = MESHLAB_DISPLAY
+        
+        mehlab_filter = ""
+        mehlab_filter += "<!DOCTYPE FilterScript><FilterScript>"
 
-      for item in meshlab:
-          mehlab_filter += '<filter name="' + item + '"/>' 
+        for item in meshlab:
+            mehlab_filter += '<filter name="' + item + '"/>' 
 
-      mehlab_filter += "<FilterScript>"
+        mehlab_filter += "<FilterScript>"
 
-      mehlab_filter_filename = os.path.join(UPLOAD_PATH, hash + '.mlx')
-      filter_file = open(mehlab_filter_filename, "w") 
-      filter_file.write(mehlab_filter) 
-      filter_file.close()
+        mehlab_filter_filename = os.path.join(UPLOAD_PATH, hash + '.mlx')
+        filter_file = open(mehlab_filter_filename, "w") 
+        filter_file.write(mehlab_filter) 
+        filter_file.close()
 
-      status = call([
-            "meshlabserver", 
+        status = call([
+            MESHLAB_BINARY, 
             "-i", 
             input_file, 
             "-o",
@@ -142,7 +150,7 @@ def convert_model(input_file, options=None):
             mehlab_filter_filename,
             "-om",
             "ff"
-          ])
+        ], env=env)
 
       if status == 0:
           logger.info("Meshlab optimization {0}".format(status))
@@ -225,7 +233,6 @@ def convert_model(input_file, options=None):
         ])
 
 
-    
     if status < 0:
         # FIXME error handling and cleanup (breaking early is good but
         # cleanup calls for try/catch/finally)

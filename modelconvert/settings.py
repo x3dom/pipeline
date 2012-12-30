@@ -20,6 +20,8 @@ TEMPLATE_PATH = path('templates/bundles')
 UPLOAD_PATH = '/var/www/modelconvert/tmp/uploads'
 DOWNLOAD_PATH = '/var/www/modelconvert/tmp/downloads'
 AOPT_BINARY = '/usr/local/bin/aopt'
+MESHLAB_BINARY = '/opt/meshlab/meshlab/src/distrib/meshlabserver'
+MESHALB_DISPLAY = ':99'
 
 ALLOWED_EXTENSIONS = set(['x3d','ply', 'x3db', 'wrl', 'bin', 'fhb', 'off',
                           'osb', 'osg', 'raw', 'slp', 'stl', 'jt', '3ds', 
@@ -51,6 +53,8 @@ if DEVELOPMENT_MODE:
     DOWNLOAD_PATH = path('../tmp/downloads')
     TEMPLATE_PATH = path('templates/bundles')
     AOPT_BINARY = '/Users/andi/Storage/tmp/instant_player/Contents/MacOS/aopt'
+    MESHLAB_BINARY = '/Users/andi/Storage/tmp/meshlab/Contents/MacOS/meshlabserver'
+    MESHALB_DISPLAY = ':0'
 
 del os
 del platform
