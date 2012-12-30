@@ -139,23 +139,31 @@ def convert_model(input_file, options=None):
         filter_file = open(mehlab_filter_filename, "w") 
         filter_file.write(mehlab_filter) 
         filter_file.close()
-
-        status = call([
-            MESHLAB_BINARY, 
-            "-i", 
-            input_file, 
-            "-o",
-            input_file, 
-            "-s",
-            mehlab_filter_filename,
-            "-om",
-            "ff"
-        ], env=env)
-
-        if status == 0:
-            logger.info("Meshlab optimization {0}".format(status))
-        else:
+        
+        try:
+            subprocess.check_call([
+                MESHLAB_BINARY, 
+                "-i", 
+                input_file, 
+                "-o",
+                input_file, 
+                "-s",
+                mehlab_filter_filename,
+                "-om",
+                "ff"
+                ], env=env)
+                
+        except subprocess.CalledProcessError as e:
             logger.info("Meshlab problem exit code {0}".format(status))
+            logger.error("Meshlab: " + e.output)
+            
+
+        # if status == 0:
+        #     logger.info("Meshlab optimization {0}".format(status))
+        # else:
+        #     logger.info("Meshlab problem exit code {0}".format(status))
+
+
     else:
         logger.info("No Meshlab optimization")
 
