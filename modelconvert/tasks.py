@@ -145,6 +145,9 @@ def convert_model(input_file, options=None):
         filter_file.write(mehlab_filter) 
         filter_file.close()
         
+        # Subprocess in combination with PIPE/STDOUT could deadlock
+        # be careful with this. Prefer the Python 2.7 version below or
+        # maybe switch to using envoy or similar.
         proc = subprocess.Popen([
             MESHLAB_BINARY, 
             "-i", 
@@ -170,7 +173,6 @@ def convert_model(input_file, options=None):
         else:
             logger.error("Meshlab problem exit code {0}".format(returncode))
 
-        
         # Python 2.7
         # try:
         #     check_output([
@@ -194,7 +196,6 @@ def convert_model(input_file, options=None):
         #     logger.info("Meshlab optimization {0}".format(status))
         # else:
         #     logger.info("Meshlab problem exit code {0}".format(status))
-
 
     else:
         logger.info("No Meshlab optimization")
