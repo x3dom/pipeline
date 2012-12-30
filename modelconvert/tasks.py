@@ -154,7 +154,7 @@ def convert_model(input_file, options=None):
                 ], env=env)
                 
         except CalledProcessError as e:
-            logger.info("Meshlab problem exit code {0}".format(status))
+            logger.info("Meshlab problem exit code {0}".format(returncode))
             logger.error("Meshlab: " + e.output)
             
 
