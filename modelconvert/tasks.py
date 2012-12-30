@@ -161,7 +161,7 @@ def convert_model(input_file, options=None):
             stderr=subprocess.STDOUT)
         
         out = proc.communicate()[0]
-        err = proc.wait()
+        returncode = proc.wait()
 
         logger.info(out)
 
@@ -169,7 +169,6 @@ def convert_model(input_file, options=None):
             logger.info("Meshlab optimization {0}".format(returncode))
         else:
             logger.error("Meshlab problem exit code {0}".format(returncode))
-            logger.error(err)
 
         
         # Python 2.7
