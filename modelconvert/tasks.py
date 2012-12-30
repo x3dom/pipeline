@@ -133,7 +133,7 @@ def convert_model(input_file, options=None):
         for item in meshlab:
             mehlab_filter += '<filter name="' + item + '"/>' 
 
-        mehlab_filter += "<FilterScript>"
+        mehlab_filter += "</FilterScript>"
 
         mehlab_filter_filename = os.path.join(UPLOAD_PATH, hash + '.mlx')
         filter_file = open(mehlab_filter_filename, "w") 
