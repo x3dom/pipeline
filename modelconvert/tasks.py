@@ -141,7 +141,7 @@ def convert_model(input_file, options=None):
         filter_file.close()
         
         try:
-            subprocess.check_call([
+            check_call([
                 MESHLAB_BINARY, 
                 "-i", 
                 input_file, 
