@@ -1,7 +1,12 @@
 import os
 import shutil
+import subprocess
+
 from contextlib import closing
 from zipfile import ZipFile, ZIP_DEFLATED
+
+from subprocess import call
+#Python 2.7
 from subprocess import check_output, CalledProcessError
 
 # template system
@@ -140,22 +145,47 @@ def convert_model(input_file, options=None):
         filter_file.write(mehlab_filter) 
         filter_file.close()
         
-        try:
-            check_output([
-                MESHLAB_BINARY, 
-                "-i", 
-                input_file, 
-                "-o",
-                input_file, 
-                "-s",
-                mehlab_filter_filename,
-                "-om",
-                "ff"
-                ], env=env)
-                
-        except CalledProcessError as e:
-            logger.info("Meshlab problem exit code {0}".format(e.returncode))
-            logger.error("Meshlab: " + e.output)
+        proc = subprocess.Popen([
+            MESHLAB_BINARY, 
+            "-i", 
+            input_file, 
+            "-o",
+            input_file, 
+            "-s",
+            mehlab_filter_filename,
+            "-om",
+            "ff"
+            ],
+            env=env, 
+            stdout=subprocess.PIPE)
+        
+        output = proc.communicate()[0]
+        returncode = proc.returncode
+
+        if returncode not 0:
+            logger.info("Meshlab optimization {0}".format(returncode))
+            logger.error(output)
+        else:
+            logger.info("Meshlab problem exit code {0}".format(status))
+
+        
+        # Python 2.7
+        # try:
+        #     check_output([
+        #         MESHLAB_BINARY, 
+        #         "-i", 
+        #         input_file, 
+        #         "-o",
+        #         input_file, 
+        #         "-s",
+        #         mehlab_filter_filename,
+        #         "-om",
+        #         "ff"
+        #         ], env=env)
+        #         
+        # except CalledProcessError as e:
+        #     logger.info("Meshlab problem exit code {0}".format(e.returncode))
+        #     logger.error("Meshlab: " + e.output)
             
 
         # if status == 0:
