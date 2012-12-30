@@ -2,7 +2,7 @@ import os
 import shutil
 from contextlib import closing
 from zipfile import ZipFile, ZIP_DEFLATED
-from subprocess import call, CalledProcessError
+from subprocess import check_call, CalledProcessError
 
 # template system
 from jinja2 import Environment, FileSystemLoader, PackageLoader
