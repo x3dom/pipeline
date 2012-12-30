@@ -157,17 +157,18 @@ def convert_model(input_file, options=None):
             "ff"
             ],
             env=env, 
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE)
+            stdout=subprocess.PIPE)
         
-        output = proc.communicate()[0]
+        (out,err) = proc.communicate()
         returncode = proc.returncode
+
+        logger.info(out)
 
         if returncode == 0:
             logger.info("Meshlab optimization {0}".format(returncode))
         else:
             logger.error("Meshlab problem exit code {0}".format(returncode))
-            logger.error(output)
+            logger.error(err)
 
         
         # Python 2.7
