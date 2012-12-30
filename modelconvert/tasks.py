@@ -7,7 +7,7 @@ from zipfile import ZipFile, ZIP_DEFLATED
 
 from subprocess import call
 #Python 2.7
-from subprocess import check_output, CalledProcessError
+#from subprocess import check_output, CalledProcessError
 
 # template system
 from jinja2 import Environment, FileSystemLoader, PackageLoader
