@@ -24,24 +24,25 @@
 
     <fieldset>
         <h4>Choose file to upload</h4>
-        <p><small>Supported formats are X3D, PLY, STL, OFF, 
-            OBJ, 3DS, COLLADA, PTX, V3D, PTS, APTS, XYZ, GTS, TRI, ASC, X3D, X3DV, 
-            VRML, ALN</small></p>
+        <p><small>Supported formats are 
+            X3D, X3DV, X3DB, VRML, PLY, OBJ, OFF, 
+            STL, 3DS, COLLADA, X, OSG, OSB, FHS
+            </small></p>
             <input type="file" name="file">
     </fieldset>   
 
     <fieldset>
-        <h4>If you want to optimitze your model, choose the optimation type</h4>
+        <h4>If you want to optimize your model before conversion, choose the optimization type</h4>
         <input type="checkbox" name="meshlab" value="Remove Duplicate Faces"> Remove Duplicate Faces<br>
-        <input type="checkbox" name="meshlab" value="Remove Duplicated Vertex"> Remove Duplicated Vertex<br>
+        <input type="checkbox" name="meshlab" value="Remove Duplicated Vertex"> Remove Duplicate Vertices<br>
         <input type="checkbox" name="meshlab" value="Remove Zero Area Faces"> Remove Zero Area Faces
     </fieldset> 
 
     <fieldset>
         <h4>Choose the conversion option</h4>
-        <input type="radio" name="aopt" value="standard" checked> standard<br>
-        <input type="radio" name="aopt" value="binGeo"> binary geometry<br>
-        <input type="radio" name="aopt" value="restuctedBinGeo"> restucted binary geometry
+        <input type="radio" name="aopt" value="standard" checked> Standard IndexedFaceSet<br>
+        <input type="radio" name="aopt" value="binGeo"> BinaryGeometry<br>
+        <input type="radio" name="aopt" value="restuctedBinGeo"> Restructured BinaryGeometry
     </fieldset>
     
     <fieldset>
@@ -53,8 +54,8 @@
     </fieldset>
 
     <fieldset id="meta-upload">
-        <h4>If your choose the "Fullsize Viewer" or "Viewer with Metadata Browser" template upload a metadata file</h4>
-        <p><small>Supported format txt for "Basic Viewer" and xml for "Viewer with Metadata Browser"</small></p>
+        <h4>If you choose the "Fullsize Viewer" or "Viewer with Metadata Browser" template, upload a metadata file</h4>
+        <p><small>Supported format 'txt' for "Basic Viewer" and 'xml' for "Viewer with Metadata Browser"</small></p>
         <input type="file" name="metadata">
     </fieldset>  
     
