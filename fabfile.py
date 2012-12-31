@@ -19,3 +19,4 @@ def deploy():
 #        run('python -c "import compileall; compileall.compile_dir(\'.\')"')
         run('touch wsgi.py')
         sudo('/etc/init.d/apache2 restart', pty=False)
+        sudo('/etc/init.d/celeryd restart', pty=False)
