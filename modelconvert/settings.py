@@ -2,10 +2,10 @@ import os
 import platform
 
 PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
-#PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 path = lambda *a: os.path.join(PROJECT_ROOT, *a)
 
 # Far too clever trick to know if we're running on the deployment server.
+# you need to change this if you are deploying to another host
 DEVELOPMENT_MODE = (platform.node() != "x3dom")
 DEBUG = DEVELOPMENT_MODE
 

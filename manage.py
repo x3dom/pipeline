@@ -12,6 +12,9 @@ from modelconvert.application import app
 manager = Manager(app)
 app.config.from_object('modelconvert.settings')
 
+#
+# FIXME: move this to a celery task
+#
 @manager.command
 def cleanup():
     download_path = os.path.normpath(app.config["DOWNLOAD_PATH"])
