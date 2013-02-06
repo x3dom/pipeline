@@ -52,7 +52,7 @@ def cleanup():
     
 
 def bootstrap():
-    print("Setup local development directories")
+    print("TODO: Setup local temp directories. Downlaod IR and meshlab, etc.")
 
 if __name__ == "__main__":
     manager.run()

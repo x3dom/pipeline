@@ -32,7 +32,7 @@ your own if quite simple. Check out www.python.org.
 
 We have not tested this application on windows. The development enviornment
 may be working there too, but it not supported. If you have to use
-Windows, VirtualBox is your friend (hint: vagrantup.com)
+Windows, VirtualBox is your friend (helper: vagrantup.com)
 
 
 Installing Python requirements
@@ -135,6 +135,15 @@ In order to use meshlab, you also need a running X11 instance or xvfb on
 DISPLAY :99 if you are running a headless setup (the display number can be
 changed in the settings file). Plese refer to your Linux distribution of
 how to setup xvfb (http://en.wikipedia.org/wiki/Xvfb)
+
+Flower
+######
+There's an nice tool called Flower to graphically manage the celery
+task queue. We highly recommend it for debugging purposes on the production
+system. 
+
+  https://github.com/mher/flower
+
 
 
 Code structure

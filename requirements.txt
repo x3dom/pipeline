@@ -1,8 +1,14 @@
 Flask==0.9
-Flask-WTF==0.8
 Flask-Script==0.5.1
-requests >= 1.0, < 2.0
-redis >= 2.6.0, < 2.7
-celery >= 3.0, < 3.1
-Fabric >= 1.5 < 2.0
+redis=2.7.2
+celery=3.0.13
+
+# only used on dev box
+Fabric
+
+# optional on production system to manage celery queues
 Flower
+
+# future
+#Flask-WTF==0.8
+#requests >= 1.0, < 2.0
