@@ -71,7 +71,8 @@ recent nightly build from here:
 
   http://www.instantreality.org/downloads/dailybuild/
   
-Our platform is currently tested on Ubuntu Lucid32, and Mac OS X 10.6.8.
+The modelconvert service is currently tested on Ubuntu Lucid32, and 
+Mac OS X 10.6.8.
 
 
 Installing Meshlabserver
