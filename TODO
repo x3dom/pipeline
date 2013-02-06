@@ -1,6 +1,6 @@
 TODOs
 =====
-
+- cleanup & unit tests
 - the converted model should be wrapped in a zip package, optionally
 - serve from media location so apache does the heavy lifting
   or utilize sendfile
