@@ -145,6 +145,14 @@ system.
   https://github.com/mher/flower
 
 
+Web Server Deployment
+---------------------
+Depending on your system, you can deploy using Apache mod_wsgi for 
+convenience. The more sensible option however is nginx/uwsgi. More detailed
+info on how to deploy can be found here:
+
+  http://flask.pocoo.org/docs/deploying/
+
 
 Code structure
 --------------
