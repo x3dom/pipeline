@@ -3,29 +3,28 @@ import os
 import random
 import shutil
 import uuid
-from contextlib import closing
-from zipfile import ZipFile, ZIP_DEFLATED
-from subprocess import call
+
+from werkzeug import secure_filename
+
+from celery import Celery
+from celery.task.control import inspect
 
 from flask import Flask, g
 from flask import render_template, request, flash, session, redirect, url_for
 from flask import jsonify
 from flask import send_from_directory
-from werkzeug import secure_filename
-
-# used for user template
-from jinja2 import Template
-
-from celery import Celery
-from celery.task.control import inspect
 
 from utils.ratelimit import ratelimit
 
 from tasks import convert_model
 
+import settings
+
 # -- App setup --------------------------------------------------------------
 app = Flask(__name__)
-app.config.from_object('modelconvert.settings')
+app.config.from_object(settings)
+app.config.from_envvar('MODELCONVERT_SETTINGS', silent=True)
+
 
 celery = Celery("tasks", 
     broker=getattr(app.config, 'CELERY_BROKER_URL', 'redis://localhost:6379/0'), 
@@ -170,7 +169,7 @@ def download(hash, filename):
 
     """
 #    filename = "%s.zip" % hash
-    # secuirty
+    # security
     filename = os.path.basename(filename)
     
     if os.path.exists(os.path.join(app.config['DOWNLOAD_PATH'], hash, filename)):
@@ -206,37 +205,35 @@ def download(hash, filename):
 # This is rather explict coded for better comprehnsion
 # FIXME: make a JS only dashboard using the REST api below
 
-
-@app.route("/admin/")
-def admin():
-    return render_template('admin/dashboard.html')
-
-
-@app.route("/admin/tasks/registered")
-def show_registered_tasks():
-    i = celery.control.inspect()
-
-    if request.is_xhr:
-        return jsonify(tasks=i.registered()) 
-    else:
-        return render_template('admin/tasks/registered.html', nodelist=i.registered())
+# @app.route("/admin/")
+# def admin():
+#     return render_template('admin/dashboard.html')
 
 
-@app.route("/admin/tasks/active/")
-def show_active_tasks():
-    i = celery.control.inspect()
-    return jsonify(tasks=i.active()) 
+# @app.route("/admin/tasks/registered")
+# def show_registered_tasks():
+#     i = celery.control.inspect()
 
-@app.route("/admin/tasks/scheduled/")
-def show_scheduled_tasks():
-    i = celery.control.inspect()
-    return jsonify(tasks=i.scheduled()) 
+#     if request.is_xhr:
+#         return jsonify(tasks=i.registered()) 
+#     else:
+#         return render_template('admin/tasks/registered.html', nodelist=i.registered())
 
-@app.route("/admin/tasks/waiting/")
-def show_waiting_tasks():
-    i = celery.control.inspect()
-    return jsonify(tasks=i.reserved()) 
 
+# @app.route("/admin/tasks/active/")
+# def show_active_tasks():
+#     i = celery.control.inspect()
+#     return jsonify(tasks=i.active()) 
+
+# @app.route("/admin/tasks/scheduled/")
+# def show_scheduled_tasks():
+#     i = celery.control.inspect()
+#     return jsonify(tasks=i.scheduled()) 
+
+# @app.route("/admin/tasks/waiting/")
+# def show_waiting_tasks():
+#     i = celery.control.inspect()
+#     return jsonify(tasks=i.reserved()) 
 
 
 

@@ -15,8 +15,7 @@ System requirements (make sure you install them first):
  * Redis
  * InstantReality
  * Meshlabserver
- * xvfb X11 framebuffer (headless) or
- * Running X11 instance
+ * xvfb framebuffer (headless) or a running X11 instance
 
 
 Installing Python
@@ -40,9 +39,9 @@ Installing Python requirements
 We recommende to use virtualenv+pip for your development and
 deployment enviroments. 
 
-  http://www.virtualenv.org/en/latest/
-  http://www.doughellmann.com/projects/virtualenvwrapper/
-  http://pypi.python.org/pypi/pip
+  * http://www.virtualenv.org/en/latest/
+  * http://www.doughellmann.com/projects/virtualenvwrapper/
+  * http://pypi.python.org/pypi/pip
 
 Although it is not a strict requirement, at least PIP should be installed. Or
 otherwise you need to install all packages listed in requirements.txt 
@@ -52,16 +51,16 @@ On your local development box, you should also install fabric (pip install fabri
 
 First, install requirements:
 
-    pip install -r requirements.txt
+    $ pip install -r requirements.txt
   
 Then you should be able to run the development server by issuing
 the following command:
 
-    python manage.py runserver
+    $ python manage.py runserver
 
 Point your browser to http://localhost:5000. The Application will not work
-properly at this point, but the home page should be rendered. So press 
-Ctrl-C to exit.
+properly at this point, but the home page should be rendered. Press 
+Ctrl-C to exit for now.
 
 
 Installing Instant Reality
@@ -90,14 +89,36 @@ Compiling redis is simple. Please follow instructions here:
   http://redis.io/
 
 
-
 Configuration
 -------------
-Please modify the settings.py file to adapt to your systems. In order to
-achieve this smoothly, we recommend you fork the project on GitHub and make
-the changes on your fork. If you are a core developer, the changes should
-be made on a seperate branch (or otherwise prevented from being pushed back
-to github)
+The modelconvert application can (and probably must) be configured in 
+in order to run properly. Especially paths to aopt and meshlab need
+to be set in the settings.py file. The settings file however should not
+be changed in the canonical repository. There are several ways to 
+accomplish this without changing the settings.py file directly.
+
+  * Forking the project on GitHub and makeing changes on your fork. 
+  * If you are a core developer, the changes can be made on a seperate 
+    branch (or otherwise prevented from being pushed back to github)
+  * Setting a environmet variable with a config file (recommended)
+
+You can set a environment variable on your system which points
+to a config file that overrides the values in settings.py. Just
+set the MODELCONVERT_SETTINGS variable to point to your config
+file like so:
+
+  $ export MODELCONVERT_SETTINGS=/path/to/config.py
+
+In order to set this whenever you run the manage script, just create
+a small shell script:
+
+  $ echo '#!/bin/sh\nexport=MODELCONVERT_SETTINGS=/path/to/config.py\nforeman start' >> run.sh
+  $ chmod a+x run.sh
+
+In production environments, you should also set this variable, in
+the WSGI file for exmaple, and point it to a configuration valid
+for the deployment. You should also make sure that debugging is 
+turned off in your production configuration.
 
 
 
@@ -114,6 +135,8 @@ services that support the Procfile protocol, like Heroku.
 
 If you don't want to use foreman in development, you need to start the
 services manually on seperate terminals or in screen/tmux sessions.
+
+
 
 
 How to run the required deamons on your production system
