@@ -18,11 +18,9 @@ from utils.ratelimit import ratelimit
 
 from tasks import convert_model
 
-import settings
-
 # -- App setup --------------------------------------------------------------
 app = Flask(__name__)
-app.config.from_object(settings)
+app.config.from_object('modelconvert.settings')
 app.config.from_envvar('MODELCONVERT_SETTINGS', silent=True)
 
 
