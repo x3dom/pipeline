@@ -11,6 +11,7 @@ from modelconvert.application import app
 
 manager = Manager(app)
 app.config.from_object('modelconvert.settings')
+app.config.from_envvar('MODELCONVERT_SETTINGS', silent=True)
 
 #
 # FIXME: move this to a celery task
