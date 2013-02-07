@@ -184,7 +184,9 @@ This app is using the Fask microframework (flask.pocoo.org) and is using
 the module file layout. You will find almost all important code
 in modelconvert/application.py and tasks.py.
 
-At first, you also need to create temporary directories as specified in 
-settings.py.
 
+Creating directories
+---------------------
+Befire you begin, you also need to create temporary directories as specified 
+in settings.py or your own config file.
 
