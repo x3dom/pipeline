@@ -1,3 +1,15 @@
+********************************
+3D model optimization for humans
+********************************
+
+![Alt text](https://github.com/x3dom/pipeline/raw/master/design/modelconvert.png)
+
+Modelconvert is a experimental 3D model optimization service.
+It allows conversion and optimization of 3D models for web 
+presentation, with a touch of a button.
+
+
+
 Getting started
 ===============
 
@@ -190,3 +202,9 @@ Creating directories
 Befire you begin, you also need to create temporary directories as specified 
 in settings.py or your own config file.
 
+
+Acknowledgements
+----------------
+The described work was carried out in the project v-must, which has received 
+funding from the European Community's Seventh Framework Programme (FP7 2007/2013) 
+under grant agreement 270404.
