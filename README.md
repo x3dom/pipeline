@@ -15,7 +15,7 @@ System requirements (make sure you install them first):
  * Redis
  * InstantReality
  * Meshlabserver
- * xvfb framebuffer (headless) or a running X11 instance
+ * Unix/Linux: xvfb framebuffer or a running X11 instance
 
 
 Installing Python
