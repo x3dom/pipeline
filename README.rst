@@ -237,7 +237,7 @@ this is usally done with apt:
 
 In order to run the `Celery`_ deamon on your production site, please use the
 generic init/upstart script provided with celery. For more information see
-the `deamonizing`_  chapter of the Celery documentation or refer to your 
+the `daemonizing`_  chapter of the Celery documentation or refer to your 
 devops people ;)
 
 In order to use meshlab, you also need a running X11 instance or `xvfb`_ as 
@@ -294,7 +294,7 @@ under grant agreement 270404.
 .. _GitHub: http://github.com/x3dom/pipeline
 .. _Procfile: https://devcenter.heroku.com/articles/procfile
 .. _Foreman: http://ddollar.github.com/foreman/
-.. _deamonizing chapter: http://docs.celeryproject.org/en/latest/tutorials/daemonizing.html
+.. _daemonizing: http://docs.celeryproject.org/en/latest/tutorials/daemonizing.html
 .. _xvfb: http://en.wikipedia.org/wiki/Xvfb
 .. _Flower: https://github.com/mher/flower
 .. _mod_wsgi: http://code.google.com/p/modwsgi/
