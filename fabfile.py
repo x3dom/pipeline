@@ -17,7 +17,11 @@ env.APP_ROOT = '/var/www/modelconvert/modelconvert'
 
 # expects the app to be cloned once there manually
 # fix this in the future and deliver a package vs. git checkout
+@task
 def deploy():
+    """
+    Deploys the code on the production server (x3dom.org)
+    """
 #    local('git push')
     with cd(env.APP_ROOT):
         run('git pull')
@@ -25,3 +29,20 @@ def deploy():
         run('touch wsgi.py')
         sudo('/etc/init.d/apache2 restart', pty=False)
         sudo('/etc/init.d/celeryd restart', pty=False)
+
+
+@task
+def mktempdirs():
+    """
+    Create default temporary directories.
+    """
+    print "Nothing here yet, move along"
+
+
+@task
+def mkvm():
+    """
+    Try to provision a VM (req. VirtualBox, Vagrant)
+    """
+    print "Nothing here yet, move along"
+

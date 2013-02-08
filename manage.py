@@ -49,11 +49,7 @@ def cleanup():
             if not os.listdir(dirpath):
                 print("Removing directory %s" % dirpath)
                 os.rmdir(dirpath)    
-    
-    
 
-def bootstrap():
-    print("TODO: Setup local temp directories. Downlaod IR and meshlab, etc.")
 
 if __name__ == "__main__":
     manager.run()
