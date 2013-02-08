@@ -168,7 +168,7 @@ this without changing the ``settings.py`` file directly.
   * Forking the project on `GitHub`_ and makeing changes on your fork. 
   * If you are a core developer, the changes can be made on a seperate 
     branch (or otherwise prevented from being pushed back to github)
-  * Setting a environmet variable with a config file (recommended)
+  * Setting a environmet variable with a config file
 
 You can set a environment variable on your system which points
 to a config file that overrides the values in settings.py. Just
@@ -177,20 +177,23 @@ file like so:
 
 .. code-block:: bash
 
-    $ export MODELCONVERT_SETTINGS=/path/to/config.py
+    $ export MODELCONVERT_SETTINGS=/path/to/yoursettings.py
 
 In order to set this whenever you run the manage script, just create
 a small shell script:
 
 .. code-block:: bash
 
-    $ echo '#!/bin/sh\nexport=MODELCONVERT_SETTINGS=/path/to/config.py\nforeman start' >> run.sh
+    $ echo '#!/bin/sh\nexport=MODELCONVERT_SETTINGS=/path/to/settings.py\nforeman start' >> run.sh
     $ chmod a+x run.sh
     $ ./run.sh
 
 In production environments, you should also set this variable, in the WSGI file
 for exmaple, and point it to a configuration valid for the deployment. Make 
 sure that debugging is turned off in your production configuration.
+
+For the moment, please use the forking or branching and modify settings.py
+directly. The config from envvar is not yet fully realized.
 
 
 ---------------------
