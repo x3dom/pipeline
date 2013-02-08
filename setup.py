@@ -26,5 +26,7 @@ setup(
     packages=['modelconvert'],
     include_package_data=True,
     zip_safe=False,
-    install_requires=deps
+    install_requires=deps,
+#    test_suite='tests.tests',
+#    tests_require=['unittest2'],
 )

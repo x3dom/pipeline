@@ -10,6 +10,7 @@ from fabric.api import *
 # the user to use for the remote commands
 env.user = 'local'
 
+
 # the servers where the commands are executed
 env.hosts = ['x3dom.org']
 
