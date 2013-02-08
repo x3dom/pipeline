@@ -16,6 +16,9 @@ Modelconvert is written in Python, and under the hood it uses the excellent
 `Flask`_ and `Celery`_ libraries as well as `Meshlab`_ and `InstantReality`_
 
 
+.. image:: https://secure.travis-ci.org/x3dom/pipeline.png
+
+
 **Table of Contents**
 
 .. contents::
