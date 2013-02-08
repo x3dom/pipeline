@@ -1,13 +1,9 @@
 TODOs
 =====
 - cleanup & unit tests
-- the converted model should be wrapped in a zip package, optionally
 - serve from media location so apache does the heavy lifting
   or utilize sendfile
 - use a cerlery task for offline processing (inluding error handling)
-- Management task: Cleanup files after 10 minutes or so. Still 
-- fix rate limit code to work on server
-- store meta info in redis
 - convert deployment to virtualenv on server
 
 Sugar
@@ -16,9 +12,3 @@ Sugar
 - upload progress bar
 - API
 - use WTforms to simplify form/error handling
-
-As this project is getting larger and more invovled, it is becoming
-increasingly difficult to maintain a sane structure with a micro-framekwork
-like Flask. It makes entry for new developers more difficult as well. Also issues like caching and celery admin, forms, etc. have been solved already by
-more stable librarlies like Django. In the future a conversion to such 
-framework might be a sensible decision.
