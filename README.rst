@@ -6,10 +6,8 @@ Modelconvert is a experimental 3D model optimization service.
 It allows optimization and conversion of 3D models for Web 
 presentation.
 
-.. image:: https://github.com/x3dom/pipeline/raw/master/design/modelconvert.png
+.. image:: https://github.com/x3dom/pipeline/raw/master/design/modelconvert.jpg
     :alt: Modelconvert Screenshots
-    :width: 835
-    :height: 835
 
 
 Modelconvert is written in Python, and under the hood it uses the excellent
