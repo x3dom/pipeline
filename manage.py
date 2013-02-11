@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 from __future__ import absolute_import
+
 # manage.py
 import os
 import shutil
@@ -13,8 +14,20 @@ manager = Manager(app)
 app.config.from_object('modelconvert.settings')
 app.config.from_envvar('MODELCONVERT_SETTINGS', silent=True)
 
+
+@manager.command
+def celery():
+    """
+    Make sure app context is present, otherwise celery will not get
+    config from app.
+    """
+    from modelconvert.tasks import celery
+    import sys
+    with app.app_context():
+        celery.worker_main(['worker', '-E'])
+
 #
-# FIXME: move this to a celery task
+# FIXME: move this to a celerybeats task
 #
 @manager.command
 def cleanup():
