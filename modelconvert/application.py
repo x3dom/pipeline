@@ -14,9 +14,9 @@ from flask import render_template, request, flash, session, redirect, url_for
 from flask import jsonify
 from flask import send_from_directory
 
-from utils.ratelimit import ratelimit
+from modelconvert.utils.ratelimit import ratelimit
 
-import tasks
+from modelconvert import tasks
 
 # -- App setup --------------------------------------------------------------
 app = Flask(__name__)

@@ -17,7 +17,7 @@ from celery import current_task
 from celery.utils.log import get_task_logger
 
 # app config
-import settings
+from modelconvert import settings
 
 logger = get_task_logger(__name__)
 
