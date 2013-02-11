@@ -24,7 +24,7 @@ def celery():
     from modelconvert.tasks import celery
     import sys
     with app.app_context():
-        celery.worker_main(['worker', '-E'])
+        celery.worker_main(['worker', '-E', '-l', 'INFO'])
 
 #
 # FIXME: move this to a celerybeats task

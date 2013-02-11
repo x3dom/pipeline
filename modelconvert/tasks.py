@@ -42,6 +42,11 @@ class ConversionError(Exception):
 
 
 @celery.task
+def ping():
+    from flask import current_app
+    logger.info("+++++++++ " + current_app.config['AOPT_BINARY'])
+
+@celery.task
 def convert_model(input_file, options=None):
     """
     Task to run the model convestion. This task is written in a manner

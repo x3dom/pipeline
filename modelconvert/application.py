@@ -16,6 +16,7 @@ from flask import send_from_directory
 
 from utils.ratelimit import ratelimit
 
+import tasks
 from tasks import convert_model
 
 # -- App setup --------------------------------------------------------------
@@ -177,6 +178,10 @@ def download(hash, filename):
         return not_found(404)
 
 
+@app.route("/ping")
+def ping():
+    tasks.ping.apply_async()
+    return 'pong'
 
 # @app.route("/test")
 # def hello_world():
@@ -194,8 +199,6 @@ def download(hash, filename):
 #     goto = context['id']
 #     #return jsonify(goto=goto) 
 #     return redirect(url_for('status', task_id=res.task_id))
-
-
 
 
 # -- Celery API Rest interface -----------------------------------------------
