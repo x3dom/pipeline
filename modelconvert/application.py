@@ -17,7 +17,6 @@ from flask import send_from_directory
 from utils.ratelimit import ratelimit
 
 import tasks
-from tasks import convert_model
 
 # -- App setup --------------------------------------------------------------
 app = Flask(__name__)
@@ -111,7 +110,7 @@ def upload():
                 template=template
             )
 
-            retval = convert_model.apply_async((filename, options))
+            retval = tasks.convert_model.apply_async((filename, options))
             
             return redirect(url_for('status', task_id=retval.task_id))
         else:
@@ -133,7 +132,7 @@ def status(task_id):
     This is an optimization and could be recitified like so:
     http://stackoverflow.com/questions/9824172/find-out-whether-celery-task-exists
     """
-    result = convert_model.AsyncResult(task_id)
+    result = tasks.convert_model.AsyncResult(task_id)
     
     if request.is_xhr:
         return jsonify(state=result.state)
@@ -194,7 +193,7 @@ def ping():
 #     options = dict(hash=hash)
 #     testfile = app.config["PROJECT_ROOT"] + '/tests/data/flipper.x3d'
 # 
-#     res = convert_model.apply_async((testfile, options))
+#     res = tasks.convert_model.apply_async((testfile, options))
 #     context = {"id": res.task_id }
 #     goto = context['id']
 #     #return jsonify(goto=goto) 
