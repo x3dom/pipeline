@@ -2,12 +2,11 @@ import os
 import shutil
 import subprocess
 
-from contextlib import closing
-from zipfile import ZipFile, ZIP_DEFLATED
-
-from subprocess import call
 #Python 2.7
 #from subprocess import check_output, CalledProcessError
+
+from contextlib import closing
+from zipfile import ZipFile, ZIP_DEFLATED
 
 # template system
 from jinja2 import Environment, FileSystemLoader, PackageLoader
@@ -205,7 +204,7 @@ def convert_model(input_file, options=None):
         output_directory_binGeo = os.path.join(output_directory, "binGeo")
         os.mkdir(output_directory_binGeo)
         
-        status = call([
+        status = subprocess.call([
           AOPT_BINARY, 
           "-i", 
           input_file, 
@@ -223,7 +222,7 @@ def convert_model(input_file, options=None):
             raise ConversionError('AOPT RETURNS: {0}'.format(status))
 
         else:
-            status = call([
+            status = subprocess.call([
               AOPT_BINARY, 
               "-i", 
               hash + '.x3db', 
@@ -240,7 +239,7 @@ def convert_model(input_file, options=None):
             logger.error("Error converting file!!!!!!!!!!")
             raise ConversionError('AOPT RETURNS: {0}'.format(status))
         else:
-            status = call([
+            status = subprocess.call([
               AOPT_BINARY, 
               "-i", 
               hash + '.x3db', 
@@ -253,7 +252,7 @@ def convert_model(input_file, options=None):
     elif aopt == 'binGeo':
         output_directory_binGeo = os.path.join(output_directory, "binGeo")
         os.mkdir(output_directory_binGeo)
-        status = call([
+        status = subprocess.call([
           AOPT_BINARY, 
           "-i", 
           input_file, 
@@ -265,7 +264,7 @@ def convert_model(input_file, options=None):
 
 
     else:  
-        status = call([
+        status = subprocess.call([
           AOPT_BINARY, 
           "-i", 
           input_file, 

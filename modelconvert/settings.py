@@ -52,8 +52,8 @@ if DEVELOPMENT_MODE:
     UPLOAD_PATH = path('../tmp/uploads')
     DOWNLOAD_PATH = path('../tmp/downloads')
     TEMPLATE_PATH = path('templates/bundles')
-    AOPT_BINARY = '/Users/andi/Storage/tmp/instant_player/Contents/MacOS/aopt'
-    MESHLAB_BINARY = '/Users/andi/Storage/tmp/meshlab/Contents/MacOS/meshlabserver'
+    AOPT_BINARY = path('../tmp/instant_player/Contents/MacOS/aopt')
+    MESHLAB_BINARY = path('../tmp/meshlab.app/Contents/MacOS/meshlabserver')
     MESHLAB_DISPLAY = ':0'
 
 del os
