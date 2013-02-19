@@ -26,7 +26,7 @@ MESHLAB_DISPLAY = ':99'
 ALLOWED_EXTENSIONS = set(['x3d','ply', 'x3db', 'wrl', 'bin', 'fhb', 'off',
                           'osb', 'osg', 'raw', 'slp', 'stl', 'jt', '3ds', 
                           'dae', 'dxf', 'lxo', 'obj', 'x', 'bin', 'fhb',
-                          'off', 'osb', 'osg'])
+                          'off', 'osb', 'osg', 'zip', 'tar.gz', 'tar.bz2'])
 
 #USE_X_SENDFILE = True
 SERVER_NAME = 'modelconvert.x3dom.org'

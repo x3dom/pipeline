@@ -10,7 +10,7 @@
     server load, it may take a while.
 </p>
 
-<form action="{{ url_for('upload') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
+<form action="{{ url_for('frontend.upload') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
     {% with messages = get_flashed_messages(with_categories=True) %}
         {% if messages %}
             {% for category, message in messages %}

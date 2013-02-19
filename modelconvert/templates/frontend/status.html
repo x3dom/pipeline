@@ -5,7 +5,7 @@
         for now.
      #}
      {% if not result.ready()%}
-        <meta http-equiv="refresh" content="5; URL={{url_for('status', task_id=result.id)}}"> 
+        <meta http-equiv="refresh" content="5; URL={{url_for('frontend.status', task_id=result.id)}}"> 
       {% endif %}
     {% endblock %}
 
@@ -23,7 +23,7 @@
     {% if result.failed() %}
         <h3>An error has occured.</h3>
         <p>{{result.info}}</p>
-        <p>Please <a href="{{ url_for('home') }}">try again</a>.</p>
+        <p>Please <a href="{{ url_for('frontend.home') }}">try again</a>.</p>
     {% endif%}
 
 {% endblock %}

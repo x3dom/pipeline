@@ -25,7 +25,7 @@
     <div class="container-fluid">
       <div class="row-fluid">
         <div class="span12">
-            <a href="{{ url_for('home') }}"><img id="logo" src="{{ url_for('static', filename='img/logo_small.png')}}"></a>
+            <a href="{{ url_for('frontend.home') }}"><img id="logo" src="{{ url_for('static', filename='img/logo_small.png')}}"></a>
             {% block content %}
             {% endblock %}
 

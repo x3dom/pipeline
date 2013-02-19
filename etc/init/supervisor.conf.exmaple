@@ -1,0 +1,51 @@
+; This is an exmaple of a supervisor configuration
+; for running celery.
+
+; ----------------------------------------------------------------------
+; This is default /etc/supervisord.conf
+; ----------------------------------------------------------------------
+
+[unix_http_server]
+file=/tmp/supervisor.sock   ; (the path to the socket file)
+
+[supervisord]
+logfile=/var/log/supervisord.log ; (main log file;default $CWD/supervisord.log)
+logfile_maxbytes=50MB        ; (max main logfile bytes b4 rotation;default 50MB)
+logfile_backups=10           ; (num of main logfile rotation backups;default 10)
+loglevel=info                ; (log level;default info; others: debug,warn,trace)
+pidfile=/tmp/supervisord.pid ; (supervisord pidfile;default supervisord.pid)
+nodaemon=false               ; (start in foreground if true;default false)
+minfds=1024                  ; (min. avail startup file descriptors;default 1024)
+minprocs=200                 ; (min. avail process descriptors;default 200)
+
+[rpcinterface:supervisor]
+supervisor.rpcinterface_factory = supervisor.rpcinterface:make_main_rpcinterface
+
+[supervisorctl]
+serverurl=unix:///tmp/supervisor.sock ; use a unix:// URL  for a unix socket
+
+
+
+; ----------------------------------------------------------------------
+; This is modelconvert/celery specific
+; e.g. /etc/supervisord.d/modelconvert.conf
+; ----------------------------------------------------------------------
+
+[program:celery]
+command=/path/to/modelconvert/manage.py celeryworker
+directory=/path/to/modelconvert
+user=local
+numprocs=1
+stdout_logfile=/var/log/celeryd.log
+stderr_logfile=/var/log/celeryd.log
+autostart=true
+autorestart=true
+startsecs=10
+
+; Need to wait for currently executing tasks to finish at shutdown.
+; Increase this if you have very long running tasks.
+stopwaitsecs = 600
+
+; if rabbitmq is supervised, set its priority higher
+; so it starts first
+priority=998

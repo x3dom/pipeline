@@ -152,13 +152,13 @@ with Linux distributions are usually out of date. Compiling redis is
 simple. Please follow instructions on the `Redis`_ website.
 
 
-=============
-Configuration
-=============
+===============
+Getting started
+===============
 
-This app is using the `Flask_` microframework  and is using 
-the module file layout. You will find almost all important code
-in ``modelconvert/application.py`` and ``tasks.py``.
+This app is using the `Flask_` microframework with Blueprints. Program entry
+point is ``core.py`` which configures the application. You will find 
+almost all important code in ``frontend/views.py`` and ``tasks.py``.
 
 The modelconvert application can (and probably must) be configured in 
 in order to run properly. Especially paths to aopt and meshlab need
@@ -201,12 +201,24 @@ directly. The config from envvar is not yet fully realized.
 Temporary directories
 ---------------------
 Befire you begin, you also need to create temporary directories as specified 
-in ``settings.py`` or, more likely, your own ``config.py`` file.
+in ``settings.py`` or, more likely, your own ``settings.py`` file.
 
 
------------------------
+------
+Flower
+------
+
+There's an nice tool called `Flower`_ to graphically manage and monitor 
+the celery task queue. We highly recommend it for debugging purposes on the 
+production system. It has been installed with the requirement.txt loading 
+business above. So you should be ready to go. Please refer to the `Flower`_
+manual for more information.
+
+  
+
+=======================
 Development Enviornment
------------------------
+=======================
 
 A `Procfile`_ is provided for convenience. You can use this on your local 
 machine to start all required services at once using `Foreman`_.
@@ -224,9 +236,14 @@ services manually on seperate terminals or in screen/tmux sessions.
 
 
 
------------------
-Production system
------------------
+
+==========
+Deployment
+==========
+
+------------------------------
+Setting up a production system
+------------------------------
 If you are noting using the Procfile to run the required services, you need
 to configure each service on your server machine.
 
@@ -249,18 +266,6 @@ DISPLAY number 99 if you are running a headless setup (the display number
 can be overridden in you config file). Plese refer to your Linux distribution 
 of how to setup `xvfb`_.
 
-
-------
-Flower
-------
-
-There's an nice tool called `Flower`_ to graphically manage and monitor 
-the celery task queue. We highly recommend it for debugging purposes on the 
-production system. It has been installed with the requirement.txt loading 
-business above. So you should be ready to go. Please refer to the `Flower`_
-manual for more information.
-
-  
 
 ---------------------
 Web Server Deployment

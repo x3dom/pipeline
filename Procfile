@@ -2,5 +2,5 @@
 # install foreman to use this
 redis: redis-server /usr/local/etc/redis.conf
 #celery: celery --app=modelconvert.tasks.celery worker -l info
-celery: python manage.py celery
+celery: python manage.py celeryworker
 web: python manage.py runserver

@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+import uuid
 import os
 import random
 import shutil
@@ -6,61 +6,36 @@ import uuid
 
 from werkzeug import secure_filename
 
-from celery import Celery
-from celery.task.control import inspect
+from flask import (Blueprint, render_template, current_app, request,
+                   flash, url_for, redirect, session, abort)
 
-from flask import Flask, g
-from flask import render_template, request, flash, session, redirect, url_for
 from flask import jsonify
 from flask import send_from_directory
 
-from modelconvert.utils.ratelimit import ratelimit
-
+from modelconvert.utils import ratelimit
 from modelconvert import tasks
 
-# -- App setup --------------------------------------------------------------
-app = Flask(__name__)
-app.config.from_object('modelconvert.settings')
-app.config.from_envvar('MODELCONVERT_SETTINGS', silent=True)
 
-
-celery = Celery("tasks", 
-    broker=getattr(app.config, 'CELERY_BROKER_URL', 'redis://localhost:6379/0'), 
-    backend=getattr(app.config, 'CELERY_RESULT_BACKEND','redis')
-)
-
-# serves the static downloads in development
-# in deployment apache or nginx should do that
-if app.config['DEBUG']:
-    from werkzeug.wsgi import SharedDataMiddleware
-    app.wsgi_app = SharedDataMiddleware(app.wsgi_app, {
-        '/preview': app.config["DOWNLOAD_PATH"]
-    })
-
-
-
-@app.errorhandler(404)
-def not_found(error):
-    return render_template('404.html'), 404
+frontend = Blueprint('frontend', __name__)
 
 
 def is_allowed_file(filename):
     """ Check if a filename has an allowed extension """
     return '.' in filename and filename.rsplit('.', 1)[1] in \
-        app.config['ALLOWED_EXTENSIONS']
+        current_app.config['ALLOWED_EXTENSIONS']
 
 
-@app.route("/")
+@frontend.route("/")
 def home():
     """ Renders the default home page """
-    return render_template('index.html')
+    return render_template('frontend/index.html')
 
 
-@app.route("/upload/", methods=['GET', 'POST'])
+@frontend.route("/upload/", methods=['GET', 'POST'])
 # ratelimit access to the upload function in order to prevent
 # DoS and spammers. Someone who wants to bulk convert his models
 # should use aopt directly.
-#@ratelimit(limit=300, per=60 * 15)
+#@ratelimit.ratelimit(limit=300, per=60 * 15)
 def upload():
     """
     The upload method takes a uploaded file and puts it into
@@ -89,7 +64,7 @@ def upload():
             options.update(hash=hash)
 
             # anonymize filename, keep extension and save
-            filename = os.path.join(app.config['UPLOAD_PATH'], 
+            filename = os.path.join(current_app.config['UPLOAD_PATH'], 
                                     hash + os.path.splitext(file.filename)[1])
             file.save(filename)
             
@@ -101,7 +76,7 @@ def upload():
             # (DoS)
             metadata = request.files['metadata']
             if metadata:
-                meta_filename = os.path.join(app.config['UPLOAD_PATH'], hash, 'metadata' + os.path.splitext(metadata.filename)[1])
+                meta_filename = os.path.join(current_app.config['UPLOAD_PATH'], hash, 'metadata' + os.path.splitext(metadata.filename)[1])
                 metadata.save(meta_filename)
                 options.update(meta_filename=meta_filename)
                 
@@ -112,18 +87,18 @@ def upload():
 
             retval = tasks.convert_model.apply_async((filename, options))
             
-            return redirect(url_for('status', task_id=retval.task_id))
+            return redirect(url_for('frontend.status', task_id=retval.task_id))
         else:
             flash("Please upload a file of the following type: %s" %
-                ", ".join(app.config['ALLOWED_EXTENSIONS']), 'error')
+                ", ".join(current_app.config['ALLOWED_EXTENSIONS']), 'error')
 
-    return render_template('index.html')
-
-
+    return render_template('frontend/index.html')
 
 
 
-@app.route('/status/<task_id>/', methods=['GET'])
+
+
+@frontend.route('/status/<task_id>/', methods=['GET'])
 def status(task_id):
     """ 
     Check status of a specific job.
@@ -138,12 +113,12 @@ def status(task_id):
         return jsonify(state=result.state)
     else:    
         if result.ready() and result.successful():
-            return redirect(url_for('success', hash=result.info['hash']))
+            return redirect(url_for('frontend.success', hash=result.info['hash']))
         else:
-            return render_template('status.html', result=result)
+            return render_template('frontend/status.html', result=result)
 
 
-@app.route('/success/<hash>/', methods=['GET'])
+@frontend.route('/success/<hash>/', methods=['GET'])
 def success(hash):
     """ 
     Display download links for converted files.
@@ -153,12 +128,12 @@ def success(hash):
     are temporary anyway.
     """
     filenames = ['%s.html' % hash, '%s.zip' % hash]
-    return render_template('success.html', hash=hash, filenames=filenames)
+    return render_template('frontend/success.html', hash=hash, filenames=filenames)
 
 
 # This is basically redundant, Nginx or apache should handle this
 # make this a wsgi middleware for development envs
-@app.route('/download/<hash>/<filename>/', methods=['GET'])
+@frontend.route('/download/<hash>/<filename>/', methods=['GET'])
 def download(hash, filename):
     """
     Allows to download a file from the DOWNLOAD_FOLDER.
@@ -170,17 +145,20 @@ def download(hash, filename):
     # security
     filename = os.path.basename(filename)
     
-    if os.path.exists(os.path.join(app.config['DOWNLOAD_PATH'], hash, filename)):
-        path = os.path.join(app.config['DOWNLOAD_PATH'], hash)
+    if os.path.exists(os.path.join(current_app.config['DOWNLOAD_PATH'], hash, filename)):
+        path = os.path.join(current_app.config['DOWNLOAD_PATH'], hash)
         return send_from_directory(path, filename, as_attachment=True)
     else:
         return not_found(404)
 
 
-@app.route("/ping")
+
+@frontend.route("/ping")
 def ping():
     tasks.ping.apply_async()
     return 'pong'
+
+
 
 # @app.route("/test")
 # def hello_world():
@@ -234,8 +212,3 @@ def ping():
 # def show_waiting_tasks():
 #     i = celery.control.inspect()
 #     return jsonify(tasks=i.reserved()) 
-
-
-
-if __name__ == "__main__":
-    app.run()

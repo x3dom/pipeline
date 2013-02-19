@@ -8,15 +8,30 @@ import time
 
 from flask.ext.script import Manager
 
-from modelconvert.application import app
+from modelconvert import create_app
+
+app = create_app()
 
 manager = Manager(app)
 app.config.from_object('modelconvert.settings')
 app.config.from_envvar('MODELCONVERT_SETTINGS', silent=True)
 
+# serves the static downloads in development
+# in deployment apache or nginx should do that
+if app.config['DEBUG']:
+    from werkzeug.wsgi import SharedDataMiddleware
+    app.wsgi_app = SharedDataMiddleware(app.wsgi_app, {
+        '/preview': app.config["DOWNLOAD_PATH"]
+    })
+
 
 @manager.command
-def celery():
+def run():
+    app.run()
+
+
+@manager.command
+def celeryworker():
     """
     Make sure app context is present, otherwise celery will not get
     config from app.
