@@ -267,6 +267,8 @@ Ubuntu/Debian 10.4 does not provide that by default. In order to get this
 you need to add the Dotdeb repositories to your APT sources. Create a new list
 file in /etc/apt/sources.list.d/ with the following content:
 
+.. code-block:: bash
+
     # /etc/apt/sources.list.d/dotdeb.org.list
     deb http://packages.dotdeb.org squeeze all
     deb-src http://packages.dotdeb.org squeeze all
