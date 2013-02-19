@@ -19,7 +19,7 @@ TEMPLATE_PATH = path('templates/bundles')
 
 UPLOAD_PATH = '/var/www/modelconvert/tmp/uploads'
 DOWNLOAD_PATH = '/var/www/modelconvert/tmp/downloads'
-AOPT_BINARY = '/usr/local/bin/aopt'
+AOPT_BINARY = '/opt/instantReality/bin/aopt'
 MESHLAB_BINARY = '/opt/meshlab/meshlab/src/distrib/meshlabserver'
 MESHLAB_DISPLAY = ':99'
 
@@ -52,7 +52,7 @@ if DEVELOPMENT_MODE:
     UPLOAD_PATH = path('../tmp/uploads')
     DOWNLOAD_PATH = path('../tmp/downloads')
     TEMPLATE_PATH = path('templates/bundles')
-    AOPT_BINARY = path('../tmp/instant_player/Contents/MacOS/aopt')
+    AOPT_BINARY = path('../tmp/InstantPlayer.app/Contents/MacOS/aopt')
     MESHLAB_BINARY = path('../tmp/meshlab.app/Contents/MacOS/meshlabserver')
     MESHLAB_DISPLAY = ':0'
 

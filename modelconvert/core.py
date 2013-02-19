@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from flask import Flask
+from flask import Flask, render_template
 
 from .extensions import celery
 from .frontend import frontend

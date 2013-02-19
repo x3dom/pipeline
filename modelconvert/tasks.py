@@ -208,51 +208,28 @@ def convert_model(input_file, options=None):
     if aopt == 'restuctedBinGeo':
         output_directory_binGeo = os.path.join(output_directory, "binGeo")
         os.mkdir(output_directory_binGeo)
-        
+
+        #aopt -i input.ply -F Scene:"maxtris(23000)" -f PrimitiveSet:creaseAngle:4
+        # -f PrimitiveSet:normalPerVertex:TRUE -f PrimitiveSet:optimizationMode:none
+        # -V -G binGeo/:sacp -x model.x3d -N model.html
         status = subprocess.call([
-          AOPT_BINARY, 
-          "-i", 
-          input_file, 
-          "-u", 
-          "-b", 
-          hash + '.x3db'
+            AOPT_BINARY, 
+            '-i', 
+            input_file, 
+            '-F',
+            'Scene:"maxtris(23000)"', 
+            '-f',
+            'PrimitiveSet:creaseAngle:4',              
+            '-f'
+            'PrimitiveSet:normalPerVertex:TRUE',
+            '-f',
+            'PrimitiveSet:optimizationMode:none',
+            '-V',
+            '-G ',
+            'binGeo/:sacp',
+            aopt_switch, 
+            output_filename
         ])
-
-        if status < 0:
-            
-            # FIXME error handling and cleanup (breaking early is good but
-            # cleanup calls for try/catch/finally)
-            os.chdir(working_directory)
-            logger.error("Error converting file!!!!!!!!!!")
-            raise ConversionError('AOPT RETURNS: {0}'.format(status))
-
-        else:
-            status = subprocess.call([
-              AOPT_BINARY, 
-              "-i", 
-              hash + '.x3db', 
-              "-F", 
-              "Scene",
-              "-b", 
-              hash + '.x3db'
-            ])
-
-        if status < 0:
-            # FIXME error handling and cleanup (breaking early is good but
-            # cleanup calls for try/catch/finally)
-            os.chdir(working_directory)
-            logger.error("Error converting file!!!!!!!!!!")
-            raise ConversionError('AOPT RETURNS: {0}'.format(status))
-        else:
-            status = subprocess.call([
-              AOPT_BINARY, 
-              "-i", 
-              hash + '.x3db', 
-              "-G", 
-              'binGeo/:saI',              
-              aopt_switch, 
-              output_filename
-            ])
         
     elif aopt == 'binGeo':
         output_directory_binGeo = os.path.join(output_directory, "binGeo")
@@ -267,7 +244,6 @@ def convert_model(input_file, options=None):
           output_filename
         ])
 
-
     else:  
         status = subprocess.call([
           AOPT_BINARY, 
@@ -276,7 +252,6 @@ def convert_model(input_file, options=None):
           aopt_switch, 
           output_filename
         ])
-
 
     if status < 0:
         # FIXME error handling and cleanup (breaking early is good but
