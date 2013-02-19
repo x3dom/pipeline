@@ -354,3 +354,4 @@ under grant agreement 270404.
 .. _mod_wsgi: http://code.google.com/p/modwsgi/
 .. _nginx: http://nginx.org/
 .. _uwsgi: http://wiki.nginx.org/HttpUwsgiModule
+.. _Puppet: https://puppetlabs.com/
