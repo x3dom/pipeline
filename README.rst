@@ -231,8 +231,8 @@ This runs all the services in the background and concacts the output in one
 log stream. The Procfile can also be use to deploy modelconvert to cloud 
 services that support the Procfile protocol.
 
-If you do not want to use `Foreman`_ in development, you need to start the
-services manually on seperate terminals or in screen/tmux sessions.
+If you do not want to use `Foreman`_ in development, no problem, you need to 
+start the services manually on seperate terminals or in screen/tmux sessions.
 
 
 
@@ -241,11 +241,18 @@ services manually on seperate terminals or in screen/tmux sessions.
 Deployment
 ==========
 
-------------------------------
-Setting up a production system
-------------------------------
-If you are noting using the Procfile to run the required services, you need
-to configure each service on your server machine.
+--------------------------------
+Provisioning a production system
+--------------------------------
+In order to deploy the application in a prodcution environment, you need to
+provision your deployment machine accordingly. We are currently working on
+a set of `Puppet`_ manifests to do that automatically - for the time being,
+you need to do the work manually. The steps outline here are tested on Ubuntu
+10.4 LTS (lucid32), but should be similar on other distributions.
+
+~~~~~
+Redis
+~~~~~
 
 Redis comes as standard package with most Linux distributions. No other action
 is required, short of installing the redis server package. For Debian systems
@@ -255,26 +262,64 @@ this is usally done with apt:
     
     $ sudo apt-get install redis-server
 
+However, there's a catch. You need a fairly recent version of Redis (2.x).
+Ubuntu/Debian 10.4 does not provide that by default. In order to get this
+you need to add the Dotdeb repositories to your APT sources. Create a new list
+file in /etc/apt/sources.list.d/ with the following content:
+
+    # /etc/apt/sources.list.d/dotdeb.org.list
+    deb http://packages.dotdeb.org squeeze all
+    deb-src http://packages.dotdeb.org squeeze all
+
+Then you need to authenticate these repositories using their public key.
+
+.. code-block:: bash
+
+    $ wget -q -O - http://www.dotdeb.org/dotdeb.gpg | sudo apt-key add -
+
+
+And finally, update your APT cache and install Redis.
+
+.. code-block:: bash
+
+    $ sudo apt-get update
+    $ sudo apt-get install redis-server
+
+
+It's also very easy to compile Redis on your own, in case you have a compiler
+installed on your production system (which you probably should not have).
+
+The `Redis`_ website provides you with more detailed information.
+
+~~~~~~
+Celery
+~~~~~~
 
 In order to run the `Celery`_ deamon on your production site, please use the
 generic init/upstart script provided with celery. For more information see
 the `daemonizing`_  chapter of the Celery documentation or refer to your 
 devops people ;)
 
+~~~~
+Xvfb
+~~~~
+
 In order to use meshlab, you also need a running X11 instance or `xvfb`_ as 
 DISPLAY number 99 if you are running a headless setup (the display number 
 can be overridden in you config file). Plese refer to your Linux distribution 
 of how to setup `xvfb`_.
 
+~~~~~~~~~
+Webserver
+~~~~~~~~~
 
----------------------
-Web Server Deployment
----------------------
 Depending on your system, you can deploy using Apache `mod_wsgi`_ for 
 convenience. The more sensible option however is `nginx`_/`uwsgi`_. More detailed
 info on how to deploy can be found here:
 
     `http://flask.pocoo.org/docs/deploying/ <http://flask.pocoo.org/docs/deploying/>`_
+
+
 
 
 
