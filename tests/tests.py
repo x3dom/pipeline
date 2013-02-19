@@ -9,11 +9,12 @@ PROJECT_ROOT = os.path.abspath(
 )
 sys.path.insert(0, PROJECT_ROOT)
 
-from  modelconvert.application import app
+from  modelconvert import create_app
 
 class ModelconvertTestCase(unittest.TestCase):
 
     def setUp(self):
+      app = create_app()
       app.config['TESTING'] = True
       self.app = app.test_client()
 
