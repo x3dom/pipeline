@@ -92,7 +92,6 @@ def mkdirs():
     dirs = [
         app.config['UPLOAD_PATH'],
         app.config['DOWNLOAD_PATH'],
-        os.path.dirname(app.config['LOGFILE']),
     ]
 
     for directory in dirs:
