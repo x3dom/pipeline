@@ -1,7 +1,11 @@
 # remove this as soon as sever has latest python 2.x
 from __future__ import with_statement  
 
+import os
+
 from fabric.api import *
+
+from modelconvert.utils import fs
 
 # Note, this file is specific for the modelconvert.x3dom server
 # Don't change this. If you want to deploy elsewhere you need
@@ -33,11 +37,24 @@ def deploy():
 
 
 @task
-def mktempdirs():
+def bootstrap():
     """
-    Create default temporary directories.
+    Try to bootstrap a development environment. Requires fabric, pip.
     """
-    print "Nothing here yet, move along"
+    local('python manage.py mkdirs')
+    local("pip install -r requirements.txt")
+
+    # download meshlab for the platform we are on and put it to tmp/meshlab
+    # download latest IR for the platform and put it into tmp/ir
+
+    # if osx:
+    #     cd meshlab && ln -s Contents/MacOS bin
+    #     cd ir && ln -s Contents/MacOS bin
+    # conveniece
+
+    # print instructions for installing redis
+    # create a settings-dev.py and print instruction of how to use it
+    # export MODELCONVERT_SETTINGS='/path/to/settings-dev.py'   
 
 
 @task
@@ -46,4 +63,3 @@ def mkvm():
     Try to provision a VM (req. VirtualBox, Vagrant)
     """
     print "Nothing here yet, move along"
-

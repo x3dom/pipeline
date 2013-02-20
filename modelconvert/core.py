@@ -18,6 +18,8 @@ def create_app():
 
     app.register_blueprint(frontend)
 
+    configure_logging(app)
+
     # configure error handlers
     @app.errorhandler(403)
     def forbidden_page(error):
@@ -33,6 +35,52 @@ def create_app():
 
     return app
 
+
+
+def configure_logging(app):
+    """
+    Configure file(info) and email(error) logging.
+    """
+
+    if app.debug or app.testing or not app.config['LOGFILE']:
+        # Skip debug and test mode as well als missing log config.
+        # You can check stdout logging. 
+        return
+    
+    import logging
+    from logging.handlers import SMTPHandler
+
+    # Set info level on logger, which might be overwritten by handers.
+    # Suppress DEBUG messages.
+    app.logger.setLevel(logging.INFO)
+    
+    info_log = app.config['LOGFILE']
+    info_file_handler = logging.handlers.RotatingFileHandler(info_log, maxBytes=100000, backupCount=10)
+    info_file_handler.setLevel(logging.INFO)
+    info_file_handler.setFormatter(logging.Formatter(
+        '%(asctime)s %(levelname)s: %(message)s '
+        '[in %(pathname)s:%(lineno)d]')
+    )
+    app.logger.addHandler(info_file_handler)
+
+    # Testing
+    app.logger.info("testing info.")
+    app.logger.warn("testing warn.")
+    app.logger.error("testing error.")
+
+    ## Mail out errors to admins
+    # mail_handler = SMTPHandler(app.config['MAIL_SERVER'],
+    #                            app.config['MAIL_USERNAME'],
+    #                            app.config['ADMINS'],
+    #                            '[modelconvert] Error on website',
+    #                            (app.config['MAIL_USERNAME'],
+    #                             app.config['MAIL_PASSWORD']))
+    # mail_handler.setLevel(logging.ERROR)
+    # mail_handler.setFormatter(logging.Formatter(
+    #     '%(asctime)s %(levelname)s: %(message)s '
+    #     '[in %(pathname)s:%(lineno)d]')
+    # )
+    # app.logger.addHandler(mail_handler)
 
 
 if __name__ == "__main__":

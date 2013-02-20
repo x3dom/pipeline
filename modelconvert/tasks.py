@@ -1,26 +1,24 @@
+# -*- coding: utf-8 -*-
 import os
 import shutil
 import subprocess
 
-#Python 2.7
-#from subprocess import check_output, CalledProcessError
 
-from contextlib import closing
-from zipfile import ZipFile, ZIP_DEFLATED
+from modelconvert.utils import compression
 
+#from flask import current_app
+#from .extensions import celery
+
+# remove with app context refactor
 # template system
 from jinja2 import Environment, FileSystemLoader, PackageLoader
-
 # async tools
 from celery import Celery
 from celery import current_task
 from celery.utils.log import get_task_logger
-
 # app config
 from modelconvert import settings
-
 logger = get_task_logger(__name__)
-
 AOPT_BINARY = getattr(settings, 'AOPT_BINARY', 'aopt')
 MESHLAB_BINARY = getattr(settings, 'MESHLAB_BINARY', 'meshlabsever')
 MESHLAB_DISPLAY = getattr(settings, 'MESHLAB_DISPLAY', ':0')
@@ -28,12 +26,12 @@ DOWNLOAD_PATH = getattr(settings, 'DOWNLOAD_PATH', '/tmp/downloads')
 UPLOAD_PATH = getattr(settings, 'UPLOAD_PATH', '/tmp/uploads')
 DEBUG = getattr(settings, 'DEBUG', False)
 TEMPLATE_PATH = getattr(settings, 'TEMPLATE_PATH')
-
 celery = Celery("tasks", 
     broker=getattr(settings, 'CELERY_BROKER_URL', 'redis://localhost:6379/0'), 
     backend=getattr(settings, 'CELERY_RESULT_BACKEND','redis'))
-
 jinja = Environment(loader=FileSystemLoader(TEMPLATE_PATH))
+# end remove with app context refactor
+
 
 
 
@@ -255,13 +253,13 @@ def convert_model(input_file, options=None):
 
     if status < 0:
         # FIXME error handling and cleanup (breaking early is good but
-        # cleanup calls for try/catch/finally)
+        # cleanup calls for try/catch/finally or contextmanager)
         os.chdir(working_directory)
         logger.error("Error converting file!!!!!!!!!!")
         raise ConversionError('AOPT RETURNS: {0}'.format(status))
     else:
         zip_path = os.path.join(DOWNLOAD_PATH, hash)
-        _zipdir(zip_path, '%s.zip' % hash)
+        compression.zipdir(zip_path, '%s.zip' % hash)
         os.chdir(working_directory)
     
     if not DEBUG:
@@ -278,18 +276,6 @@ def convert_model(input_file, options=None):
 
 
 
-def _zipdir(basedir, archivename):
-    assert os.path.isdir(basedir)
-    with closing(ZipFile(archivename, "w", ZIP_DEFLATED)) as z:
-        for root, dirs, files in os.walk(basedir):
-            # ignore empty directories
-            for fn in files:
-                # skip self and other zip files
-                if os.path.basename(fn) == os.path.basename(archivename):
-                    continue
-                absfn = os.path.join(root, fn)
-                zfn = absfn[len(basedir)+len(os.sep):] #XXX: relative path
-                z.write(absfn, zfn)
 
 
 

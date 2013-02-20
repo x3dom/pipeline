@@ -10,13 +10,14 @@ DEVELOPMENT_MODE = (platform.node() != "x3dom")
 DEBUG = DEVELOPMENT_MODE
 
 SECRET_KEY = '\xad\x12+\x13l\t\x811\x05\x9d\x01W\xd0?\xb9\xb61\xfe\xd5G\xe6^W\x0e'
-ADMINS = frozenset(['http://x3dom.org'])
+ADMINS = frozenset(['admin@domain'])
 
 MAX_CONTENT_LENGTH = 16 * 1024 * 1024 # 16Meg upload limit
 
 # location of the user templates (fullsize, metadata, etc.)
 TEMPLATE_PATH = path('templates/bundles')
 
+LOGFILE = '/var/www/modelconvert/tmp/logs/modelconvert.log'
 UPLOAD_PATH = '/var/www/modelconvert/tmp/uploads'
 DOWNLOAD_PATH = '/var/www/modelconvert/tmp/downloads'
 AOPT_BINARY = '/opt/instantReality/bin/aopt'
@@ -45,15 +46,15 @@ CELERY_IMPORTS = ("tasks", )
 #CELERY_TASK_RESULT_EXPIRES = 300 # default is one day
 
 
-
 # development specific stuff, should really be seperate file
 if DEVELOPMENT_MODE:
     SERVER_NAME = 'localhost:5000'
     UPLOAD_PATH = path('../tmp/uploads')
+    LOGFILE = os.path.join(path('../tmp/logs'), 'modelconvert.log')
     DOWNLOAD_PATH = path('../tmp/downloads')
     TEMPLATE_PATH = path('templates/bundles')
-    AOPT_BINARY = path('../tmp/InstantPlayer.app/Contents/MacOS/aopt')
-    MESHLAB_BINARY = path('../tmp/meshlab.app/Contents/MacOS/meshlabserver')
+    AOPT_BINARY = path('../tmp/ir/bin/aopt')
+    MESHLAB_BINARY = path('../tmp/meshlab/bin/meshlabserver')
     MESHLAB_DISPLAY = ':0'
 
 del os

@@ -1,14 +1,16 @@
 #!/usr/bin/env python
 from __future__ import absolute_import
 
-# manage.py
 import os
 import shutil
 import time
+import datetime
 
 from flask.ext.script import Manager
 
+from modelconvert.utils import fs
 from modelconvert import create_app
+
 
 app = create_app()
 
@@ -33,8 +35,7 @@ def run():
 @manager.command
 def celeryworker():
     """
-    Make sure app context is present, otherwise celery will not get
-    config from app.
+    Runs celery worker within the Flask app context
     """
     from modelconvert.tasks import celery
     import sys
@@ -46,7 +47,10 @@ def celeryworker():
 #
 @manager.command
 def cleanup():
-    download_path = os.path.normpath(app.config["DOWNLOAD_PATH"])
+    """
+    Removes generated files older than 
+    """
+    download_path = os.path.abspath(app.config["DOWNLOAD_PATH"])
     
     # simple protection against dummies. However it is questionable to
     # give them Unix rm command in this case ;)
@@ -59,7 +63,7 @@ def cleanup():
 
     longevity = 6300 * 24
     current_time = time.time();
-    print("Removing files older than %i seconds" % longevity)
+    print("Removing files older than {0}".format(datetime.timedelta(seconds=longevity)))
     
     
     for root, dirs, files in os.walk(download_path, topdown=False):
@@ -77,6 +81,25 @@ def cleanup():
             if not os.listdir(dirpath):
                 print("Removing directory %s" % dirpath)
                 os.rmdir(dirpath)    
+
+
+@manager.command
+def mkdirs():
+    """
+    Create required directories from settings
+    """
+
+    dirs = [
+        app.config['UPLOAD_PATH'],
+        app.config['DOWNLOAD_PATH'],
+        os.path.dirname(app.config['LOGFILE']),
+    ]
+
+    for directory in dirs:
+        directory = os.path.abspath(directory)
+        print("Creating directory {0}".format(directory))
+        fs.mkdir_p(directory)
+
 
 
 if __name__ == "__main__":
