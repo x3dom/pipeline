@@ -1,6 +1,9 @@
-# this procfile is for development only
-# install foreman to use this
+# this procfile is for development only and simplifies launching of required
+# services. Please use this in development only. 
+# Youc an use honcho (python) or foreman (ruby):
+# https://github.com/nickstenning/honcho
+# http://ddollar.github.com/foreman/
+
 redis: redis-server /usr/local/etc/redis.conf
-#celery: celery --app=modelconvert.tasks.celery worker -l info
 celery: python manage.py celeryworker
 web: python manage.py runserver

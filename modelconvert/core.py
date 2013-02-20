@@ -14,11 +14,12 @@ def create_app():
     app.config.from_object('modelconvert.settings')
     app.config.from_envvar('MODELCONVERT_SETTINGS', silent=True)
 
-    celery.add_defaults(app.config)
+    configure_logging(app)
 
     app.register_blueprint(frontend)
 
-    configure_logging(app)
+    celery.add_defaults(app.config)
+
 
     # configure error handlers
     @app.errorhandler(403)
@@ -64,9 +65,9 @@ def configure_logging(app):
     app.logger.addHandler(info_file_handler)
 
     # Testing
-    app.logger.info("testing info.")
-    app.logger.warn("testing warn.")
-    app.logger.error("testing error.")
+    # app.logger.info("testing info.")
+    # app.logger.warn("testing warn.")
+    # app.logger.error("testing error.")
 
     ## Mail out errors to admins
     # mail_handler = SMTPHandler(app.config['MAIL_SERVER'],

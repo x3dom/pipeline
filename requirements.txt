@@ -3,11 +3,15 @@ Flask-Script>=0.5.1,<0.6.0
 redis >=2.7.0,<2.8.0
 celery >=3.0.13, <3.1.0
 
-# only used on dev box
-Fabric
-
-# optional on production system to manage celery queues
+# optional to manage celery queues
 Flower
+
+
+# 
+# Used on dev box only
+#
+Fabric
+honcho
 
 # future
 #Flask-WTF==0.8
