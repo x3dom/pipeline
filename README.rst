@@ -185,7 +185,7 @@ a small shell script:
 
 .. code-block:: bash
 
-    $ echo '#!/bin/sh\nexport=MODELCONVERT_SETTINGS=/path/to/settings.py\nforeman start' >> run.sh
+    $ echo '#!/bin/sh\nexport=MODELCONVERT_SETTINGS=/path/to/settings.py\nhoncho start' >> run.sh
     $ chmod a+x run.sh
     $ ./run.sh
 
@@ -221,17 +221,17 @@ Development Enviornment
 =======================
 
 A `Procfile`_ is provided for convenience. You can use this on your local 
-machine to start all required services at once using `Foreman`_.
+machine to start all required services at once using `Honcho`_.
 
 .. code-block:: bash
     
-    $ foreman start
+    $ honcho start
 
 This runs all the services in the background and concacts the output in one
 log stream. The Procfile can also be use to deploy modelconvert to cloud 
 services that support the Procfile protocol.
 
-If you do not want to use `Foreman`_ in development, no problem, you need to 
+If you do not want to use `Honcho`_ in development, no problem, you need to 
 start the services manually on seperate terminals or in screen/tmux sessions.
 
 
@@ -349,7 +349,7 @@ under grant agreement 270404.
 .. _nightly build: http://www.instantreality.org/downloads/dailybuild/
 .. _GitHub: http://github.com/x3dom/pipeline
 .. _Procfile: https://devcenter.heroku.com/articles/procfile
-.. _Foreman: http://ddollar.github.com/foreman/
+.. _Honcho: https://github.com/nickstenning/honcho/
 .. _daemonizing: http://docs.celeryproject.org/en/latest/tutorials/daemonizing.html
 .. _xvfb: http://en.wikipedia.org/wiki/Xvfb
 .. _Flower: https://github.com/mher/flower
