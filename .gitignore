@@ -11,10 +11,13 @@ Thumbs.db
 .Trashes
 
 .rbenv-version
+.env
 
 *.pyc
 .webassets-cache
 .idea
+.tox
+modelconvert.egg-info/
 cache/
 logs/
 uploads/

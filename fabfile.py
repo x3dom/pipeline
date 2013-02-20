@@ -56,6 +56,10 @@ def bootstrap():
     # create a settings-dev.py and print instruction of how to use it
     # export MODELCONVERT_SETTINGS='/path/to/settings-dev.py'   
 
+@task
+def clean():
+    local("rm -rf modelconvert.egg-info")
+
 
 @task
 def mkvm():
