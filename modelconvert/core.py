@@ -2,8 +2,8 @@
 
 from flask import Flask, render_template
 
-from .extensions import celery
-from .frontend import frontend
+from modelconvert.extensions import celery
+from modelconvert.frontend import frontend
 
 
 # -- App setup --------------------------------------------------------------
@@ -33,6 +33,13 @@ def create_app():
     @app.errorhandler(500)
     def server_error_page(error):
         return render_template("500.html"), 500
+
+
+    if app.config['DEBUG']:
+        from werkzeug.wsgi import SharedDataMiddleware
+        app.wsgi_app = SharedDataMiddleware(app.wsgi_app, {
+            '/preview': app.config["DOWNLOAD_PATH"]
+        })
 
     return app
 
@@ -85,4 +92,5 @@ def configure_logging(app):
 
 
 if __name__ == "__main__":
+    app = create_app()
     app.run()

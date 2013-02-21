@@ -8,23 +8,12 @@ import datetime
 
 from flask.ext.script import Manager
 
-from modelconvert.utils import fs
 from modelconvert import create_app
+from modelconvert.utils import fs
 
 
 app = create_app()
-
 manager = Manager(app)
-app.config.from_object('modelconvert.settings')
-app.config.from_envvar('MODELCONVERT_SETTINGS', silent=True)
-
-# serves the static downloads in development
-# in deployment apache or nginx should do that
-if app.config['DEBUG']:
-    from werkzeug.wsgi import SharedDataMiddleware
-    app.wsgi_app = SharedDataMiddleware(app.wsgi_app, {
-        '/preview': app.config["DOWNLOAD_PATH"]
-    })
 
 
 @manager.command
@@ -37,8 +26,7 @@ def celeryworker():
     """
     Runs celery worker within the Flask app context
     """
-    from modelconvert.tasks import celery
-    import sys
+    from modelconvert.extensions import celery
     with app.app_context():
         celery.worker_main(['worker', '-E', '-l', 'INFO'])
 

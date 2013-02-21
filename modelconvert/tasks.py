@@ -1,38 +1,32 @@
 # -*- coding: utf-8 -*-
+"""
+This file contains celery tasks that are used to async the process of 
+converting models. It is required that celery runs within a falsk
+app context in order to execute the tasks.
+
+You can achieve this by createing a instance of the app and then use a
+context manager to run celery. For example:
+
+    from modelconvert import create_app
+    from modelconvert.extensions import celery
+
+    app = create_app()
+
+    with app.app_context():
+        celery.worker_main(['worker', '-E', '-l', 'INFO'])
+
+"""
 import os
 import shutil
 import subprocess
 
-
-from modelconvert.utils import compression
-
-#from flask import current_app
-#from .extensions import celery
-
-# remove with app context refactor
-# template system
-from jinja2 import Environment, FileSystemLoader, PackageLoader
-# async tools
-from celery import Celery
+from flask import current_app
 from celery import current_task
-from celery.utils.log import get_task_logger
-# app config
-from modelconvert import settings
-logger = get_task_logger(__name__)
-AOPT_BINARY = getattr(settings, 'AOPT_BINARY', 'aopt')
-MESHLAB_BINARY = getattr(settings, 'MESHLAB_BINARY', 'meshlabsever')
-MESHLAB_DISPLAY = getattr(settings, 'MESHLAB_DISPLAY', ':0')
-DOWNLOAD_PATH = getattr(settings, 'DOWNLOAD_PATH', '/tmp/downloads')
-UPLOAD_PATH = getattr(settings, 'UPLOAD_PATH', '/tmp/uploads')
-DEBUG = getattr(settings, 'DEBUG', False)
-TEMPLATE_PATH = getattr(settings, 'TEMPLATE_PATH')
-celery = Celery("tasks", 
-    broker=getattr(settings, 'CELERY_BROKER_URL', 'redis://localhost:6379/0'), 
-    backend=getattr(settings, 'CELERY_RESULT_BACKEND','redis'))
-jinja = Environment(loader=FileSystemLoader(TEMPLATE_PATH))
-# end remove with app context refactor
 
+from jinja2 import Environment, FileSystemLoader
 
+from modelconvert.extensions import celery
+from modelconvert.utils import compression
 
 
 class ConversionError(Exception):
@@ -41,8 +35,8 @@ class ConversionError(Exception):
 
 @celery.task
 def ping():
-    from flask import current_app
-    logger.info("+++++++++ " + current_app.config['AOPT_BINARY'])
+    """ Just for testing """
+    logger.info("+++++++++ PING +++++++++")
 
 @celery.task
 def convert_model(input_file, options=None):
@@ -57,6 +51,8 @@ def convert_model(input_file, options=None):
       - make directories hash.tmp and rename after successfull transcoding
         this is to distinguish between orphaned files and completed ones
     """
+    logger = current_app.logger
+
     # The current tasks id
     task_id = current_task.request.id
     
@@ -88,15 +84,24 @@ def convert_model(input_file, options=None):
     # find generated files
     logger.info("Starting to process uploaded file: {0}".format(input_file))
 
-    output_directory = os.path.join(DOWNLOAD_PATH, hash)
+    download_path = current_app.config['DOWNLOAD_PATH']
+    template_path = current_app.config['TEMPLATE_PATH']
+    upload_path = current_app.config['UPLOAD_PATH']
+    
+    # specifically not using the current_app.jinja_env in order to seperate
+    # user templates entirely from the application. The user should not have
+    # access to the request, global object and app configuration.
+    jinja = Environment(loader=FileSystemLoader(template_path))
+
+    output_directory = os.path.join(download_path, hash)
     os.mkdir(output_directory)
     
     if template and template == 'fullsize' or template == 'metadataBrowser':
         output_extension = '.x3d'
-        aopt_switch = '-x'
+        aopt_output_switch = '-x'
 
         # render the template with inline
-        output_template_filename = os.path.join(DOWNLOAD_PATH, 
+        output_template_filename = os.path.join(download_path, 
                                                 hash, hash + '.html')
         user_tpl = jinja.get_template(template +'/' + template + '_template.html')
         
@@ -104,7 +109,7 @@ def convert_model(input_file, options=None):
             f.write(user_tpl.render(X3D_INLINE_URL='%s.x3d' % hash))
 
         output_directory_static = os.path.join(output_directory, 'static')
-        input_directory_static = os.path.join(TEMPLATE_PATH, template, 'static')
+        input_directory_static = os.path.join(template_path, template, 'static')
 
         shutil.copytree(input_directory_static, output_directory_static)
         
@@ -115,7 +120,7 @@ def convert_model(input_file, options=None):
 
     else:
         output_extension = '.html'
-        aopt_switch = '-N'
+        aopt_output_switch = '-N'
 
     output_filename = hash + output_extension
     working_directory = os.getcwd()
@@ -132,7 +137,7 @@ def convert_model(input_file, options=None):
     if meshlab:
         
         env = os.environ.copy()
-        env['DISPLAY'] = MESHLAB_DISPLAY
+        env['DISPLAY'] = current_app.config['MESHLAB_DISPLAY']
         
         mehlab_filter = ""
         mehlab_filter += "<!DOCTYPE FilterScript><FilterScript>"
@@ -151,7 +156,7 @@ def convert_model(input_file, options=None):
         # be careful with this. Prefer the Python 2.7 version below or
         # maybe switch to using envoy or similar.
         proc = subprocess.Popen([
-            MESHLAB_BINARY, 
+            current_app.config['MESHLAB_BINARY'], 
             "-i", 
             input_file, 
             "-o",
@@ -178,7 +183,7 @@ def convert_model(input_file, options=None):
         # Python 2.7
         # try:
         #     check_output([
-        #         MESHLAB_BINARY, 
+        #         current_app.config['MESHLAB_BINARY'], 
         #         "-i", 
         #         input_file, 
         #         "-o",
@@ -211,7 +216,7 @@ def convert_model(input_file, options=None):
         # -f PrimitiveSet:normalPerVertex:TRUE -f PrimitiveSet:optimizationMode:none
         # -V -G binGeo/:sacp -x model.x3d -N model.html
         status = subprocess.call([
-            AOPT_BINARY, 
+            current_app.config['AOPT_BINARY'], 
             '-i', 
             input_file, 
             '-F',
@@ -225,7 +230,7 @@ def convert_model(input_file, options=None):
             '-V',
             '-G ',
             'binGeo/:sacp',
-            aopt_switch, 
+            aopt_output_switch, 
             output_filename
         ])
         
@@ -233,21 +238,21 @@ def convert_model(input_file, options=None):
         output_directory_binGeo = os.path.join(output_directory, "binGeo")
         os.mkdir(output_directory_binGeo)
         status = subprocess.call([
-          AOPT_BINARY, 
+          current_app.config['AOPT_BINARY'], 
           "-i", 
           input_file, 
           "-G", 
           'binGeo/:saI', 
-          aopt_switch, 
+          aopt_output_switch, 
           output_filename
         ])
 
     else:  
         status = subprocess.call([
-          AOPT_BINARY, 
+          current_app.config['AOPT_BINARY'], 
           "-i", 
           input_file, 
-          aopt_switch, 
+          aopt_output_switch, 
           output_filename
         ])
 
@@ -258,11 +263,11 @@ def convert_model(input_file, options=None):
         logger.error("Error converting file!!!!!!!!!!")
         raise ConversionError('AOPT RETURNS: {0}'.format(status))
     else:
-        zip_path = os.path.join(DOWNLOAD_PATH, hash)
+        zip_path = os.path.join(download_path, hash)
         compression.zipdir(zip_path, '%s.zip' % hash)
         os.chdir(working_directory)
     
-    if not DEBUG:
+    if not current_app.config['DEBUG']:
         # delete the uploaded file
         os.remove(input_file)
     
@@ -273,13 +278,3 @@ def convert_model(input_file, options=None):
         input_file = input_file,
     )
     return result_set
-
-
-
-
-
-
-if __name__ == "__main__":
-#    celery.start()
-    testfile = 'tests/data/flipper.x3d'
-    result = convert_model.apply_async((testfile,))

@@ -32,6 +32,14 @@ def home():
     return render_template('frontend/index.html')
 
 
+@frontend.route("/preview")
+def preview():
+    """
+    The URL is handled by the web-server.
+    """
+    pass
+
+
 @frontend.route("/upload/", methods=['GET', 'POST'])
 # ratelimit access to the upload function in order to prevent
 # DoS and spammers. Someone who wants to bulk convert his models

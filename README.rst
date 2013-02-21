@@ -160,48 +160,153 @@ This app is using the `Flask_` microframework with Blueprints. Program entry
 point is ``core.py`` which configures the application. You will find 
 almost all important code in ``frontend/views.py`` and ``tasks.py``.
 
-The modelconvert application can (and probably must) be configured in 
-in order to run properly. Especially paths to aopt and meshlab need
-to be set in the ``settings.py`` file. The settings file however should not
-be changed in the canonical repository. There are several ways to accomplish 
-this without changing the ``settings.py`` file directly.
+The modelconvert application must be configured in order to run properly. It
+ships with sensible defaults, but usually you need to configure it for
+production. Especially paths to ``aopt`` and ``meshlabserver`` as well as a 
+session key need to be set. There are bascially two ways to accomplish this.
 
-  * Forking the project on `GitHub`_ and makeing changes on your fork. 
-  * If you are a core developer, the changes can be made on a seperate 
-    branch (or otherwise prevented from being pushed back to github)
-  * Setting a environmet variable with a config file
+  * Configuring the application by setting environment variables
+  * Creating config file which overrides/sets values
 
-You can set a environment variable on your system which points
-to a config file that overrides the values in settings.py. Just
-set the ``MODELCONVERT_SETTINGS`` variable to point to your config
+Configuration through OS environment variables is the preferred way to 
+configure the modelconvert application. If you use `Honcho`_ or Procfile in
+development, this can be done by creating a ``.env`` file in the root checkout.
+For example:
+
+.. code-block:: bash
+
+    $ cat >.env <<EOM
+    DEBUG=True
+    DEVELOPMENT_MODE=True
+    MESHLAB_BINARY=/path/to/meshlabserver
+    AOPT_BINARY=/path/to/aopt
+    MESHLAB_DISPLAY=:0
+    ADMINS=admin@somedomain.com
+    EOM
+
+When launching the development environment like so:
+
+.. code-block:: bash
+
+    $ honcho start
+
+The variables contained in the ``.env`` file are automatically set.
+
+In server environments, there are many ways to do this: Webserver config, 
+startup script, wsgi file, virtualenv loaders, etc. **Note**: the env 
+variables also must be set when running the celery worker daemon. 
+Make sure that debugging is turned off in your production configuration.
+
+Additionally or alternatively you can set a environment variable on your 
+system which points to a config file that overrides the default values or the
+values you set through individual environment variables. Just set the 
+``MODELCONVERT_SETTINGS`` variable to point to your config
 file like so:
 
 .. code-block:: bash
 
     $ export MODELCONVERT_SETTINGS=/path/to/yoursettings.py
 
-In order to set this whenever you run the manage script, just create
-a small shell script:
+Of course this can also be done in the ``.env`` file. Alternatively, just 
+create a small shell script:
 
 .. code-block:: bash
 
-    $ echo '#!/bin/sh\nexport=MODELCONVERT_SETTINGS=/path/to/settings.py\nhoncho start' >> run.sh
+    $ echo '#!/bin/sh\nexport=MODELCONVERT_SETTINGS=/path/to/settings.py\nhoncho start' >> manage.sh
     $ chmod a+x run.sh
-    $ ./run.sh
+    $ ./manage.sh
 
-In production environments, you should also set this variable, in the WSGI file
-for exmaple, and point it to a configuration valid for the deployment. Make 
-sure that debugging is turned off in your production configuration.
 
-For the moment, please use the forking or branching and modify settings.py
-directly. The config from envvar is not yet fully realized.
+
+-----------------------
+Configuration Variables
+-----------------------
+
+The following configuration variables can be set from the environemnt.
+For more variables which can be overridden with a external config file, 
+see the `settings.py`_ file.
+
+
+=================   ===========================================================
+Variable            Description
+=================   ===========================================================
+SECRET_KEY          For session generation. You absolutely need to 
+                    set this in production environments. To generate
+                    a key run python on the command line and type this:
+
+                    >>> import os
+                    >>> os.urandom(24)
+
+                    There is a default, but please only use this
+                    in development.
+
+DEBUG               Enable/disable debug mode.
+                    default: False (possible: False, True)
+
+DOWNLOAD_PATH       Absolute path to directory that is used to
+                    store generated files. The directory needs to
+                    be writable by the process which owns the 
+                    application. It needs to be readable by the
+                    webserver. You should override the default
+                    value in production.
+                    default: <module_dir>/../tmp/downloads
+
+UPLOAD_PATH         Absolute path to directory which holds uploaded
+                    files. This needs to be read/writable by the
+                    application process. You should override the
+                    default value in production.
+                    default: <module_dir>/../tmp/uploads
+
+AOPT_BINARY         Absolute path to the aopt binary (including
+                    executable). default: aopt (PATH lookup)
+
+MESHLAB_BINARY      Absolute path to the meshlabserver binary 
+                    (including the executable). 
+                    default: meshlabserver (PATH lookup)
+
+MESHLAB_DISPLAY     X11 display port for meshlabserver. Set this to
+                    you default display in a non headless setup. For
+                    a headless setup the default is :99, you need
+                    to run a Xvfb instance there.
+                    default: ':99'
+
+CELERY_BROKER_URL   Celery broker url
+                    default: redis://localhost:6379/0
+
+SERVER_NAME         The name and port number of the server. 
+                    Required for subdomain support (e.g.: 'myapp.dev:5000') 
+                    Note that localhost does not support subdomains 
+                    so setting this to "localhost" does not help. 
+                    Setting a SERVER_NAME also by default enables 
+                    URL generation without a request context but 
+                    with an application context.
+                    default: none
+
+TEMPLATE_PATH       Where the user templates reside. Usually you 
+                    don't want to override this.
+                    default: module_dir/templates/bundles
+                    
+LOGFILE             Absolute path to a file to pipe stdout logging 
+                    to. This should not be used in production. 
+                    default: False (stdout logging)
+
+DEVELOPMENT_MODE    Enable/disable dev mode. This is a old setting
+                    and will be removed. Set to false in production.
+                    default: False (possible: False, True)
+
 
 
 ---------------------
 Temporary directories
 ---------------------
-Befire you begin, you also need to create temporary directories as specified 
-in ``settings.py`` or, more likely, your own ``settings.py`` file.
+
+Before you begin developing, you can automatically create temporary directories 
+as specified per your settings:
+
+.. code-block:: bash
+
+    $ python manage.py mkdirs
+
 
 
 ------
@@ -357,3 +462,4 @@ under grant agreement 270404.
 .. _nginx: http://nginx.org/
 .. _uwsgi: http://wiki.nginx.org/HttpUwsgiModule
 .. _Puppet: https://puppetlabs.com/
+.. _settings.py: https://github.com/x3dom/pipeline/blob/master/modelconvert/settings.py

@@ -49,3 +49,5 @@ stopwaitsecs = 600
 ; if rabbitmq is supervised, set its priority higher
 ; so it starts first
 priority=998
+
+environment=SECRET_KEY='replace this',MESHLAB_BINARY=/opt/meshlab/meshlab/src/distrib/meshlabserver,AOPT_BINARY=/opt/instantReality/bin/aopt,ADMINS='root@localhost',DEBUG=False,UPLOAD_PATH=/var/www/modelconvert/tmp/uploads,DOWNLOAD_PATH=/var/www/modelconvert/tmp/downloads,SERVER_NAME=modelconvert.x3dom.org
