@@ -212,8 +212,8 @@ create a small shell script:
 
 .. code-block:: bash
 
-    $ echo '#!/bin/sh\nexport=MODELCONVERT_SETTINGS=/path/to/settings.py\nhoncho start' >> manage.sh
-    $ chmod a+x run.sh
+    $ echo '#!/bin/sh\nexport=MODELCONVERT_SETTINGS=/path/to/settings.py\npython manage.py run' >> manage.sh
+    $ chmod a+x manage.sh
     $ ./manage.sh
 
 
