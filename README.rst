@@ -293,6 +293,7 @@ LOGFILE             Absolute path to a file to pipe stdout logging
 DEVELOPMENT_MODE    Enable/disable dev mode. This is a old setting
                     and will be removed. Set to false in production.
                     default: False (possible: False, True)
+=================   ===========================================================
 
 
 
