@@ -89,8 +89,7 @@ deployment enviroments. Virtualenv also installs pip for you. If you are not
 using virtualenv, and not acting as root user, you probably need to prefix the 
 pip command in the following instructions with ``sudo``.
 
-.. note::
-   Please do not use your systems package manager (e.g. apt, yum, pacman) to 
+.. note:: Please do not use your systems package manager (e.g. apt, yum, pacman) to 
    install Python libraries. Always use pip.
 
 The steps outline here are tested on Ubuntu 10.4 LTS (lucid32), but should be 
@@ -229,8 +228,7 @@ application, change dir into it.
 Installing required libraries
 -----------------------------
 
-.. note::
-   If you are using virtualenv/wrapper, activate your virtualenv now.
+.. note:: If you are using virtualenv/wrapper, activate your virtualenv now.
 
 
 Install modelconvert requirements with pip:
@@ -439,8 +437,7 @@ And point your browser to ``http://localhost:5000``. To shut down
 press ``Ctrl-C``.
 
 
-.. note::
-   Usually you do not need to restart honcho when you make changes in 
+.. note:: Usually you do not need to restart honcho when you make changes in 
    DEBUG mode. However you need to restart if you make changes to ``tasks.py``.
 
 
@@ -464,8 +461,7 @@ In production environments, you need to configure the application through
 environment variables as well. There are many ways to do this: Webserver config, 
 startup script, wsgi file, virtualenv loaders, etc. 
 
-.. note::
-   The env variables also must be set when running the celery worker daemon. 
+.. note:: The env variables also must be set when running the celery worker daemon. 
    Make sure that debugging is turned off in your production configuration.
 
 
