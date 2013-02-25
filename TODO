@@ -1,14 +1,13 @@
 TODOs
 =====
 - cleanup & unit tests
-- serve from media location so apache does the heavy lifting
-  or utilize sendfile
-- use a cerlery task for offline processing (inluding error handling)
 - convert deployment to virtualenv on server
-
-Sugar
+- error handing and status updates in tasks
+- use WTforms to simplify form/error handling
+- multiple file uploads - redesign of upload/result workflow
+- sessions
 - uploadable user templates
 - package all resources for default templates in zipfile instead of hotlinking
-- upload progress bar
+- upload progress indicator
+- queue list with status info of conversion process
 - API
-- use WTforms to simplify form/error handling

@@ -5,8 +5,6 @@ import os
 
 from fabric.api import *
 
-from modelconvert.utils import fs
-
 # Note, this file is specific for the modelconvert.x3dom server
 # Don't change this. If you want to deploy elsewhere you need
 # to create your own fabfile, specific to your environment
