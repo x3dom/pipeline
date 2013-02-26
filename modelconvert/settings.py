@@ -16,6 +16,11 @@ The following variables can currentluy be configured via environment:
                         There is a default, but please only use this
                         in development.
 
+    ADMINS              A comma seperated list of Email addresses. This
+                        is used to send notification emails to the 
+                        app maintainers.
+                        default: root@localhost
+
     DEBUG               Enable/disable debug mode.
                         default: False (possible: False, True)
 
