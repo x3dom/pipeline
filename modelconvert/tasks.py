@@ -147,7 +147,7 @@ def convert_model(input_file, options=None):
 
         mehlab_filter += "</FilterScript>"
 
-        mehlab_filter_filename = os.path.join(UPLOAD_PATH, hash + '.mlx')
+        mehlab_filter_filename = os.path.join(current_app.config['UPLOAD_PATH'], hash + '.mlx')
         filter_file = open(mehlab_filter_filename, "w") 
         filter_file.write(mehlab_filter) 
         filter_file.close()
