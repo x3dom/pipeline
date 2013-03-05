@@ -129,6 +129,8 @@ def convert_model(input_file, options=None):
     logger.info("Output filename:   {0}".format(output_filename) )
     logger.info("Output directory: {0}".format(output_directory) )
     logger.info("Working directory: {0}".format(working_directory) )
+    logger.info("Aopt binary: {0}".format(current_app.config['AOPT_BINARY']))
+    logger.info("Meshlab binary: {0}".format(current_app.config['MESHLAB_BINARY']))
 
     #inputfile = outputfile warning
     
