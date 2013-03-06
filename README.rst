@@ -292,12 +292,12 @@ set by creating a ``.env`` file in the root checkout. For example:
 .. code-block:: bash
 
     $ cat >.env <<EOM
-    DEBUG=True
-    DEVELOPMENT_MODE=True
-    MESHLAB_BINARY=/path/to/meshlabserver
-    AOPT_BINARY=/path/to/aopt
-    MESHLAB_DISPLAY=:0
-    ADMINS=admin@somedomain.com
+    DEBUG="True"
+    DEVELOPMENT_MODE="True"
+    MESHLAB_BINARY="/path/to/meshlabserver"
+    AOPT_BINARY="/path/to/aopt"
+    MESHLAB_DISPLAY=":0"
+    ADMINS="admin@somedomain.com"
     EOM
 
 When launching the development environment like so:
