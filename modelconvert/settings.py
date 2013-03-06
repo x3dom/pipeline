@@ -102,6 +102,9 @@ def env_var(key, default=None, proc=None):
     elif val == 'False':
         val = False
 
+    if isinstance(val, basestring):
+        val = val.strip()
+        
     if proc:
         val = proc(val)
 

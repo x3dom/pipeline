@@ -317,7 +317,7 @@ file like so:
 
 .. code-block:: bash
 
-    $ export MODELCONVERT_SETTINGS=/path/to/yoursettings.py
+    $ export MODELCONVERT_SETTINGS="/path/to/yoursettings.py"
 
 Of course, this can also be done in the ``.env`` file.
 
@@ -325,11 +325,14 @@ Alternatively, just create a small shell script:
 
 .. code-block:: bash
 
-    $ echo '#!/bin/sh\nMODELCONVERT_SETTINGS=/path/to/config.py python manage.py run' >> manage.sh
+    $ echo '#!/bin/sh\nMODELCONVERT_SETTINGS="/path/to/config.py" python manage.py run' >> manage.sh
     $ chmod a+x manage.sh
     $ ./manage.sh
 
 
+.. warning:: Be sure you don't have leading or trailing whitespaces in the 
+             environemnt variable values. To be certain, use quotes around
+             the values.
 
 
 ~~~~~~~~~~~~~~~~~~~~~~~
