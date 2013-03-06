@@ -414,7 +414,17 @@ DEVELOPMENT_MODE    Enable/disable dev mode. This is a old setting
                     default: False (possible: False, True)
 =================   ===========================================================
 
+~~~~~~~~~~~~~~~
+Other variables
+~~~~~~~~~~~~~~~
+The following variables can only be set through the system environment.
 
+=================   ===========================================================
+Variable            Description
+=================   ===========================================================
+OSG_LOG_LEVEL       Set the OpenSG log level (aopt/opensg). Values: FATAL, 
+                    WARNING, NOTICE, INFO, DEBUG
+=================   ===========================================================
 
 ---------------------
 Temporary directories

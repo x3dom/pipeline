@@ -135,7 +135,6 @@ def convert_model(input_file, options=None):
     #inputfile = outputfile warning
     
     
-
     if meshlab:
         
         env = os.environ.copy()
@@ -250,13 +249,23 @@ def convert_model(input_file, options=None):
         ])
 
     else:  
-        status = subprocess.call([
-          current_app.config['AOPT_BINARY'], 
-          "-i", 
-          input_file, 
-          aopt_output_switch, 
-          output_filename
-        ])
+
+        status = -100
+        aopt_cmd = [
+            current_app.config['AOPT_BINARY'], 
+            "-i", 
+            input_file, 
+            aopt_output_switch, 
+            output_filename
+        ]
+
+        try:
+            status = subprocess.call(aopt_cmd)
+        except OSError:
+            err_msg = "Error: AOPT not found or not executable {0}".format(repr(aopt_cmd))
+            logger.error(err_msg)
+            raise ConversionError(err_msg)
+
 
     if status < 0:
         # FIXME error handling and cleanup (breaking early is good but
