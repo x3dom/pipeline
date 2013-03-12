@@ -1,7 +1,8 @@
-Flask>=0.9
-Flask-Script>=0.5.1,<0.6.0
+Flask==0.9
+Flask-Script==0.5.3
 redis >=2.7.0,<2.8.0
 celery >=3.0.13, <3.1.0
+requests==1.1.0
 
 # optional to manage celery queues
 Flower
@@ -15,4 +16,3 @@ honcho
 
 # future
 #Flask-WTF==0.8
-#requests >= 1.0, < 2.0

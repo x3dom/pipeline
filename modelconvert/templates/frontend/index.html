@@ -23,33 +23,65 @@
     {% endwith %}
 
     <fieldset>
-        <h4>Choose file to upload</h4>
-        <p><small>Supported formats are 
+        <legend>File to convert</legend>
+        <p>Supported formats are 
             X3D, X3DV, X3DB, VRML, PLY, OBJ, OFF, 
-            STL, 3DS, COLLADA, X, OSG, OSB, FHS
-            </small></p>
-            <input type="file" name="file">
+            STL, 3DS, COLLADA, X, OSG, OSB, FHS</p>
+
+            <div id="input_group_file">
+                <input type="file" name="file">
+                <span class="help-block">or <a href="#" id="toggle_input_file">use a URL</a> instead of a file.</span>
+            </div>
+            
+            <div id="input_group_url" class="hide">
+                <input type="text" name="url" maxlength="254" placeholder="http://">
+                <span class="help-block">No thanks, I prefer to <a href="#" id="toggle_input_url">upload a file?</a></span>
+            </div>
     </fieldset>   
 
-    <fieldset>
-        <h4>If you want to optimize your model before conversion, choose the optimization type</h4>
-        <input type="checkbox" name="meshlab" value="Remove Duplicate Faces"> Remove Duplicate Faces<br>
-        <input type="checkbox" name="meshlab" value="Remove Duplicated Vertex"> Remove Duplicate Vertices<br>
-        <input type="checkbox" name="meshlab" value="Remove Zero Area Faces"> Remove Zero Area Faces
-    </fieldset> 
 
     <fieldset>
-        <h4>Choose the conversion option</h4>
-        <input type="radio" name="aopt" value="standard" checked> Standard IndexedFaceSet<br>
-        <input type="radio" name="aopt" value="binGeo"> BinaryGeometry<br>
-        <input type="radio" name="aopt" value="restuctedBinGeo"> Restructured BinaryGeometry
+        <legend>Choose the optimization type</legend>
+        <p>These are all optional</p>
+         <label class="checkbox">
+            <input type="checkbox" name="meshlab" value="Remove Duplicate Faces"> Remove Duplicate Faces
+        </label>
+        <label class="checkbox">
+            <input type="checkbox" name="meshlab" value="Remove Duplicated Vertex"> Remove Duplicate Vertices
+        </label>
+        <label class="checkbox">
+           <input type="checkbox" name="meshlab" value="Remove Zero Area Faces"> Remove Zero Area Faces
+        </label>
+    </fieldset> 
+
+
+    <fieldset>
+        <legend>Choose the conversion option</legend>
+        <label class="radio">
+            <input type="radio" name="aopt" value="standard" checked> Standard IndexedFaceSet<br>
+        </label>    
+        
+        <label class="radio">
+            <input type="radio" name="aopt" value="binGeo"> BinaryGeometry<br>
+        </label>    
+
+        <label class="radio">
+            <input type="radio" name="aopt" value="restuctedBinGeo"> Restructured BinaryGeometry
+        </label>
+
     </fieldset>
     
     <fieldset>
-        <h4>Select a template</h4>
-        <input type="radio" name="template" value="basic" id="radio-basic" checked> Basic Viewer<br>
-        <input type="radio" name="template" value="fullsize" id="radio-fullsize"> Fullsize Viewer<br>
-        <input type="radio" name="template" value="metadataBrowser" id="radio-meta"> Viewer with Metadata Browser<br>
+        <legend>Select a template</legend>
+        <label class="radio">
+            <input type="radio" name="template" value="basic" id="radio-basic" checked> Basic Viewer
+        </label>
+        <label class="radio">
+            <input type="radio" name="template" value="fullsize" id="radio-fullsize"> Fullsize Viewer
+        </label>
+        <label class="radio">
+            <input type="radio" name="template" value="metadataBrowser" id="radio-meta"> Viewer with Metadata Browser
+        </label>
         {# TODO upload own template #}
     </fieldset>
 

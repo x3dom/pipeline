@@ -344,78 +344,86 @@ For more variables which can be overridden with a external config file,
 see the `settings.py`_ file.
 
 
-=================   ===========================================================
-Variable            Description
-=================   ===========================================================
-SECRET_KEY          For session generation. You absolutely need to 
-                    set this in production environments. To generate
-                    a key run python on the command line and type this:
+=================       =======================================================
+Variable                Description
+=================       =======================================================
+SECRET_KEY              For session generation. You absolutely need to 
+                        set this in production environments. To generate
+                        a key run python on the command line and type this:
 
-                    >>> import os
-                    >>> os.urandom(24)
+                        >>> import os
+                        >>> os.urandom(24)
 
-                    There is a default, but please only use this
-                    in development.
+                        There is a default, but please only use this
+                        in development.
 
-ADMINS              A comma seperated list of Email addresses. This
-                    is used to send notification emails to the 
-                    app maintainers.
-                    default: root@localhost
+ADMINS                  A comma seperated list of Email addresses. This
+                        is used to send notification emails to the 
+                        app maintainers.
+                        default: root@localhost
 
-DEBUG               Enable/disable debug mode.
-                    default: False (possible: False, True)
+DEBUG                   Enable/disable debug mode.
+                        default: False (possible: False, True)
 
-DOWNLOAD_PATH       Absolute path to directory that is used to
-                    store generated files. The directory needs to
-                    be writable by the process which owns the 
-                    application. It needs to be readable by the
-                    webserver. You should override the default
-                    value in production.
-                    default: <module_dir>/../tmp/downloads
+DOWNLOAD_PATH           Absolute path to directory that is used to
+                        store generated files. The directory needs to
+                        be writable by the process which owns the 
+                        application. It needs to be readable by the
+                        webserver. You should override the default
+                        value in production.
+                        default: <module_dir>/../tmp/downloads
 
-UPLOAD_PATH         Absolute path to directory which holds uploaded
-                    files. This needs to be read/writable by the
-                    application process. You should override the
-                    default value in production.
-                    default: <module_dir>/../tmp/uploads
+UPLOAD_PATH             Absolute path to directory which holds uploaded
+                        files. This needs to be read/writable by the
+                        application process. You should override the
+                        default value in production.
+                        default: <module_dir>/../tmp/uploads
 
-AOPT_BINARY         Absolute path to the aopt binary (including
-                    executable). default: aopt (PATH lookup)
+AOPT_BINARY             Absolute path to the aopt binary (including
+                        executable). default: aopt (PATH lookup)
 
-MESHLAB_BINARY      Absolute path to the meshlabserver binary 
-                    (including the executable). 
-                    default: meshlabserver (PATH lookup)
+MESHLAB_BINARY          Absolute path to the meshlabserver binary 
+                        (including the executable). 
+                        default: meshlabserver (PATH lookup)
 
-MESHLAB_DISPLAY     X11 display port for meshlabserver. Set this to
-                    you default display in a non headless setup. For
-                    a headless setup the default is :99, you need
-                    to run a Xvfb instance there.
-                    default: ':99'
+MESHLAB_DISPLAY         X11 display port for meshlabserver. Set this to
+                        you default display in a non headless setup. For
+                        a headless setup the default is :99, you need
+                        to run a Xvfb instance there.
+                        default: ':99'
 
-CELERY_BROKER_URL   Celery broker url
-                    default: redis://localhost:6379/0
+ALLOWED_DOWNLOAD_HOSTS  A list of hosts which are allowed to download
+                        files from. Basic secuirty for the "download model
+                        from URL functionality". You need to set this with
+                        the environment through a comma seperated list e.g.:
+                        x3dom.modelconvert.org,someother.domain.com
+                        default: localhost:5000
 
-SERVER_NAME         The name and port number of the server. 
-                    Required for subdomain support (e.g.: 'myapp.dev:5000') 
-                    Note that localhost does not support subdomains 
-                    so setting this to "localhost" does not help. 
-                    Setting a SERVER_NAME also by default enables 
-                    URL generation without a request context but 
-                    with an application context.
-                    default: none
 
-TEMPLATE_PATH       Where the user templates reside. Usually you 
-                    don't want to override this.
-                    default: module_dir/templates/bundles
+CELERY_BROKER_URL       Celery broker url
+                        default: redis://localhost:6379/0
+
+SERVER_NAME             The name and port number of the server. 
+                        Required for subdomain support (e.g.: 'myapp.dev:5000') 
+                        Note that localhost does not support subdomains 
+                        so setting this to "localhost" does not help. 
+                        Setting a SERVER_NAME also by default enables 
+                        URL generation without a request context but 
+                        with an application context.
+                        default: none
+
+TEMPLATE_PATH           Where the user templates reside. Usually you 
+                        don't want to override this.
+                        default: module_dir/templates/bundles
                     
-LOGFILE             Absolute path to a file to pipe stdout logging 
-                    to. This should not be used in production. 
-                    default: False (stdout logging)
+LOGFILE                 Absolute path to a file to pipe stdout logging 
+                        to. This should not be used in production. 
+                        default: False (stdout logging)
 
-DEVELOPMENT_MODE    Enable/disable dev mode. This is a old setting
-                    and will be removed. Set to false in production.
-                    default: False (possible: False, True)
-=================   ===========================================================
+DEVELOPMENT_MODE        Enable/disable dev mode. This is a old setting
+                        and will be removed. Set to false in production.
+                        default: False (possible: False, True)
+=================       =======================================================
 
 ~~~~~~~~~~~~~~~
 Other variables

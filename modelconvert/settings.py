@@ -66,6 +66,13 @@ The following variables can currentluy be configured via environment:
                         with an application context.
                         default: none
 
+    ALLOWED_DOWNLOAD_HOSTS  A list of hosts which are allowed to download
+                            files from. Basic secuirty for the "download model
+                            from URL functionality". You need to set this with
+                            the environment through a comma seperated list e.g.:
+                            x3dom.modelconvert.org,someother.domain.com
+                            default: localhost:5000
+
     TEMPLATE_PATH       Where the user templates reside. Usually you 
                         don't want to override this.
                         default: module_dir/templates/bundles
@@ -149,6 +156,14 @@ ALLOWED_EXTENSIONS = set(['x3d','ply', 'x3db', 'wrl', 'bin', 'fhb', 'off',
                           'osb', 'osg', 'raw', 'slp', 'stl', 'jt', '3ds', 
                           'dae', 'dxf', 'lxo', 'obj', 'x', 'bin', 'fhb',
                           'off', 'osb', 'osg', 'zip', 'tar.gz', 'tar.bz2'])
+
+# A list
+ALLOWED_DOWNLOAD_HOSTS = env_var('ALLOWED_DOWNLOAD_HOSTS', 
+    default='localhost:5000,x3dom.org,www.x3dom.org', 
+    proc=lambda x: frozenset(x.replace(' ', '').split(','))
+)
+
+
 
 #USE_X_SENDFILE = True
 if env_var('SERVER_NAME'):

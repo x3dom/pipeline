@@ -5,6 +5,10 @@ import random
 import shutil
 import uuid
 
+import requests
+import urlparse
+
+
 from werkzeug import secure_filename
 
 from flask import (Blueprint, render_template, current_app, request,
@@ -58,48 +62,97 @@ def upload():
         meshlab = request.form.getlist('meshlab')
         aopt = request.form['aopt']
         template = request.form['template']
+
         file = request.files['file']
+        url = request.form['url']
 
         # options to pass to convertion task
         options = dict()
-        
 
-        if file and is_allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            
-            # create a UUID like hash
-            #hash = "%032x" % random.getrandbits(128)
-            hash = uuid.uuid4().hex
-            options.update(hash=hash)
+        # create a UUID like hash for temporary file storage
+        #hash = "%032x" % random.getrandbits(128)
+        hash = uuid.uuid4().hex
+        options.update(hash=hash)
 
-            # anonymize filename, keep extension and save
-            filename = os.path.join(current_app.config['UPLOAD_PATH'], 
-                                    hash + os.path.splitext(file.filename)[1])
-            file.save(filename)
-            
-            if meshlab:
-                options.update(meshlab=meshlab)
 
-            # in case the user uploaded a meta file, store this as well
-            # FIXME make sure only processed when valid template selection
-            # (DoS)
-            metadata = request.files['metadata']
-            if metadata:
-                meta_filename = os.path.join(current_app.config['UPLOAD_PATH'], hash, 'metadata' + os.path.splitext(metadata.filename)[1])
-                metadata.save(meta_filename)
-                options.update(meta_filename=meta_filename)
-                
-            options.update(
-                aopt=aopt, 
-                template=template
-            )
 
-            retval = tasks.convert_model.apply_async((filename, options))
-            
-            return redirect(url_for('frontend.status', task_id=retval.task_id))
-        else:
-            flash("Please upload a file of the following type: %s" %
+        # This whole section is kind of flimsy. 
+        # - download should be performed asynchrounously, though some checks
+        #   should be performed here (allowed hosts, filenames, etc.)
+        # - downloading a url triggered via public web form is a HUGE security
+        #   risk. Basically anyone can kill our sever by pasting a url to be
+        #   downloaded. Therefore, at the  moment, the ULRs are restricted to 
+        #   the ALLOWED_DOWNLOAD_HOSTS settings.
+
+        # error handling can be done smarter
+        # URL instead of file
+        if url:
+
+            # basic security
+            host = urlparse.urlparse(url).netloc
+            if host not in current_app.config['ALLOWED_DOWNLOAD_HOSTS']:
+                flash("Tried to download from a insecure source. Host {0} not allowed".format(host), 'error')
+                return render_template('frontend/index.html')
+
+            # download file to disk
+            r = requests.get(url, stream=True)
+            filename = secure_filename(os.path.split(url)[-1].split("?")[0])
+            filename = os.path.join(current_app.config['UPLOAD_PATH'], filename)
+
+            if not is_allowed_file(filename):
+                flash("Please upload a file of the following type: %s" %
                 ", ".join(current_app.config['ALLOWED_EXTENSIONS']), 'error')
+                return render_template('frontend/index.html')
+
+            if r.status_code == requests.codes.ok:
+
+                if int(r.headers['content-length']) > current_app.config['MAX_CONTENT_LENGTH']:
+                    flash("File too big. Please don't upload files greater than {}".format(current_app.config['MAX_CONTENT_LENGTH']), 'error')
+                    return render_template('frontend/index.html')
+                else:
+
+                    with open(filename, "wb") as data:
+                        data.write(r.content)
+
+            else:
+                flash("Could not download file {0} Status code: {1}".format(url, r.status_code), 'error')
+                return render_template('frontend/index.html')
+
+        else:
+            # in case of file upload
+            if file and is_allowed_file(file.filename):
+                filename = secure_filename(file.filename)
+                
+                # anonymize filename, keep extension and save
+                filename = os.path.join(current_app.config['UPLOAD_PATH'], 
+                                        hash + os.path.splitext(file.filename)[1])
+                file.save(filename)
+            else:
+                flash("Please upload a file of the following type: %s" %
+                    ", ".join(current_app.config['ALLOWED_EXTENSIONS']), 'error')
+                return render_template('frontend/index.html')
+
+
+        if meshlab:
+            options.update(meshlab=meshlab)
+
+        # in case the user uploaded a meta file, store this as well
+        # FIXME make sure only processed when valid template selection
+        # (DoS)
+        metadata = request.files['metadata']
+        if metadata:
+            meta_filename = os.path.join(current_app.config['UPLOAD_PATH'], hash, 'metadata' + os.path.splitext(metadata.filename)[1])
+            metadata.save(meta_filename)
+            options.update(meta_filename=meta_filename)
+        options.update(
+            aopt=aopt, 
+            template=template
+        )
+
+        retval = tasks.convert_model.apply_async((filename, options))
+        
+        return redirect(url_for('frontend.status', task_id=retval.task_id))
+
 
     return render_template('frontend/index.html')
 
