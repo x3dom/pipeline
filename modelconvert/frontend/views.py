@@ -91,7 +91,7 @@ def upload():
             # basic security
             host = urlparse.urlparse(url).netloc
             if host not in current_app.config['ALLOWED_DOWNLOAD_HOSTS']:
-                flash("Tried to download from a insecure source. Host {0} not allowed".format(host), 'error')
+                flash("Tried to download from a insecure source ({0}). Only the following hosts are allowed: {1}".format(host, ", ".join(current_app.config['ALLOWED_DOWNLOAD_HOSTS'])), 'error')
                 return render_template('frontend/index.html')
 
             # download file to disk

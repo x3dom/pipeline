@@ -24,9 +24,7 @@
 
     <fieldset>
         <legend>File to convert</legend>
-        <p>Supported formats are 
-            X3D, X3DV, X3DB, VRML, PLY, OBJ, OFF, 
-            STL, 3DS, COLLADA, X, OSG, OSB, FHS</p>
+        <p>Supported formats: {{ ", ".join(config['ALLOWED_EXTENSIONS']) }} (the compressed types e.g. zip can contain any of the other, except nested archives)</p>
 
             <div id="input_group_file">
                 <input type="file" name="file">
