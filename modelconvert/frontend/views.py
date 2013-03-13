@@ -17,7 +17,7 @@ from flask import (Blueprint, render_template, current_app, request,
 from flask import jsonify
 from flask import send_from_directory
 
-from modelconvert.utils import ratelimit
+from modelconvert.utils import ratelimit, humanize
 from modelconvert import tasks
 
 
@@ -107,7 +107,7 @@ def upload():
             if r.status_code == requests.codes.ok:
 
                 if int(r.headers['content-length']) > current_app.config['MAX_CONTENT_LENGTH']:
-                    flash("File too big. Please don't upload files greater than {0}".format(current_app.config['MAX_CONTENT_LENGTH']), 'error')
+                    flash("File too big. Please don't upload files greater than {0}".format(humanize.bytes(current_app.config['MAX_CONTENT_LENGTH'])), 'error')
                     return render_template('frontend/index.html')
                 else:
 
