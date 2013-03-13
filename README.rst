@@ -2,9 +2,10 @@
 3D model optimization for humans
 ********************************
 
-Modelconvert is a experimental 3D model optimization service.
-It allows optimization and conversion of 3D models for Web 
-presentation.
+Modelconvert is a experimental 3D model optimization and
+sharing service. It allows optimization and conversion 
+of 3D models for Web presentation and sharing these
+models on the web.
 
 .. image:: https://github.com/x3dom/pipeline/raw/master/design/modelconvert.jpg
     :alt: Modelconvert Screenshots
