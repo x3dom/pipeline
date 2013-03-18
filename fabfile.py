@@ -27,7 +27,7 @@ def deploy():
     """
 #    local('git push')
     with cd(env.APP_ROOT):
-        run('git pull')
+        run('git fetch origin; git reset --hard origin/master')
 #        run('python -c "import compileall; compileall.compile_dir(\'.\')"')
         run('touch wsgi.py')
         sudo('/etc/init.d/apache2 restart', pty=False)
