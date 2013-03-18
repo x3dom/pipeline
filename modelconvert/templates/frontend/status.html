@@ -4,14 +4,50 @@
     {# The polling method is not the best way to do it. But will suffice
         for now.
      #}
-     {% if not result.ready()%}
-        <meta http-equiv="refresh" content="5; URL={{url_for('frontend.status', task_id=result.id)}}"> 
-      {% endif %}
+
+        {% if not result.ready()%}
+        <meta http-equiv="refresh" content="10; URL={{url_for('frontend.status', task_id=result.id)}}">     
+        {% endif %}
+
+     <script>
+        $(document).ready(function() {
+            // Current behaviour is that meta refresh is still executing and killing the log every 10s.
+            // that's kind of lame, so we need to clean this up:
+            // FIXME: need event for complete/error so we can redirect
+            // FIXME: Fallback to meta refresh in case of no JS
+            // FIXME: Use JSON response vs. plain text cruft
+            // FIXME: Fallback to polling in case of no EventSource => better polyfill
+            if (!!window.EventSource) {
+
+                $('meta[name=http-equiv]').remove();
+
+                var source = new EventSource('/progress/{{ result.id }}');
+                var status = $('#status');
+
+                source.addEventListener('message', function(e) {
+                  console.log(e.data);
+                    if (e.data != '1') {
+                        status.append("<p>" +  e.data + "</p>");
+                    }
+                }, false);
+
+            } else {
+              // Result to xhr polling :(
+            }
+        });
+
+    </script>
+
+
     {% endblock %}
 
 {% block content %}
+
+    <div id="status">
+
+    </div>
     {% if not result.ready() %}
-    
+        
     <div style="text-align:center">
         <h2>Your files are being processed... please wait.</h2>
         <img src="{{ url_for('static', filename='img/working.gif') }}">

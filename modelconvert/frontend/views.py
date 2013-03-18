@@ -11,8 +11,9 @@ import urlparse
 
 from werkzeug import secure_filename
 
+import flask
 from flask import (Blueprint, render_template, current_app, request,
-                   flash, url_for, redirect, session, abort)
+                   flash, url_for, redirect, session, abort, Response)
 
 from flask import jsonify
 from flask import send_from_directory
@@ -20,6 +21,7 @@ from flask import send_from_directory
 from modelconvert.utils import ratelimit, humanize
 from modelconvert import tasks
 
+from modelconvert.extensions import red
 
 frontend = Blueprint('frontend', __name__)
 
@@ -36,6 +38,30 @@ def is_allowed_host(url):
     
     host = urlparse.urlparse(url).netloc
     return host in current_app.config['ALLOWED_DOWNLOAD_HOSTS']
+
+
+
+def event_stream(task_id):
+    pubsub = red.pubsub()
+    pubsub.subscribe(task_id)
+    for message in pubsub.listen():
+        print message
+        yield 'data: %s\n\n' % message['data']
+
+@frontend.route('/progress/<task_id>')
+def stream(task_id):
+    return flask.Response(event_stream(task_id), mimetype="text/event-stream")
+
+
+@frontend.route("/ping")
+def ping():
+    red.publish('test', 'Hello!')
+    return flask.redirect('/')
+    #tasks.ping.apply_async()
+    #return 'pong'
+
+
+
 
 
 @frontend.route("/")
@@ -185,6 +211,7 @@ def status(task_id):
             return redirect(url_for('frontend.success', hash=result.info['hash']))
         else:
             return render_template('frontend/status.html', result=result)
+#            return render_template('frontend/status.html', result=result)
 
 
 @frontend.route('/success/<hash>/', methods=['GET'])
@@ -221,11 +248,6 @@ def download(hash, filename):
         return not_found(404)
 
 
-
-@frontend.route("/ping")
-def ping():
-    tasks.ping.apply_async()
-    return 'pong'
 
 
 

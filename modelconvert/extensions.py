@@ -5,6 +5,8 @@ from celery import Celery
 
 celery = Celery()
 
+from redis import StrictRedis
+red = StrictRedis()
 
 #from flask.ext.mail import Mail
 #mail = Mail()

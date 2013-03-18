@@ -6,4 +6,4 @@
 
 redis: redis-server etc/init/redis.conf
 celery: python manage.py celeryworker
-web: python manage.py runserver
+web: python manage.py runserver --threaded

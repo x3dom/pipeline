@@ -93,4 +93,5 @@ def configure_logging(app):
 
 if __name__ == "__main__":
     app = create_app()
-    app.run()
+    app.debug = True
+    app.run(threaded=True)

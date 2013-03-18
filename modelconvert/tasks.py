@@ -19,13 +19,15 @@ context manager to run celery. For example:
 import os
 import shutil
 import subprocess
+import zipfile
+import datetime
 
 from flask import current_app
 from celery import current_task
 
 from jinja2 import Environment, FileSystemLoader
 
-from modelconvert.extensions import celery
+from modelconvert.extensions import celery, red
 from modelconvert.utils import compression
 
 
@@ -33,10 +35,36 @@ class ConversionError(Exception):
     pass
 
 
+def update_progress(msg):
+    """
+    Logs a info about current progress state and updates. Custom
+    PROGRESS state with task. 
+    """
+    #now = datetime.datetime.now().replace(microsecond=0).time()
+    current_app.logger.info("Sening to redis: {0}".format(current_task.request.id))
+    red.publish(current_task.request.id, '{0}'.format(msg))
+
+    current_app.logger.info(msg)
+    current_task.update_state(state='PROGRESS', meta={'message': msg})
+
+
+
+
 @celery.task
 def ping():
     """ Just for testing """
-    logger.info("+++++++++ PING +++++++++")
+    log = current_app.logger
+    log.info("+++++++++ PING +++++++++")
+
+def cleanup():
+    """Stub for celerybeat task to clean out previews"""
+    pass
+
+@celery.task
+def assemble_deliverable(path_to_converted_files, tempalate_bundle, options=None):
+    """Stub"""
+    pass
+
 
 @celery.task
 def convert_model(input_file, options=None):
@@ -47,11 +75,17 @@ def convert_model(input_file, options=None):
     is a settings module in the current package as well as the requierd 
     dependencies (celery, jinja, aopt, meshlab, etc.).
     
+    This tasks is currently very monolithic and does too much.
+    To make this more flexible, this task should really only convert
+    and optimize one file. If multiple files are uploaded, tasks
+    can be chained. Also assembly of templates should not go here.
+
+
     TODO:
       - make directories hash.tmp and rename after successfull transcoding
         this is to distinguish between orphaned files and completed ones
     """
-    logger = current_app.logger
+    log = current_app.logger
 
     # The current tasks id
     task_id = current_task.request.id
@@ -80,9 +114,19 @@ def convert_model(input_file, options=None):
     # aopt options
     aopt = options.get('aopt', None)
 
-    # return OK or FAILED as well as hash for info where to 
-    # find generated files
-    logger.info("Starting to process uploaded file: {0}".format(input_file))
+    update_progress("Starting to process uploaded file: {0}".format(input_file))
+
+    # {{{ start code which will be refactored to frontend 
+    # If the uploaded file is a archive, uncompress it.
+    # Note that this step should be moved to the controller once we support
+    # a wizard style: upload file, select template, analyze contents and present
+    # options for each model. but for now, we are using the naive approach.
+    if compression.is_archive(input_file):
+        update_progress("Input file is a (compressed) archive. Trying to deflate...")
+
+
+    # }}}
+
 
     download_path = current_app.config['DOWNLOAD_PATH']
     template_path = current_app.config['TEMPLATE_PATH']
@@ -126,17 +170,17 @@ def convert_model(input_file, options=None):
     working_directory = os.getcwd()
     os.chdir(output_directory)
     
-    logger.info("Output filename:   {0}".format(output_filename) )
-    logger.info("Output directory: {0}".format(output_directory) )
-    logger.info("Working directory: {0}".format(working_directory) )
-    logger.info("Aopt binary: {0}".format(current_app.config['AOPT_BINARY']))
-    logger.info("Meshlab binary: {0}".format(current_app.config['MESHLAB_BINARY']))
+    log.info("Output filename:   {0}".format(output_filename) )
+    log.info("Output directory: {0}".format(output_directory) )
+    log.info("Working directory: {0}".format(working_directory) )
+    log.info("Aopt binary: {0}".format(current_app.config['AOPT_BINARY']))
+    log.info("Meshlab binary: {0}".format(current_app.config['MESHLAB_BINARY']))
 
     #inputfile = outputfile warning
     
     
     if meshlab:
-        
+    
         env = os.environ.copy()
         env['DISPLAY'] = current_app.config['MESHLAB_DISPLAY']
         
@@ -174,12 +218,12 @@ def convert_model(input_file, options=None):
         out = proc.communicate()[0]
         returncode = proc.wait()
 
-        logger.info(out)
+        log.info(out)
 
         if returncode == 0:
-            logger.info("Meshlab optimization {0}".format(returncode))
+            log.info("Meshlab optimization {0}".format(returncode))
         else:
-            logger.error("Meshlab problem exit code {0}".format(returncode))
+            log.error("Meshlab problem exit code {0}".format(returncode))
 
         # Python 2.7
         # try:
@@ -196,18 +240,20 @@ def convert_model(input_file, options=None):
         #         ], env=env)
         #         
         # except CalledProcessError as e:
-        #     logger.info("Meshlab problem exit code {0}".format(e.returncode))
-        #     logger.error("Meshlab: " + e.output)
+        #     log.info("Meshlab problem exit code {0}".format(e.returncode))
+        #     log.error("Meshlab: " + e.output)
             
 
         # if status == 0:
-        #     logger.info("Meshlab optimization {0}".format(status))
+        #     log.info("Meshlab optimization {0}".format(status))
         # else:
-        #     logger.info("Meshlab problem exit code {0}".format(status))
+        #     log.info("Meshlab problem exit code {0}".format(status))
 
     else:
-        logger.info("No Meshlab optimization")
+       update_progress("No Meshlab optimization")
 
+
+    update_progress("Starting AOPT conversion")
 
     if aopt == 'restuctedBinGeo':
         output_directory_binGeo = os.path.join(output_directory, "binGeo")
@@ -263,7 +309,7 @@ def convert_model(input_file, options=None):
             status = subprocess.call(aopt_cmd)
         except OSError:
             err_msg = "Error: AOPT not found or not executable {0}".format(repr(aopt_cmd))
-            logger.error(err_msg)
+            log.error(err_msg)
             raise ConversionError(err_msg)
 
 
@@ -271,7 +317,7 @@ def convert_model(input_file, options=None):
         # FIXME error handling and cleanup (breaking early is good but
         # cleanup calls for try/catch/finally or contextmanager)
         os.chdir(working_directory)
-        logger.error("Error converting file!!!!!!!!!!")
+        log.error("Error converting file!!!!!!!!!!")
         raise ConversionError('AOPT RETURNS: {0}'.format(status))
     else:
         zip_path = os.path.join(download_path, hash)

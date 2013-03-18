@@ -1,4 +1,5 @@
 $(document).ready(function(){
+
     $('#meta-upload').hide();
     $('#input_group_url').hide();
 

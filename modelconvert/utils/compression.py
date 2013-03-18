@@ -2,9 +2,16 @@
 import os
 
 from contextlib import closing
-from zipfile import ZipFile, ZIP_DEFLATED
+from zipfile import ZipFile, ZIP_DEFLATED, is_zipfile
 
 from . import fs
+
+def is_archive(file):
+    """
+    Checks if a file is compressed or not.
+    This should ultimately support zip, tar.gz, and tar.bz.
+    """
+    return is_zipfile(file)
 
 # check for securuit i.g. ../../../../etc/passwd
 def unzip(file, destdir=None):
