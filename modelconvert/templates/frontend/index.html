@@ -23,8 +23,28 @@
     {% endwith %}
 
     <fieldset>
-        <legend>File to convert</legend>
-        <p>Supported formats: {{ ", ".join(config['ALLOWED_EXTENSIONS']) }} (the compressed types e.g. zip can contain any of the other, except nested archives)</p>
+        <legend>Upload Model</legend>
+        <p><a class="toggler" data-toggle-on="Hide help" data-toggle-off="Show help" href="#file_help">Show help</a> for supported formats, textured models. </p>
+
+        <div id="file_help">
+            <span class="label label-info">Supported formats</span>
+            <p>Supported formats: {{ ", ".join(config['ALLOWED_EXTENSIONS']) }} (the compressed types e.g. zip can contain any of the other, except nested archives)</p>
+            
+            <span class="label label-info">Textured models</span>
+            <p>If you need to upload textures with your model, you need to prepare and upload a ZIP file which also contains your textures. In order to discover the models in the zip file, you need to <strong>store them at the root level</strong> of the Zip archive. This is also true for the metadata which you can also put in the archive. The meatadata nilename needs to be exactly like your model filename except for the extension. Directory names and textures are not touched during conversion and simply copied over. Make sure you only have relative paths in you Zip file. Things like <code>z/../../../etc/passwd</code> or similar are filtered out. Nested archives are not processed. Here's how a zipfile could look:</p>
+
+            <code>my_models.zip:</code>
+<pre>
+vase.ply
+vase.txt
+vase_textures/arbitrary.jpg
+vase_textures/texture.jpg
+skull.ply
+skull.xml
+skull_textures/arbitrary.jpg
+skull_textures/texture.jpg
+</pre>
+        </div>
 
             <div id="input_group_file">
                 <input type="file" name="file">
@@ -84,8 +104,9 @@
     </fieldset>
 
     <fieldset id="meta-upload">
-        <h4>If you choose the "Fullsize Viewer" or "Viewer with Metadata Browser" template, upload a metadata file</h4>
-        <p><small>Supported format 'txt' for "Basic Viewer" and 'xml' for "Viewer with Metadata Browser"</small></p>
+        <legend>Upload a metadata file</legend>
+        <p>If you choose the "Fullsize Viewer" or "Viewer with Metadata Browser" template, you can attach metatdata to your model. Supported formats are <code>txt</code> for "Basic Viewer" and <code>xml</code> for "Viewer with Metadata Browser"</small></p>
+        <p><span class="label label-info">Heads up!</span> In case you upload a ZIP archive, you need to provide the metadata within your archive. See help above for more info.</p>
         <input type="file" name="metadata">
     </fieldset>  
     

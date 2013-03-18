@@ -29,6 +29,14 @@ def is_allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1] in \
         current_app.config['ALLOWED_EXTENSIONS']
 
+def is_allowed_host(url):
+    """ Check if a URL download is allowed """
+    if "*" in current_app.config['ALLOWED_DOWNLOAD_HOSTS']:
+        return True
+    
+    host = urlparse.urlparse(url).netloc
+    return host in current_app.config['ALLOWED_DOWNLOAD_HOSTS']
+
 
 @frontend.route("/")
 def home():
@@ -89,8 +97,7 @@ def upload():
         if url:
 
             # basic security
-            host = urlparse.urlparse(url).netloc
-            if host not in current_app.config['ALLOWED_DOWNLOAD_HOSTS']:
+            if not is_allowed_host(url):
                 flash("Tried to download from a insecure source ({0}). Only the following hosts are allowed: {1}".format(host, ", ".join(current_app.config['ALLOWED_DOWNLOAD_HOSTS'])), 'error')
                 return render_template('frontend/index.html')
 

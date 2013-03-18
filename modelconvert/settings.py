@@ -155,7 +155,7 @@ PREVIEW_URI = env_var('PREVIEW_URI', 'preview/')
 ALLOWED_EXTENSIONS = set(['x3d','ply', 'x3db', 'wrl', 'bin', 'fhb', 'off',
                           'osb', 'osg', 'raw', 'slp', 'stl', 'jt', '3ds', 
                           'dae', 'dxf', 'lxo', 'obj', 'x', 'bin', 'fhb',
-                          'off', 'osb', 'osg', 'zip', 'tar.gz', 'tar.bz2'])
+                          'off', 'osb', 'osg', 'zip'])
 
 # A list
 ALLOWED_DOWNLOAD_HOSTS = env_var('ALLOWED_DOWNLOAD_HOSTS', 

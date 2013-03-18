@@ -1,26 +1,50 @@
-$j(document).ready(function(){
-    $j('#meta-upload').hide();
-    $j('#input_group_url').hide();
+$(document).ready(function(){
+    $('#meta-upload').hide();
+    $('#input_group_url').hide();
 
 
-    $j('#radio-fullsize, #radio-meta').click(function() {
-        $j('#meta-upload').slideDown();
+    $('#radio-fullsize, #radio-meta').click(function() {
+        $('#meta-upload').slideDown();
     });
-    $j('#radio-basic').click(function() {
-        $j('#meta-upload').slideUp();
+    $('#radio-basic').click(function() {
+        $('#meta-upload').slideUp();
     });
 
-    $j('#toggle_input_file').click(function(e) {
-        $j('#input_group_file').hide();
-        $j('#input_group_url').show();
+    $('#toggle_input_file').click(function(e) {
+        $('#input_group_file').hide();
+        $('#input_group_url').show();
         e.preventDefault();
     })
 
-    $j('#toggle_input_url').click(function(e) {
-        $j('#input_group_file').show();
-        $j('#input_group_url').hide();
+    $('#toggle_input_url').click(function(e) {
+        $('#input_group_file').show();
+        $('#input_group_url').hide();
         e.preventDefault();
     })
+
+
+
+    // generic toggler
+    $('a.toggler').each(function() {
+        // hide all elements with ids given in hrefs
+        $($(this).attr('href')).hide();
+    })
+    $('a.toggler').each(function() {
+        $(this).click(function(e) {
+            e.preventDefault();
+            var elem = $($(this).attr('href'));
+            var link = $(this);
+            elem.slideToggle('fast', function() {
+
+            if ($(this).is(':visible')) {
+                link.text(link.attr('data-toggle-on'))
+            } else {
+                link.text(link.attr('data-toggle-off'))
+            }
+
+            });
+        });
+    });
 
 });
 
