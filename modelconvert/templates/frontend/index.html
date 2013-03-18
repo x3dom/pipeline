@@ -20,8 +20,7 @@
     {% endwith %}
 
     <fieldset>
-        <legend>1. Upload your 3D model</legend>
-        <p><a class="toggler" data-toggle-on="Hide help" data-toggle-off="Show help" href="#file_help">Show help</a> on supported formats, textured models. </p>
+        <legend>1. Upload your 3D model <a class="toggler" data-toggle-on="Hide help" data-toggle-off="Show help" href="#file_help">Show help</a></legend>
 
         <div id="file_help" class="help">
             <h4>Supported formats</h4>
@@ -69,12 +68,12 @@ my_models.zip:
 </pre>
         </div>
 
-            <div id="input_group_file">
+            <div id="input_group_file" class="grouping">
                 <input type="file" name="file">
                 <span class="help-block">or <a href="#" id="toggle_input_file">use a URL</a> instead of a file.</span>
             </div>
             
-            <div id="input_group_url" class="hide">
+            <div id="input_group_url" class="grouping hide">
                 <input type="text" name="url" maxlength="254" style="width:90%" placeholder="http://">
                 <span class="help-block">No thanks, I prefer to <a href="#" id="toggle_input_url">upload a file?</a></span>
             </div>
@@ -82,9 +81,14 @@ my_models.zip:
 
 
     <fieldset>
-        <legend>2. Choose the optimization type</legend>
-        <p>These are all optional</p>
-         <label class="checkbox">
+        <legend>2. Choose the optimization type (optional) <a class="toggler" data-toggle-on="Hide help" data-toggle-off="Show help" href="#optimization_help">Show help</a></legend>
+
+        <div id="optimization_help" class="help">
+            <h4>Meshlab optimization</h4>
+            <p>Optimization is performed by <a href="http://meshlab.sourceforge.net/">Meshalb</a> and optional. If you don’t want to optimize meshes, just don’t select anything here.</p>
+        </div>
+
+        <label class="checkbox">
             <input type="checkbox" name="meshlab" value="Remove Duplicate Faces"> Remove Duplicate Faces
         </label>
         <label class="checkbox">
@@ -97,7 +101,25 @@ my_models.zip:
 
 
     <fieldset>
-        <legend>3. Choose conversion options</legend>
+        <legend>3. Choose conversion options <a class="toggler" data-toggle-on="Hide help" data-toggle-off="Show help" href="#aopt_help">Show help</a></legend>
+
+        <div id="aopt_help" class="help">
+            <h4>Conversion options</h4>
+            <p>Conversion to a format suitable for web display is performed using <a href="">InstantReality</a>. You can influence the outcome of the conversion process by choosing the following options.</p>
+
+            <dl>
+                <dt>Standard IndexedFaceSet</dt>
+                <dd>Help Todo</dd>
+
+                <dt>BinaryGeometry</dt>
+                <dd>Help Todo</dd>
+
+                <dt>Restructured BinaryGeometry</dt>
+                <dd>Help Todo</dd>
+            </dl>
+
+        </div>
+
         <label class="radio">
             <input type="radio" name="aopt" value="standard" checked> Standard IndexedFaceSet<br>
         </label>    
