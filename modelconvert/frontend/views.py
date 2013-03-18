@@ -124,7 +124,7 @@ def upload():
 
             # basic security
             if not is_allowed_host(url):
-                flash("Tried to download from a insecure source ({0}). Only the following hosts are allowed: {1}".format(host, ", ".join(current_app.config['ALLOWED_DOWNLOAD_HOSTS'])), 'error')
+                flash("Tried to download from a insecure source ({0}). Only the following hosts are allowed: {1}".format(url, ", ".join(current_app.config['ALLOWED_DOWNLOAD_HOSTS'])), 'error')
                 return render_template('frontend/index.html')
 
             # download file to disk
