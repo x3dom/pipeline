@@ -32,10 +32,21 @@ Main Features
 =============
 
 * Upload and conversion of 3D Models to X3DOM
+* Sharing of models on the web (permalinks to converted models)
+* Downloadble ZIP packages of converted models
 * Triangular Mesh optimization of models
-* Converted/Optimized models can be embedded in tempaltes
+* Converted/Optimized models can be embedded in different tempaltes
 * Asynchronous process
+* Server-Sent Events for fast status updates
 
+And soon:
+
+* Upload archives with many models and textures at once
+* Personalized upload manager for multiple uploads in one view
+* Reprocessing of models with different settings also later
+* Manage your models and what you share with whom
+* User uploadable tempaltes
+* Much more
 
 
 ============
