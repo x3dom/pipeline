@@ -5,6 +5,12 @@ body {
   font-size: 12px;
 }
 
+.help {
+  border: 1px solid red;
+  padding:1em 2em 2em 2em;
+  background-color: #ffffee
+}
+
 p a,
 p a:visited,
 p a:link {
@@ -27,13 +33,20 @@ p {
   margin-bottom: 1.2em;
 }
 
+#hero  {
+  text-align: center;
+  margin:0 auto 2em auto;
+  padding:0;
+  max-width:52em;
+}
+
 
 form {
-  background-color:rgba(128,128,128,0.05);
-  padding:1em;
-  margin:1em 0 1em 0;
-  border:2px solid rgba(157,126,38,0.1);
-  border-radius:4px;
+  /*background-color:rgba(128,128,128,0.05);*/
+  padding:1em 2em 1em 2em;
+  /*margin:1em 0 1em 0;*/
+  /*border:2px solid rgba(157,126,38,0.1);*/
+  /*border-radius:4px;*/
 
 }
 
@@ -41,7 +54,7 @@ form input[type="submit"] {
 }
 
 fieldset {
-  margin-bottom:1em;
+  margin-bottom:2em;
 }
 
 #wrapper {

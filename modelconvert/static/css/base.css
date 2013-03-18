@@ -1,4 +1,11 @@
 body {
+  padding-top: 2em;
+}
+fieldset {
+  margin-top:2em;
+}
+
+/*body {
   padding: 2em;
   max-width:48em;
   margin:0 auto;
@@ -45,4 +52,6 @@ fieldset {
   margin-bottom:1em;
 }
 
+
+*/
 

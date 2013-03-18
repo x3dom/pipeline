@@ -2,13 +2,10 @@
 
 {% block content %}
 
-<h1>Model Conversion</h1>
-<p>This web service converts your 3D model into X3DOM compatible HTML5.</p>
-
-<p>Start the conversion by selecting the model file from your disk and then
-    press the Convert button. Depending on the size of your model and the 
-    server load, it may take a while.
-</p>
+<div id="hero">
+    <h1>Modelconvert</h1>
+    <h4>Convert your 3D model into X3DOM compatible HTML5 <br>and share it over the web.</h4>
+</div>
 
 <form action="{{ url_for('frontend.upload') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
     {% with messages = get_flashed_messages(with_categories=True) %}
@@ -23,15 +20,18 @@
     {% endwith %}
 
     <fieldset>
-        <legend>Upload Model</legend>
-        <p><a class="toggler" data-toggle-on="Hide help" data-toggle-off="Show help" href="#file_help">Show help</a> for supported formats, textured models. </p>
+        <legend>1. Upload your 3D model</legend>
+        <p><a class="toggler" data-toggle-on="Hide help" data-toggle-off="Show help" href="#file_help">Show help</a> on supported formats, textured models. </p>
 
-        <div id="file_help">
-            <span class="label label-info">Supported formats</span>
+        <div id="file_help" class="help">
+            <h4>Supported formats</h4>
             <p>Supported formats: {{ ", ".join(config['ALLOWED_EXTENSIONS']) }} (the compressed types e.g. zip can contain any of the other, except nested archives)</p>
             
-            <span class="label label-info">Textured models</span>
-            <p>If you need to upload textures with your model, you need to prepare and upload a ZIP file which also contains your textures. In order to discover the models in the zip file, you need to <strong>store them at the root level</strong> of the Zip archive. This is also true for the metadata which you can also put in the archive. The meatadata filename needs to be exactly like your model filename except for the extension. Directory names and textures are not touched during conversion and simply copied over. Make sure you only have relative paths in you Zip file. Things like <code>z/../../../etc/passwd</code> or similar are filtered out. Nested archives are not processed. </p>
+            <h4>Textures and multiple models</h4>
+            <p>If you need to upload textures with your model, you need to prepare and upload a ZIP file which also contains your textures. Directory names and textures are not touched during conversion and simply copied over.</p>
+            <p>You can also upload multiple models in one zip file. In order to discover the models in the zip file, you need to <strong>store them at the root level</strong> of the Zip archive. This is also true for the metadata which you can also put in the archive. The meatadata filename needs to be exactly like your model filename except for the extension.  Make sure you only have relative paths in you Zip file. Things like <code>z/../../../etc/passwd</code> or similar are filtered out. Nested archives are not processed.</p>
+
+            <p><span class="label label-info">Heads up!</span> Conversion settingsare the same for all models in one zipfile.</p>
 
             <h5>Here's how a good zipfile could look:</h5>
 
@@ -78,7 +78,7 @@ my_models.zip:
 
 
     <fieldset>
-        <legend>Choose the optimization type</legend>
+        <legend>2. Choose the optimization type</legend>
         <p>These are all optional</p>
          <label class="checkbox">
             <input type="checkbox" name="meshlab" value="Remove Duplicate Faces"> Remove Duplicate Faces
@@ -93,7 +93,7 @@ my_models.zip:
 
 
     <fieldset>
-        <legend>Choose the conversion option</legend>
+        <legend>3. Choose conversion options</legend>
         <label class="radio">
             <input type="radio" name="aopt" value="standard" checked> Standard IndexedFaceSet<br>
         </label>    
@@ -109,7 +109,7 @@ my_models.zip:
     </fieldset>
     
     <fieldset>
-        <legend>Select a template</legend>
+        <legend>3. Select a template</legend>
         <label class="radio">
             <input type="radio" name="template" value="basic" id="radio-basic" checked> Basic Viewer
         </label>
@@ -129,18 +129,22 @@ my_models.zip:
         <input type="file" name="metadata">
     </fieldset>  
     
-    <input type="submit" value="Convert" class="btn btn-primary" data-loading-text="Processing..." onclick="$j(this).button('loading')" >
+
+    <fieldset>
+        <legend>4. Start sharing</legend>
+        <p>Everything set? Then you are ready to upload your model and start sharing. After hitting the convert button, you will be taken to a new page which provides a download link and a preview link to your model.</p>
+
+        <p><strong>Note:</strong> The converted model files will be deleted from our servers a couple of hours after the conversion took place. Make sure you download the files to your computer as soon as possible.</p>
+
+        <input type="submit" value="Convert and Share" class="btn btn-primary" data-loading-text="Processing..." onclick="$(this).button('loading')" >
+
+
+    </fieldset>
+
+        
 </form>
 
-<h4>What happens next?</h4>
-<p>After uploading your source file using the form above, a new page
-    will be displayed with a link to download the converted model as
-    HTML file.</p>
 
-<h4>Note</h4>
-<p>The converted model files will be deleted from our servers
-a couple of hours after the conversion took place. Make sure you download
-the files to your computer.</p>
 
 
 {% endblock %}
