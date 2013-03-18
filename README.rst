@@ -43,7 +43,8 @@ And soon:
 
 * Upload archives with many models and textures at once
 * Personalized upload manager for multiple uploads in one view
-* Reprocessing of models with different settings also later
+* Come back later and reprocess models with different settings without
+  uploading again
 * Manage your models and what you share with whom
 * User uploadable tempaltes
 * Much more
