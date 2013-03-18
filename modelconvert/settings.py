@@ -151,11 +151,40 @@ MESHLAB_DISPLAY = env_var('MESHLAB_DISPLAY', ':99')
 
 PREVIEW_URI = env_var('PREVIEW_URI', 'preview/')
 
+# extension, description
+SUPPORTED_FORMATS = (
+    ('x3d', 'X3D'),
+    ('x3db', 'X3D Binary'),
+    ('osg', 'Open Scene Graph'),
+    ('osb', 'OSB file'),
+    ('3ds', '3D Studio Max'),
+    ('ply', 'PLY files'),
+    ('wrl', 'VRML'),
+    ('bin', 'Binary'),
+    ('fhb', 'FHB files'),
+    ('off', 'OFF files'),
+    ('raw', 'RAW files'),
+    ('slp', 'SLP files'),
+    ('stl', 'STL files'),
+    ('jt', 'JT files'),
+    ('dae', 'DAE files'),
+    ('dxf', 'AutoCad files'),
+    ('lxo', 'LXO files'),
+    ('obj', 'Object files'),
+    ('x', 'X files'),
+    ('fhb', 'FHB files'),
+)
 
-ALLOWED_EXTENSIONS = set(['x3d','ply', 'x3db', 'wrl', 'bin', 'fhb', 'off',
-                          'osb', 'osg', 'raw', 'slp', 'stl', 'jt', '3ds', 
-                          'dae', 'dxf', 'lxo', 'obj', 'x', 'bin', 'fhb',
-                          'off', 'osb', 'osg', 'zip'])
+
+
+ALLOWED_EXTENSIONS = set([ext for ext, desc in SUPPORTED_FORMATS])
+ALLOWED_EXTENSIONS.update(['zip'])
+
+# ALLOWED_EXTENSIONS = set(['x3d','ply', 'x3db', 'wrl', 'bin', 'fhb', 'off',
+#                           'osb', 'osg', 'raw', 'slp', 'stl', 'jt', '3ds', 
+#                           'dae', 'dxf', 'lxo', 'obj', 'x', 'fhb', 'zip'])
+
+
 
 # A list
 ALLOWED_DOWNLOAD_HOSTS = env_var('ALLOWED_DOWNLOAD_HOSTS', 

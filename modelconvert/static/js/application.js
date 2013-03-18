@@ -23,6 +23,7 @@ $(document).ready(function(){
     })
 
 
+    $('abbr').tooltip();
 
     // generic toggler
     $('a.toggler').each(function() {

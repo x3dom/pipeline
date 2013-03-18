@@ -25,11 +25,18 @@
 
         <div id="file_help" class="help">
             <h4>Supported formats</h4>
-            <p>Supported formats: {{ ", ".join(config['ALLOWED_EXTENSIONS']) }} (the compressed types e.g. zip can contain any of the other, except nested archives)</p>
-            
-            <h4>Textures and multiple models</h4>
-            <p>If you need to upload textures with your model, you need to prepare and upload a ZIP file which also contains your textures. Directory names and textures are not touched during conversion and simply copied over.</p>
-            <p>You can also upload multiple models in one zip file. In order to discover the models in the zip file, you need to <strong>store them at the root level</strong> of the Zip archive. This is also true for the metadata which you can also put in the archive. The meatadata filename needs to be exactly like your model filename except for the extension.  Make sure you only have relative paths in you Zip file. Things like <code>z/../../../etc/passwd</code> or similar are filtered out. Nested archives are not processed.</p>
+            <p>The following file formats are currently supported: 
+             {% for ext,desc in config['SUPPORTED_FORMATS'] %}
+                    <span class="label"><abbr title="{{ desc }}">{{ ext }}</abbr></span>
+                {% endfor %}
+            </p>
+
+
+            <h4>Textured models</h4>
+            <p>If you need to upload textures with your model, you need to prepare and upload a ZIP file which also contains your textures. Directory names and texture files as well as the refenreces in your models are not touched during conversion and simply copied over. So are any other files provided in the ZIP package. For more on uploading ZIP files read the next section.</p>
+
+            <h4>ZIP files</h4>
+            <p>You can also upload multiple models in one zip file. In order to discover the models in the zip file, you need to <strong>store them at the root level</strong> of the Zip archive. This is also true for the metadata which you can also put in the archive. The meatadata filename needs to be exactly like your model filename except for the extension.  Make sure you only have relative paths in you Zip file and no back references. Things like <code>z/../../../etc/passwd</code> or similar are filtered out. Nested archives are not processed.</p>
 
             <p><span class="label label-info">Heads up!</span> Conversion settingsare the same for all models in one zipfile.</p>
 
@@ -38,10 +45,10 @@
             
 <pre>
 my_models.zip:
-    vase.ply
-    vase.txt
-    vase_textures/arbitrary.jpg
-    vase_textures/texture.jpg
+    vase.ply                             &lt;- the model at root level
+    vase.txt                             &lt;- Metadata
+    vase_textures/arbitrary.jpg          &lt;- Textures in subdirs
+    vase_textures/texture.jpg            
     skull.ply
     skull.xml
     skull_textures/arbitrary.jpg
@@ -49,7 +56,6 @@ my_models.zip:
 </pre>
 
 <h5>Don't do this:</h5>
-
 <pre>
 my_models.zip:
     mymodels/vase.ply
@@ -61,8 +67,6 @@ my_models.zip:
     /home/pete/project/skull_textures/arbitrary.jpg
     ../../skull_textures/texture.jpg
 </pre>
-
-
         </div>
 
             <div id="input_group_file">
@@ -71,7 +75,7 @@ my_models.zip:
             </div>
             
             <div id="input_group_url" class="hide">
-                <input type="text" name="url" maxlength="254" placeholder="http://">
+                <input type="text" name="url" maxlength="254" style="width:90%" placeholder="http://">
                 <span class="help-block">No thanks, I prefer to <a href="#" id="toggle_input_url">upload a file?</a></span>
             </div>
     </fieldset>   
