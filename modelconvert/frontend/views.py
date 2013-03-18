@@ -41,16 +41,16 @@ def is_allowed_host(url):
 
 
 
-def event_stream(task_id):
+# TODO: cleanup pubsub business (json, events, and ids)
+def event_stream(channel):
     pubsub = red.pubsub()
-    pubsub.subscribe(task_id)
+    pubsub.subscribe(channel)
     for message in pubsub.listen():
-        print message
-        yield 'data: %s\n\n' % message['data']
+        yield 'retry: 500\ndata: %s\n\n' % message['data']
 
-@frontend.route('/progress/<task_id>')
-def stream(task_id):
-    return flask.Response(event_stream(task_id), mimetype="text/event-stream")
+@frontend.route('/stream/<channel>/')
+def stream(channel):
+    return flask.Response(event_stream(channel), mimetype="text/event-stream")
 
 
 @frontend.route("/ping")
@@ -70,7 +70,7 @@ def home():
     return render_template('frontend/index.html')
 
 
-@frontend.route("/preview")
+@frontend.route('/preview/<hash>/<filename>', methods=['GET'])
 def preview():
     """
     The URL is handled by the web-server.
@@ -203,17 +203,20 @@ def status(task_id):
     http://stackoverflow.com/questions/9824172/find-out-whether-celery-task-exists
     """
     result = tasks.convert_model.AsyncResult(task_id)
-    
+
     if request.is_xhr:
         return jsonify(state=result.state)
     else:    
         if result.ready() and result.successful():
-            return redirect(url_for('frontend.success', hash=result.info['hash']))
+            hash = result.info['hash']
+            filenames = ['%s.html' % hash, '%s.zip' % hash]
+            return render_template('frontend/status.html', result=result, hash=hash, filenames=filenames)
+        #    return redirect(url_for('frontend.success', hash=result.info['hash']))
         else:
             return render_template('frontend/status.html', result=result)
-#            return render_template('frontend/status.html', result=result)
 
 
+# TODO: redundant now, we can delete this
 @frontend.route('/success/<hash>/', methods=['GET'])
 def success(hash):
     """ 
@@ -229,7 +232,7 @@ def success(hash):
 
 # This is basically redundant, Nginx or apache should handle this
 # make this a wsgi middleware for development envs
-@frontend.route('/download/<hash>/<filename>/', methods=['GET'])
+@frontend.route('/download/<hash>/<filename>', methods=['GET'])
 def download(hash, filename):
     """
     Allows to download a file from the DOWNLOAD_FOLDER.

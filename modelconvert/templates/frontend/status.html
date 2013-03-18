@@ -5,9 +5,6 @@
         for now.
      #}
 
-        {% if not result.ready()%}
-        <meta http-equiv="refresh" content="10; URL={{url_for('frontend.status', task_id=result.id)}}">     
-        {% endif %}
 
      <script>
         $(document).ready(function() {
@@ -18,16 +15,17 @@
             // FIXME: Use JSON response vs. plain text cruft
             // FIXME: Fallback to polling in case of no EventSource => better polyfill
             if (!!window.EventSource) {
-
-                $('meta[name=http-equiv]').remove();
-
-                var source = new EventSource('/progress/{{ result.id }}');
                 var status = $('#status');
+                if (status.length <= 0) {
+                    return;
+                }
+
+                var source = new EventSource('/stream/{{ result.id }}');
 
                 source.addEventListener('message', function(e) {
-                  console.log(e.data);
+                    console.log(e.data);
                     if (e.data != '1') {
-                        status.append("<p>" +  e.data + "</p>");
+                        status.text(e.data);
                     }
                 }, false);
 
@@ -38,23 +36,69 @@
 
     </script>
 
+        {% if not result.ready()%}
+        <meta http-equiv="refresh" content="10; URL={{url_for('frontend.status', task_id=result.id)}}">
+        {% endif %}
 
     {% endblock %}
 
 {% block content %}
 
-    <div id="status">
+    {% if result.ready() and result.successful() %}
+        {# <div class="alert alert-success"><strong>Well done!</strong> Your files are ready :)</div> #}
 
-    </div>
-    {% if not result.ready() %}
+        <table class="table">
+             <thead>
+                <tr>
+                    <th></th>
+                    <th width="100%">File ID</th>
+                    <th>Preview</th>
+                    <th>Download</th>
+                </tr>
+            </thead>
+
+            <tr class="success">
+                <td><i class="icon-ok"></i></td>
+                <td>{{ hash }}</td>
+                <td><a href="{{ url_for('frontend.preview', hash=hash, filename=filenames[0]) }}" target="_blank">HTML</a></td>
+                <td><a href="{{ url_for('frontend.download', hash=hash, filename=filenames[1]) }}">zip</a></td>
+            </tr>
+        </table>
+
+
+        <p>Click on the links above to download or preview the converted model files or <a href="{{ url_for('frontend.home') }}">convert another file</a></p>
+
         
-    <div style="text-align:center">
-        <h2>Your files are being processed... please wait.</h2>
-        <img src="{{ url_for('static', filename='img/working.gif') }}">
-        <h3>You will be automatically redirected to the download site, once the conversion is&nbsp;complete.</h3>
-    </div>    
+    {% else %}
+
+        <table class="table">
+             <thead>
+                <tr>
+                    <th></th>
+                    <th width="100%">File ID</th>
+                    <th>Preview</th>
+                    <th>Download</th>
+                </tr>
+            </thead>
+
+            <tr class="warning">
+                <td><tt id="wait_1">...</tt>
+                        <script>
+                         new AnimatedDiv('wait_1', ['&ndash;','\\','|','/'], 150).animate();
+                        </script>
+                </td>
+                <td id="status"><strong>Converting...</strong></td>
+                <td>n/a</td>
+                <td>n/a</td>
+            </tr>
+        </table>
+
+        </div>    
+
 
     {% endif %}
+
+
     
     {% if result.failed() %}
         <h3>An error has occured.</h3>
