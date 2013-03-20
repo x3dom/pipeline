@@ -8,37 +8,21 @@ import uuid
 import requests
 import urlparse
 
-
 from werkzeug import secure_filename
 
 import flask
 from flask import (Blueprint, render_template, current_app, request,
-                   flash, url_for, redirect, session, abort, Response)
+                   flash, url_for, redirect, session, abort, Response,
+                   jsonify, send_from_directory)
 
-from flask import jsonify
-from flask import send_from_directory
 
-from modelconvert.utils import ratelimit, humanize
-from modelconvert import tasks
+from modelconvert import tasks, security
 
 from modelconvert.extensions import red
+from modelconvert.utils import ratelimit, humanize
+
 
 frontend = Blueprint('frontend', __name__)
-
-
-def is_allowed_file(filename):
-    """ Check if a filename has an allowed extension """
-    return '.' in filename and filename.rsplit('.', 1)[1] in \
-        current_app.config['ALLOWED_EXTENSIONS']
-
-def is_allowed_host(url):
-    """ Check if a URL download is allowed """
-    if "*" in current_app.config['ALLOWED_DOWNLOAD_HOSTS']:
-        return True
-    
-    host = urlparse.urlparse(url).netloc
-    return host in current_app.config['ALLOWED_DOWNLOAD_HOSTS']
-
 
 
 # TODO: cleanup pubsub business (json, events, and ids)
@@ -123,7 +107,7 @@ def upload():
         if url:
 
             # basic security
-            if not is_allowed_host(url):
+            if not security.is_allowed_host(url):
                 flash("Tried to download from a insecure source ({0}). Only the following hosts are allowed: {1}".format(url, ", ".join(current_app.config['ALLOWED_DOWNLOAD_HOSTS'])), 'error')
                 return render_template('frontend/index.html')
 
@@ -132,7 +116,7 @@ def upload():
             filename = secure_filename(os.path.split(url)[-1].split("?")[0])
             filename = os.path.join(current_app.config['UPLOAD_PATH'], filename)
 
-            if not is_allowed_file(filename):
+            if not security.is_allowed_file(filename):
                 flash("Please upload a file of the following type: %s" %
                 ", ".join(current_app.config['ALLOWED_EXTENSIONS']), 'error')
                 return render_template('frontend/index.html')
@@ -153,7 +137,7 @@ def upload():
 
         else:
             # in case of file upload
-            if file and is_allowed_file(file.filename):
+            if file and security.is_allowed_file(file.filename):
                 filename = secure_filename(file.filename)
                 
                 # anonymize filename, keep extension and save

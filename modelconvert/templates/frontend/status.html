@@ -44,7 +44,15 @@
 
 {% block content %}
 
-    {% if result.ready() and result.successful() %}
+
+    {% if result.failed() %}
+    
+        <h3>An error has occured.</h3>
+        <p>{{result.info}}</p>
+        <p>Please <a href="{{ url_for('frontend.home') }}">try again</a>.</p>
+    
+    {% elif result.ready() and result.successful() %}
+    
         {# <div class="alert alert-success"><strong>Well done!</strong> Your files are ready :)</div> #}
 
         <table class="table">
@@ -100,10 +108,5 @@
 
 
     
-    {% if result.failed() %}
-        <h3>An error has occured.</h3>
-        <p>{{result.info}}</p>
-        <p>Please <a href="{{ url_for('frontend.home') }}">try again</a>.</p>
-    {% endif%}
 
 {% endblock %}

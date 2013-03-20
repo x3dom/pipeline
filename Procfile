@@ -5,5 +5,5 @@
 # http://ddollar.github.com/foreman/
 
 redis: redis-server etc/init/redis.conf
-celery: python manage.py celeryworker
+celery: python manage.py celeryworker 
 web: python manage.py runserver --threaded

@@ -20,7 +20,6 @@ def create_app():
 
     celery.add_defaults(app.config)
 
-
     # configure error handlers
     @app.errorhandler(403)
     def forbidden_page(error):

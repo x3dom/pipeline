@@ -175,14 +175,26 @@ SUPPORTED_FORMATS = (
     ('fhb', 'FHB files'),
 )
 
+SUPPORTED_META_DATA = (
+    ('xml', 'XML Metadata'),
+    ('txt', 'Text metadata'),
+)
 
+SUPPORTED_ARCHIVES = (
+    ('zip', 'ZIP archive'),
+)
 
-ALLOWED_EXTENSIONS = set([ext for ext, desc in SUPPORTED_FORMATS])
-ALLOWED_EXTENSIONS.update(['zip'])
+SUPPORTED_MODEL_EXTENSIONS = set([ext[0] for ext in SUPPORTED_FORMATS])
+SUPPORTED_META_EXTENSIONS = set([ext[0] for ext in SUPPORTED_META_DATA])
+SUPPORTED_ARCHIVE_EXTENSIONS = set([ext[0] for ext in SUPPORTED_ARCHIVES])
 
-# ALLOWED_EXTENSIONS = set(['x3d','ply', 'x3db', 'wrl', 'bin', 'fhb', 'off',
-#                           'osb', 'osg', 'raw', 'slp', 'stl', 'jt', '3ds', 
-#                           'dae', 'dxf', 'lxo', 'obj', 'x', 'fhb', 'zip'])
+ALLOWED_EXTENSIONS = set()
+ALLOWED_EXTENSIONS.update(SUPPORTED_MODEL_EXTENSIONS)
+ALLOWED_EXTENSIONS.update(SUPPORTED_META_EXTENSIONS)
+
+# archives in progress currently not supported
+if DEBUG:
+    ALLOWED_EXTENSIONS.update(SUPPORTED_ARCHIVE_EXTENSIONS)
 
 
 
@@ -210,7 +222,14 @@ CELERY_BROKER_URL = env_var('CELERY_BROKER_URL', 'redis://localhost:6379/0')
 BROKER_URL = CELERY_BROKER_URL
 CELERY_IMPORTS = ("modelconvert.tasks", )
 #CELERY_TASK_RESULT_EXPIRES = 300 # default is one day
+CELERY_HIJACK_ROOT_LOGGER = False
+CELERYD_LOG_COLOR=False
 
+
+
+if DEBUG:
+    CELERYD_LOG_FORMAT = '%(message)s'
+    CELERYD_TASK_LOG_FORMAT = '%(message)s'
 
 
 del os
