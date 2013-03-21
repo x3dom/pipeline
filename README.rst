@@ -357,9 +357,9 @@ For more variables which can be overridden with a external config file,
 see the `settings.py`_ file.
 
 
-=================       =======================================================
+======================  =======================================================
 Variable                Description
-=================       =======================================================
+======================  =======================================================
 SECRET_KEY              For session generation. You absolutely need to 
                         set this in production environments. To generate
                         a key run python on the command line and type this:
@@ -436,7 +436,7 @@ LOGFILE                 Absolute path to a file to pipe stdout logging
 DEVELOPMENT_MODE        Enable/disable dev mode. This is a old setting
                         and will be removed. Set to false in production.
                         default: False (possible: False, True)
-=================       =======================================================
+======================  =======================================================
 
 ~~~~~~~~~~~~~~~
 Other variables
