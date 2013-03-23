@@ -30,7 +30,7 @@ def event_stream(channel):
     pubsub = red.pubsub()
     pubsub.subscribe(channel)
     for message in pubsub.listen():
-        yield 'retry: 500\ndata: %s\n\n' % message['data']
+        yield 'retry: 3000\ndata: %s\n\n' % message['data']
 
 @frontend.route('/stream/<channel>/')
 def stream(channel):

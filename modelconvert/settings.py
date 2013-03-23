@@ -226,7 +226,7 @@ CELERY_HIJACK_ROOT_LOGGER = False
 CELERYD_LOG_COLOR=False
 
 
-
+# simplify log output during development
 if DEBUG:
     CELERYD_LOG_FORMAT = '%(message)s'
     CELERYD_TASK_LOG_FORMAT = '%(message)s'
