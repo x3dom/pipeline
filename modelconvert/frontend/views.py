@@ -26,6 +26,8 @@ frontend = Blueprint('frontend', __name__)
 
 
 # TODO: cleanup pubsub business (json, events, and ids)
+# FIXME: This oviously does not scale, we need to use gevent/tornado
+#        or node for pub/sub services.
 def event_stream(channel):
     pubsub = red.pubsub()
     pubsub.subscribe(channel)
@@ -112,7 +114,7 @@ def upload():
                 return render_template('frontend/index.html')
 
             # download file to disk
-            r = requests.get(url, stream=True)
+            r = requests.get(url, stream=True, verify=False)
             filename = secure_filename(os.path.split(url)[-1].split("?")[0])
             filename = os.path.join(current_app.config['UPLOAD_PATH'], filename)
 
