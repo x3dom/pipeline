@@ -118,6 +118,8 @@ def upload():
             filename = secure_filename(os.path.split(url)[-1].split("?")[0])
             filename = os.path.join(current_app.config['UPLOAD_PATH'], filename)
 
+            # FIXME: this should check the mimetype in the http response header
+            # as well
             if not security.is_allowed_file(filename):
                 flash("Please upload a file of the following type: %s" %
                 ", ".join(current_app.config['ALLOWED_EXTENSIONS']), 'error')
@@ -163,6 +165,7 @@ def upload():
             meta_filename = os.path.join(current_app.config['UPLOAD_PATH'], hash, 'metadata' + os.path.splitext(metadata.filename)[1])
             metadata.save(meta_filename)
             options.update(meta_filename=meta_filename)
+        
         options.update(
             aopt=aopt, 
             template=template
