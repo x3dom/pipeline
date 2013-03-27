@@ -139,8 +139,41 @@ need it later.
 Meshlabserver
 -------------
 
-You can get Meshlab from http://www.meshlab.org/. Installation depends
-on your system. You need the path to the ``meshlabserver`` binary.
+The Meshlab Server version used inside the CIF pipeline is a special version of the Meshlab Server released
+with Meshlab. Binaries or installers are not released for this version, hence you need to compile it 
+from the scratch. To do so, you have to follow the instructions at:
+
+http://sourceforge.net/apps/mediawiki/meshlab/index.php?title=Compiling
+
+for what concern to get the source code and to resolve the external dependencies.
+
+Regarding the compilation we report below the instructions distinguishing between using or not the Qt Creator.
+
+*Compiling without the Qt Creator*
+
+The compiling step depends on the compiling environment. Using GCC (both under linux and using the mingw gcc provided with 
+the free Qt distribution) you should just type, from the meshlab/src directory:
+
+.. code-block:: bash
+    
+    $ qmake -recursive meshlabserver_vmust.pro
+    $ make
+
+This compile the Meshlab Server and all the plugins needed to work into the CIF pipeline.
+
+*Compiling with the Qt Creator*
+
+In order to easily compile the external libraries and MeshLab using the Qt Creator IDE we suggest to go around the 
+shadow-build system introduced by Qt Creator.
+
+    - Import the *.pro file ( File->Open File or Project... )
+    - Click on Finish button in the Project setup form
+    - Click on the Projects Icon in the Left Bar on Qt Creator Main Window
+    - Both for Debug and Release setup change "Build directory" parameter on:
+        
+        - MESHLAB_DIR/src/external for external.pro project
+        - MESHLAB_DIR/src for meshlabserver_vmust.pro 
+
 
 Unless it's not already in the PATH, note down the absolute path to the 
 ``meshlabserver`` binary, you'll need it later.
