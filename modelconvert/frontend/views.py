@@ -57,7 +57,7 @@ def home():
 
 
 @frontend.route('/preview/<hash>/<filename>', methods=['GET'])
-def preview():
+def preview(hash, filename):
     """
     The URL is handled by the web-server.
     """

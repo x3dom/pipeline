@@ -360,13 +360,11 @@ def convert_model(input_file, options=None):
             '-i', 
             input_file, 
             '-F',
-            'Scene:"maxtris(23000)"', 
+            'Scene:"cacheopt(true)"',
             '-f',
             'PrimitiveSet:creaseAngle:4',              
             '-f'
             'PrimitiveSet:normalPerVertex:TRUE',
-            '-f',
-            'PrimitiveSet:optimizationMode:none',
             '-V',
             '-G ',
             'binGeo/:sacp',
@@ -374,27 +372,6 @@ def convert_model(input_file, options=None):
             output_filename
         ]
 
-        #aopt -i input.ply -F Scene:"maxtris(23000)" -f PrimitiveSet:creaseAngle:4
-        # -f PrimitiveSet:normalPerVertex:TRUE -f PrimitiveSet:optimizationMode:none
-        # -V -G binGeo/:sacp -x model.x3d -N model.html
-        # status = subprocess.call([
-        #     current_app.config['AOPT_BINARY'], 
-        #     '-i', 
-        #     input_file, 
-        #     '-F',
-        #     'Scene:"maxtris(23000)"', 
-        #     '-f',
-        #     'PrimitiveSet:creaseAngle:4',              
-        #     '-f'
-        #     'PrimitiveSet:normalPerVertex:TRUE',
-        #     '-f',
-        #     'PrimitiveSet:optimizationMode:none',
-        #     '-V',
-        #     '-G ',
-        #     'binGeo/:sacp',
-        #     aopt_output_switch, 
-        #     output_filename
-        # ])
         
     elif aopt == 'binGeo':
         update_progress("AOPT binary geo optimization...")
@@ -411,15 +388,6 @@ def convert_model(input_file, options=None):
           output_filename
         ]
 
-        # status = subprocess.call([
-        #   current_app.config['AOPT_BINARY'], 
-        #   "-i", 
-        #   input_file, 
-        #   "-G", 
-        #   'binGeo/:saI', 
-        #   aopt_output_switch, 
-        #   output_filename
-        # ])
 
     else:  
 
@@ -433,8 +401,7 @@ def convert_model(input_file, options=None):
             output_filename
         ]
 
-
-    
+   
     try:
     
         update_progress("Running AOPT")
