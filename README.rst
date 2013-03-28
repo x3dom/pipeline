@@ -67,6 +67,34 @@ System requirements (make sure you install them first):
  * On Unix/Linux a xvfb framebuffer or a running X11 instance
 
 
+------------------
+The shortcut route 
+------------------
+
+Highly experimental at this time. You need an live internet connection,
+preferrably fast.
+
+  * Install `VirtualBox`_ 
+  * Install `Vagrant`_ 
+  * Install Git
+
+Drop to command line:
+
+.. code-block:: bash
+    
+    $ git clone https://github.com/x3dom/pipeline.git modelconvert
+    $ cd modelconvert
+    $ vagrant up                  (go to lunch, takes LONG the first time)
+    $ vagrant ssh
+    $ ./develop
+
+Point your browser to: http://localhost:5001
+
+With a bit of luck, you'll have a working virtual machine with everything
+installed and running.
+
+
+
 ------
 Python
 ------
