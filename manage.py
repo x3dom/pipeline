@@ -28,9 +28,6 @@ def celeryworker():
     """
     from modelconvert.extensions import celery
     with app.app_context():
-        if app.debug:
-            # silence duplicate logs during development
-            celery.worker_main(['worker', '-E', '-l', 'FATAL'])
         celery.worker_main(['worker', '-E', '-l', 'INFO'])
 #
 # FIXME: move this to a celerybeats task

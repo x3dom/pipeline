@@ -1,0 +1,9 @@
+DEBUG="True"
+DEVELOPMENT_MODE="True"
+MESHLAB_BINARY="/opt/meshlab/bin/meshlabserver"
+AOPT_BINARY="/opt/instantrelaity/bin/aopt"
+MESHLAB_DISPLAY=":99"
+ADMINS=root@localhost
+PYTHONWARNINGS="d"
+DOWNLOAD_PATH=/vagrant/tmp/downloads
+UPLOAD_PATH=/vagrant/tmp/uploads
