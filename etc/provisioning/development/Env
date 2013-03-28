@@ -1,6 +1,6 @@
 DEBUG="True"
 DEVELOPMENT_MODE="True"
-MESHLAB_BINARY="/opt/meshlab/bin/meshlabserver"
+MESHLAB_BINARY="/opt/build/meshlab/src/distrib/meshlabserver"
 AOPT_BINARY="/opt/instantrelaity/bin/aopt"
 MESHLAB_DISPLAY=":99"
 ADMINS=root@localhost
