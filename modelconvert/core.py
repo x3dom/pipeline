@@ -19,11 +19,6 @@ def create_app():
     app.config.from_object('modelconvert.settings')
     app.config.from_envvar('MODELCONVERT_SETTINGS', silent=True)
 
-    from jinja2 import FileSystemLoader 
-    import os
-    template_path = '/Users/andi/tmp/templates' 
-    app.jinja_loader = FileSystemLoader(template_path) 
-
     configure_logging(app)
 
     app.register_blueprint(frontend)

@@ -147,7 +147,7 @@ BUNDLES_PATH = env_var('BUNDLES_PATH', path('templates/bundles'))
 
 #customization of UI templates
 STATIC_PATH = env_var('STATIC_PATH', path('static'))
-TEMPLATE_PATH = env_var('TEMPLATE_PATH', path('static'))
+TEMPLATE_PATH = env_var('TEMPLATE_PATH', path('templates'))
 
 
 LOGFILE = env_var('LOGFILE', False)   # default logging to stdout
