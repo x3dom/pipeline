@@ -67,9 +67,7 @@ System requirements (make sure you install them first):
  * On Unix/Linux a xvfb framebuffer or a running X11 instance
 
 
-~~~~~~~~~~~~~~~~~~
-The shortcut route 
-~~~~~~~~~~~~~~~~~~
+**The shortcut route**
 
 Highly experimental at this time. You need an live internet connection,
 preferrably fast.
@@ -191,12 +189,12 @@ the free Qt distribution) you should just type, from the meshlab/src directory:
 
 This compile the Meshlab Server and all the plugins needed to work into the CIF pipeline.
 
-*Compiling with the Qt Creator*
+**Compiling with the Qt Creator**
 
 In order to easily compile the external libraries and MeshLab using the Qt Creator IDE we suggest to go around the 
 shadow-build system introduced by Qt Creator.
 
-    - Import the *.pro file ( File->Open File or Project... )
+    - Import the ``.pro`` file ( File->Open File or Project... )
     - Click on Finish button in the Project setup form
     - Click on the Projects Icon in the Left Bar on Qt Creator Main Window
     - Both for Debug and Release setup change "Build directory" parameter on:
