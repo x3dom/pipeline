@@ -67,9 +67,9 @@ System requirements (make sure you install them first):
  * On Unix/Linux a xvfb framebuffer or a running X11 instance
 
 
-------------------
+~~~~~~~~~~~~~~~~~~
 The shortcut route 
-------------------
+~~~~~~~~~~~~~~~~~~
 
 Highly experimental at this time. You need an live internet connection,
 preferrably fast.
@@ -93,6 +93,8 @@ Point your browser to: http://localhost:5001
 With a bit of luck, you'll have a working virtual machine with everything
 installed and running.
 
+The VirtualBox/Vagrant setup is currently a WIP. Read on for the regular
+setup steps.
 
 
 ------
