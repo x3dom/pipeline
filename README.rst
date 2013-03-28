@@ -425,10 +425,16 @@ SERVER_NAME             The name and port number of the server.
                         with an application context.
                         default: none
 
-TEMPLATE_PATH           Where the user templates reside. Usually you 
+TEMPLATE_PATH           Where the UI templates reside. 
+                        default: module_dir/templates
+
+STATIC_PATH             Where the static assets for the UI reside. 
+                        default: module_dir/static
+
+BUNDLES_PATH            Where the user templates reside. Usually you 
                         don't want to override this.
                         default: module_dir/templates/bundles
-                    
+                   
 LOGFILE                 Absolute path to a file to pipe stdout logging 
                         to. This should not be used in production. 
                         default: False (stdout logging)

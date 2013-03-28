@@ -5,14 +5,24 @@ from flask import Flask, render_template
 from modelconvert.extensions import celery
 from modelconvert.frontend import frontend
 
+from modelconvert import settings
+
 
 # -- App setup --------------------------------------------------------------
 def create_app():
     """Create the Flask app."""
 
-    app = Flask("modelconvert")
+    app = Flask("modelconvert", 
+        template_folder=settings.TEMPLATE_PATH, 
+        static_folder=settings.STATIC_PATH)
+    
     app.config.from_object('modelconvert.settings')
     app.config.from_envvar('MODELCONVERT_SETTINGS', silent=True)
+
+    from jinja2 import FileSystemLoader 
+    import os
+    template_path = '/Users/andi/tmp/templates' 
+    app.jinja_loader = FileSystemLoader(template_path) 
 
     configure_logging(app)
 

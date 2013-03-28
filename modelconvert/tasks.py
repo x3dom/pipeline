@@ -143,7 +143,7 @@ def convert_model(input_file, options=None):
     logger.info("Uploaded file: {0}".format(input_file))
 
     download_path = current_app.config['DOWNLOAD_PATH']
-    template_path = current_app.config['TEMPLATE_PATH']
+    template_path = current_app.config['BUNDLES_PATH']
     upload_path = current_app.config['UPLOAD_PATH']
     
 
