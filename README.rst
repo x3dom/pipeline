@@ -67,7 +67,7 @@ System requirements (make sure you install them first):
  * On Unix/Linux a xvfb framebuffer or a running X11 instance
 
 
-**The shortcut route**
+**The quick and easy route, as Vader did**
 
 Highly experimental at this time. You need an live internet connection,
 preferrably fast.
@@ -82,9 +82,9 @@ Drop to command line:
     
     $ git clone https://github.com/x3dom/pipeline.git modelconvert
     $ cd modelconvert
-    $ vagrant up                  (go to lunch, takes LONG the first time)
+    $ vagrant up              (go to lunch, takes LONG the first time)
     $ vagrant ssh
-    $ ./develop            <- you're now on the vm
+    $ ./develop               <- on the vm
 
 Point your browser to: http://localhost:5001
 
@@ -96,8 +96,8 @@ To stop working:
 .. code-block:: bash
     
     $ <Ctr-C>^
-    $ logout     (or Ctr-D)       
-    $ vagrant suspend                <- back on local machine
+    $ logout                  (or Ctr-D)       
+    $ vagrant suspend         <- back on local machine
 
 Then when you come back to work on the project again:
 
@@ -105,7 +105,7 @@ Then when you come back to work on the project again:
     
     $ vagrant resume
     $ vagrant ssh
-    $ ./develop            <- you're now on the vm
+    $ ./develop               <- runs on the vm
 
 
 The VirtualBox/Vagrant setup is currently a WIP. Read on for the regular
