@@ -62,12 +62,17 @@ easy_install pip
 # ----------------------------------------------------------------------
 
 # instant
-#wget --directory=/tmp ftp://ftp.igd.fraunhofer.de/irbuild/Ubuntu-i686/InstantReality-Ubuntu-10.04-x86-2.2.0.24944.deb
-#dpkg -i /tmp/InstantReality-Ubuntu-10.04-x86-2.2.0.24944.deb
-#rm /tmp/InstantReality-Ubuntu-10.04-x86-2.2.0.24944.deb
-# get missing dependencies from dpkg
-apt-get -f install 
+# TODO: ftp list and get latest file > 30MB
+#IR_BUILD="InstantReality-Ubuntu-12.04-x86-2.2.0.24948.deb"
+IR_BUILD="InstantReality-Ubuntu-12.04-x64-2.2.0.24953.deb"
 
+wget --directory=/tmp http://x3dom.org/temp/$IR_BUILD
+#wget --directory=/tmp ftp://ftp.igd.fraunhofer.de/irbuild/Ubuntu-i686/InstantReality-Ubuntu-10.04-x86-2.2.0.24944.deb
+dpkg -i /tmp/$IR_BUILD
+rm /tmp/$IR_BUILD
+
+# get missing dependencies from dpkg
+apt-get -y -f install 
 
 
 # ----------------------------------------------------------------------
@@ -102,7 +107,7 @@ qmake -recursive external.pro
 make
 
 cd /opt/build/meshlab/src
-qmake -recursive meshlab_full.pro
+qmake -recursive meshlabserver_vmust.pro
 make
 
 cd $_CWD
