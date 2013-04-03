@@ -1,5 +1,20 @@
 TODOs
 =====
+
+- Vagrant box
+- rename etc -> share
+- Multi files
+- metarefresh->ajax poll
+- hub/vmust split
+- 12.4 ir download?
+
+- switch to dir for each upload
+- zip upload 
+- sha/index.hml not sha/sha.html
+- Uploader (nginx/progress)
+- better basic viewer
+
+
 - cleanup & unit tests
 - convert deployment to virtualenv on server
 - error handing and status updates in tasks
@@ -11,3 +26,5 @@ TODOs
 - upload progress indicator
 - queue list with status info of conversion process
 - API
+
+

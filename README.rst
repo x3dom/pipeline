@@ -84,12 +84,29 @@ Drop to command line:
     $ cd modelconvert
     $ vagrant up                  (go to lunch, takes LONG the first time)
     $ vagrant ssh
-    $ ./develop
+    $ ./develop            <- you're now on the vm
 
 Point your browser to: http://localhost:5001
 
 With a bit of luck, you'll have a working virtual machine with everything
 installed and running.
+
+To stop working:
+
+.. code-block:: bash
+    
+    $ <Ctr-C>^
+    $ logout     (or Ctr-D)       
+    $ vagrant suspend                <- back on local machine
+
+Then when you come back to work on the project again:
+
+.. code-block:: bash
+    
+    $ vagrant resume
+    $ vagrant ssh
+    $ ./develop            <- you're now on the vm
+
 
 The VirtualBox/Vagrant setup is currently a WIP. Read on for the regular
 setup steps.

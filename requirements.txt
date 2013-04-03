@@ -1,13 +1,12 @@
 Flask==0.9
 Flask-Script==0.5.3
 redis >=2.7.0,<2.8.0
-celery >=3.0.13, <3.1.0
+celery==3.0.17
 requests==1.1.0
 flask-login
 
 # optional to manage celery queues
 Flower
-
 
 # 
 # Used on dev box only

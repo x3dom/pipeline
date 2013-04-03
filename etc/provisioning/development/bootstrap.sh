@@ -24,6 +24,12 @@ EOM
 wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | \
   sudo apt-key add -
 
+# recent redis, node
+add-apt-repository ppa:chris-lea/redis-server
+add-apt-repository ppa:chris-lea/node.js
+#add-apt-repository ppa:nginx/stable
+add-apt-repository ppa:nginx/development
+
 apt-get update
 apt-get -y upgrade
 
@@ -44,9 +50,9 @@ service xvfb restart
 apt-get -y install vim
 apt-get -y install git
 apt-get -y install postgresql
-apt-get -y install redis-server  # old, fix this
-apt-get -y install nginx         # old, fix this
-apt-get -y install nodejs        # don't need yet
+apt-get -y install redis-server 
+apt-get -y install nginx
+apt-get -y install nodejs
 apt-get -y install python-setuptools
 apt-get -y install python-dev
 easy_install pip
