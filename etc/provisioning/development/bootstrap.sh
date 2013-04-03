@@ -31,7 +31,9 @@ add-apt-repository ppa:chris-lea/node.js
 add-apt-repository ppa:nginx/development
 
 apt-get update
-apt-get -y upgrade
+
+# upgrading takes forever, don't do this
+#apt-get -y upgrade
 
 # ----------------------------------------------------------------------
 # basic infrastructure
