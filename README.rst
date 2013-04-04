@@ -58,7 +58,7 @@ This project works in a Python ecosystem and depends on two external software
 solutions: `InstantReality`_ and `Meshlab`_. Therefore you need to install
 those packages first, and in rare cases a recent Python, on your system. 
 
-System requirements (make sure you install them first):
+System requirements:
  
  * `Python`_ 2.7 (2.6 works too)
  * `Redis`_
