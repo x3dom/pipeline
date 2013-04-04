@@ -125,16 +125,17 @@ cd $_CWD
 # ----------------------------------------------------------------------
 pip install -r https://raw.github.com/x3dom/pipeline/master/requirements.txt
 
-#
-# NOTE, there's a problem when Ctrl-C ing after an error
-# I don't know why but it does not terminate all celery workers
-# This does not happen on OSX
-#
 cat >/home/vagrant/develop <<EOM
 #!/bin/bash
 HOME=`pwd`
 cd /vagrant
 exec honcho -d /vagrant -e /vagrant/share/provisioning/development/Env -f /vagrant/share/provisioning/development/Procfile start
+
+# NOTE, there's a problem when Ctrl-C ing after an error
+# I don't know why but it does not terminate all celery workers
+# on Ubuntu. So we kill em all.
+
+kill -9 $(pidof python)
 cd $HOME
 EOM
 
