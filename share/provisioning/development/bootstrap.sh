@@ -134,7 +134,7 @@ cat >/home/vagrant/develop <<EOM
 #!/bin/bash
 HOME=`pwd`
 cd /vagrant
-exec honcho -d /vagrant -e /vagrant/etc/provisioning/development/Env -f /vagrant/etc/provisioning/development/Procfile start
+exec honcho -d /vagrant -e /vagrant/share/provisioning/development/Env -f /vagrant/share/provisioning/development/Procfile start
 cd $HOME
 EOM
 

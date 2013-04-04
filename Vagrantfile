@@ -10,7 +10,7 @@ Vagrant.configure("2") do |config|
   #config.vm.box_url = "http://files.vagrantup.com/precise64.box"  
 
   config.vm.network(:forwarded_port, guest: 5001, host: 5001, auto_correct: true)
-  config.vm.provision(:shell, :path => "etc/provisioning/development/bootstrap.sh")
+  config.vm.provision(:shell, :path => "share/provisioning/development/bootstrap.sh")
 
   # Create a private network, which allows host-only access to the machine
   # using a specific IP.
