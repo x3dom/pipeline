@@ -67,33 +67,45 @@ System requirements (make sure you install them first):
  * On Unix/Linux a xvfb framebuffer or a running X11 instance
 
 
-**The quick and easy route, as Vader did**
+-----------------------
+The quick and easy path
+-----------------------
+We provide a method of boostrapping a complete development environment in a
+virtual machine. This is done using four different open source tools you need 
+to install first on your system:
 
-Highly experimental at this time. You need an live internet connection,
-preferrably fast.
+  * `VirtualBox`_, a virtualization software 
+  * `Vagrant`_ , a virtualization software manager
+  * `Git`_, a source control system to get the code
+  * a SSH client in your PATH (on Unix systems this is usually installed)
 
-  * Install `VirtualBox`_ 
-  * Install `Vagrant`_ 
-  * Install Git
+After installing these components on your system you need to drop to the
+command line and issue the following commands. Make sure you have a 
+live internet connection, since this process downloads a lot of stuff:
 
-Drop to command line:
-
-.. code-block:: bash
+.. code-block::
     
     $ git clone https://github.com/x3dom/pipeline.git modelconvert
-    $ cd modelconvert
-    $ vagrant up              (go to lunch, takes LONG the first time)
+    $ cd modelconvert                
+    $ vagrant up
     $ vagrant ssh
-    $ ./develop               <- on the vm
+    $ ./develop                                                     
 
-Point your browser to: http://localhost:5001
+This sequence of commands downloads the code from GitHub, provisions a 
+virtual machine with all the software you need to develop with the
+system, then SSHs into machine and launches the development server.
+
+Next, point your browser to: http://localhost:5001
 
 With a bit of luck, you'll have a working virtual machine with everything
-installed and running.
+installed and running. You can edit code on your local machine - the
+virtual machine autmatically mounted the folder on your host machine.
 
-To stop working:
+To stop working on the project it is important to suspend the virtual 
+machine instead of not shutting down. This is required in order to skip
+the provisioning step when you resume:
 
-.. code-block:: bash
+.. code-block::
     
     $ <Ctr-C>^
     $ logout                  (or Ctr-D)       
@@ -107,9 +119,20 @@ Then when you come back to work on the project again:
     $ vagrant ssh
     $ ./develop               <- runs on the vm
 
+If provisioning code changed, you need to reload the virtual machine with
+this command:
 
-The VirtualBox/Vagrant setup is currently a WIP. Read on for the regular
-setup steps.
+.. code-block:: bash
+    
+    $ vagrant reload
+
+In order to destory the machine and start over, issue:
+
+.. code-block:: bash
+    
+    $ vagrant destroy
+
+Read more about this in the `Vagrant`_ documentation.
 
 
 ------
