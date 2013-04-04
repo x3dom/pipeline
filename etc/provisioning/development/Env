@@ -1,7 +1,7 @@
 DEBUG="True"
 DEVELOPMENT_MODE="True"
 MESHLAB_BINARY="/opt/build/meshlab/src/distrib/meshlabserver"
-AOPT_BINARY="/opt/instantrelaity/bin/aopt"
+AOPT_BINARY="/opt/instantReality/bin/aopt"
 MESHLAB_DISPLAY=":99"
 ADMINS=root@localhost
 PYTHONWARNINGS="d"
