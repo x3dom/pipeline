@@ -4,6 +4,6 @@
 # https://github.com/nickstenning/honcho
 # http://ddollar.github.com/foreman/
 
-redis: redis-server etc/init/redis.conf
+redis: redis-server share/init/redis.conf
 celery: python manage.py celeryworker 
 web: python manage.py runserver --threaded
