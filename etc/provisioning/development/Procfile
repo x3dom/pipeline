@@ -4,4 +4,4 @@
 # -> redis
 # -> xvfb on port :99
 celery: python manage.py celeryworker
-web: python manage.py runserver --threaded --host=0.0.0.0
+web: python manage.py runserver --threaded --host=0.0.0.0 --port=5001
