@@ -162,7 +162,7 @@ def upload():
         # (DoS)
         metadata = request.files['metadata']
         if metadata:
-            meta_filename = os.path.join(current_app.config['UPLOAD_PATH'], hash, 'metadata' + os.path.splitext(metadata.filename)[1])
+            meta_filename = os.path.join(current_app.config['UPLOAD_PATH']) + 'metadata' + os.path.splitext(metadata.filename)[1]
             metadata.save(meta_filename)
             options.update(meta_filename=meta_filename)
         
