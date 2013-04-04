@@ -27,6 +27,7 @@ wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | \
 apt-get -y install python-software-properties
 
 # recent redis, node
+add-apt-repository ppa:git-core/ppa
 add-apt-repository ppa:chris-lea/redis-server
 add-apt-repository ppa:chris-lea/node.js
 #add-apt-repository ppa:nginx/stable
