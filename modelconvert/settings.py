@@ -235,7 +235,7 @@ CELERY_IMPORTS = ("modelconvert.tasks", )
 #CELERY_TASK_RESULT_EXPIRES = 300 # default is one day
 CELERY_HIJACK_ROOT_LOGGER = False
 CELERYD_LOG_COLOR=False
-
+CELERYD_MAX_TASKS_PER_CHILD=1 
 
 # simplify log output during development
 if DEBUG:

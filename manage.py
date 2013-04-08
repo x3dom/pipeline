@@ -28,7 +28,10 @@ def celeryworker():
     """
     from modelconvert.extensions import celery
     with app.app_context():
-        celery.worker_main(['worker', '-E', '-l', 'INFO'])
+        if app.config['DEBUG']:
+            celery.worker_main(['worker', '-E', '-l', 'DEBUG'])
+        else:
+            celery.worker_main(['worker', '-E', '-l', 'INFO'])
 #
 # FIXME: move this to a celerybeats task
 #

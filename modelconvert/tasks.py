@@ -93,7 +93,7 @@ def convert_model(input_file, options=None):
     # # and the reconn timout of evensource
     # # FIXME find out why we need to wait a bit and fix it
     # import time
-    # time.sleep(4)
+    # time.sleep(10)
 
     #log = current_app.logger
     logger = current_app.logger
@@ -364,8 +364,8 @@ def convert_model(input_file, options=None):
 
     status = -100
     aopt_bingeo = "{0}_bin".format(input_filename)
-
     os.mkdir(os.path.join(output_directory, aopt_bingeo))
+
     aopt_cmd = [
         current_app.config['AOPT_BINARY'], 
         '-i', 
@@ -387,7 +387,16 @@ def convert_model(input_file, options=None):
     
         update_progress("Running AOPT")
         status = subprocess.call(aopt_cmd)
-    
+        # process = subprocess.Popen(aopt_cmd, 
+        #    stdout=subprocess.PIPE, 
+        #    stderr=subprocess.STDOUT) 
+        # output = process.communicate()[0] 
+
+        # status = process.wait()
+
+        logger.info("Aopt return: {0}".format(status))
+        # logger.info(output)
+
     except OSError:
         update_progress("Failure to execute AOPT")
         err_msg = "Error: AOPT not found or not executable {0}".format(repr(aopt_cmd))
