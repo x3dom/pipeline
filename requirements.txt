@@ -1,6 +1,6 @@
 Flask==0.9
 Flask-Script==0.5.3
-redis >=2.7.0,<2.8.0
+redis==2.7.2
 celery==3.0.17
 requests==1.1.0
 
