@@ -75,7 +75,7 @@ The following variables can currentluy be configured via environment:
 
     BUNDLES_PATH        Where the user templates reside. Usually you 
                         don't want to override this.
-                        default: module_dir/templates/bundles
+                        default: module_dir/bundles
 
     TEMPLATE_PATH       Where the UI templates reside. 
                         default: module_dir/templates
@@ -143,7 +143,7 @@ ADMINS = env_var('ADMINS', 'root@localhost',
 MAX_CONTENT_LENGTH = 16 * 1024 * 1024 # 16Meg upload limit
 
 # location of the user templates (fullsize, metadata, etc.)
-BUNDLES_PATH = env_var('BUNDLES_PATH', path('templates/bundles'))
+BUNDLES_PATH = env_var('BUNDLES_PATH', path('bundles'))
 
 #customization of UI templates
 STATIC_PATH = env_var('STATIC_PATH', path('static'))

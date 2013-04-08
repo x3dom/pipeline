@@ -19,7 +19,7 @@ from flask import (Blueprint, render_template, current_app, request,
 from modelconvert import tasks, security
 
 from modelconvert.extensions import red
-from modelconvert.utils import ratelimit, humanize
+from modelconvert.utils import ratelimit, humanize, compression
 
 
 frontend = Blueprint('frontend', __name__)
@@ -80,7 +80,7 @@ def upload():
     if request.method == 'POST':
         # FIXME: convert this to WTForms
         meshlab = request.form.getlist('meshlab')
-        aopt = request.form['aopt']
+        
         template = request.form['template']
 
         file = request.files['file']
@@ -143,11 +143,30 @@ def upload():
             # in case of file upload
             if file and security.is_allowed_file(file.filename):
                 filename = secure_filename(file.filename)
-                
-                # anonymize filename, keep extension and save
-                filename = os.path.join(current_app.config['UPLOAD_PATH'], 
+
+                # FIXME: 
+                # this whole section needs rework
+                # The upload and decompression process should happen
+                # here. Also, everything should be in a folder with uuid name
+                # currently decompression happens in the task worker, this way we don't
+                # have immediate feedback if everything worked. the frontend should
+                # handle preperation of content suitable for the worker so we can 
+                # shoot off just zip file to the backend worker which contains everything
+                # needed to generate the output. this becomes imporant for scaling out
+                # the worker should have everything it needs in a sane state.
+
+                # anonymize upload in a path to avoid name conflicts
+                if compression.is_archive(filename):
+                    filename = os.path.join(current_app.config['UPLOAD_PATH'], 
                                         hash + os.path.splitext(file.filename)[1])
+                else:
+                    upload_directory = os.path.join(current_app.config['UPLOAD_PATH'], hash)
+                    os.mkdir(upload_directory)
+                    filename = os.path.join(current_app.config['UPLOAD_PATH'], hash, file.filename)
+
+                # save file to final location
                 file.save(filename)
+
             else:
                 flash("Please upload a file of the following type: %s" %
                     ", ".join(current_app.config['ALLOWED_EXTENSIONS']), 'error')
@@ -167,7 +186,6 @@ def upload():
             options.update(meta_filename=meta_filename)
         
         options.update(
-            aopt=aopt, 
             template=template
         )
 
@@ -198,7 +216,9 @@ def status(task_id):
     else:    
         if result.ready() and result.successful():
             hash = result.info['hash']
-            filenames = ['%s.html' % hash, '%s.zip' % hash]
+
+            # don't trust this var, it's going to chagne
+            filenames = result.info['filenames']
             return render_template('frontend/status.html', result=result, hash=hash, filenames=filenames)
         #    return redirect(url_for('frontend.success', hash=result.info['hash']))
         else:

@@ -33,8 +33,7 @@ from jinja2 import Environment, FileSystemLoader
 
 from modelconvert import security
 from modelconvert.extensions import celery, red
-from modelconvert.utils import compression
-
+from modelconvert.utils import compression, fs
 
 class ConversionError(Exception):
     pass
@@ -70,15 +69,6 @@ def ping():
     """ Just for testing """
     logger.info("+++++++++ PING +++++++++")
 
-def cleanup():
-    """Stub for celerybeat task to clean out previews"""
-    pass
-
-@celery.task
-def assemble_deliverable(path_to_converted_files, tempalate_bundle, options=None):
-    """Stub"""
-    pass
-
 
 @celery.task
 def convert_model(input_file, options=None):
@@ -92,21 +82,18 @@ def convert_model(input_file, options=None):
     This tasks is currently very monolithic and does too much.
     To make this more flexible, this task should really only convert
     and optimize one file. If multiple files are uploaded, tasks
-    can be chained. Also assembly of templates should not go here.
+    can be chained.
 
-
-    TODO:
-      - make directories hash.tmp and rename after successfull transcoding
-        this is to distinguish between orphaned files and completed ones
+    This task is currently a mess.
     """
 
     update_progress("Warming up...")
 
-    # need this so pubsub will work, it's probably due to too fast processing
-    # and the reconn timout of evensource
-    # FIXME find out why we need to wait a bit and fix it
-    import time
-    time.sleep(4)
+    # # need this so pubsub will work, it's probably due to too fast processing
+    # # and the reconn timout of evensource
+    # # FIXME find out why we need to wait a bit and fix it
+    # import time
+    # time.sleep(4)
 
     #log = current_app.logger
     logger = current_app.logger
@@ -136,9 +123,6 @@ def convert_model(input_file, options=None):
     # alternative template
     template = options.get('template', None)
     
-    # aopt options
-    aopt = options.get('aopt', None)
-
     update_progress("Starting to process uploaded file")
     logger.info("Uploaded file: {0}".format(input_file))
 
@@ -227,22 +211,35 @@ def convert_model(input_file, options=None):
     output_directory = os.path.join(download_path, hash)
     os.mkdir(output_directory)
     
-    if template and template == 'fullsize' or template == 'metadataBrowser':
-        output_extension = '.x3d'
+    # get the filename without extension 
+    # i.e. /path/tp/foo.obj     -> foo
+    #      /path/tp/foo.bar.obj -> foo.bar
+    input_filename = os.path.splitext(os.path.basename(input_file))[0]
+
+    if template:
+        # the templates always work with inlines
         aopt_output_switch = '-x'
 
-        # render the template with inline
-        output_template_filename = os.path.join(download_path, 
-                                                hash, hash + '.html')
-        user_tpl = jinja.get_template(template +'/' + template + '_template.html')
+        output_filename = input_filename + '.x3d'
+
+        # name of the ouput file for the model
+        output_template_filename = os.path.join(output_directory, input_filename + '.html')
+        
+        # the model template for displaying a single model (from bundle)
+        user_tpl = jinja.get_template(template +'/' + 'model.html')
         
         with open(output_template_filename, 'w+') as f:
-            f.write(user_tpl.render(X3D_INLINE_URL='%s.x3d' % hash))
+            f.write(user_tpl.render(X3D_INLINE_URL=output_filename))
 
         output_directory_static = os.path.join(output_directory, 'static')
         input_directory_static = os.path.join(template_path, template, 'static')
+        input_directory_shared = os.path.join(template_path, '_shared')
+        
+        # copy shared resources
+        fs.copytree(input_directory_shared, output_directory)
 
-        shutil.copytree(input_directory_static, output_directory_static)
+        # copy template resources
+        fs.copytree(input_directory_static, output_directory_static)
         
         # copy metadata to output dir if present
         meta_filename = options.get('meta_filename', None)
@@ -250,10 +247,11 @@ def convert_model(input_file, options=None):
             shutil.copy(meta_filename, output_directory)
 
     else:
-        output_extension = '.html'
+        # when no template is selected, we just use plain AOPT HTML output
+        output_filename = output_template_filename = input_filename + '.html'
         aopt_output_switch = '-N'
 
-    output_filename = hash + output_extension
+
     working_directory = os.getcwd()
     os.chdir(output_directory)
     
@@ -282,9 +280,8 @@ def convert_model(input_file, options=None):
         mehlab_filter += "</FilterScript>"
 
         mehlab_filter_filename = os.path.join(current_app.config['UPLOAD_PATH'], hash + '.mlx')
-        filter_file = open(mehlab_filter_filename, "w") 
-        filter_file.write(mehlab_filter) 
-        filter_file.close()
+        with open(mehlab_filter_filename, 'w+') as f:
+            f.write(mehlab_filter)
         
         # Subprocess in combination with PIPE/STDOUT could deadlock
         # be careful with this. Prefer the Python 2.7 version below or
@@ -347,61 +344,26 @@ def convert_model(input_file, options=None):
     update_progress("Starting AOPT conversion")
 
     status = -100
-    aopt_cmd = []
+    aopt_bingeo = "{0}_bin".format(input_filename)
 
-    if aopt == 'restuctedBinGeo':
-        update_progress("AOPT restructured binary geo optimization...")
+    os.mkdir(os.path.join(output_directory, aopt_bingeo))
+    aopt_cmd = [
+        current_app.config['AOPT_BINARY'], 
+        '-i', 
+        input_file, 
+        '-F',
+        'Scene:"cacheopt(true)"',
+        '-f',
+        'PrimitiveSet:creaseAngle:4',              
+        '-f'
+        'PrimitiveSet:normalPerVertex:TRUE',
+        '-V',
+        '-G ',
+        aopt_bingeo + '/:sacp',
+        aopt_output_switch, 
+        output_filename
+    ]
 
-        output_directory_binGeo = os.path.join(output_directory, "binGeo")
-        os.mkdir(output_directory_binGeo)
-
-        aopt_cmd = [
-            current_app.config['AOPT_BINARY'], 
-            '-i', 
-            input_file, 
-            '-F',
-            'Scene:"cacheopt(true)"',
-            '-f',
-            'PrimitiveSet:creaseAngle:4',              
-            '-f'
-            'PrimitiveSet:normalPerVertex:TRUE',
-            '-V',
-            '-G ',
-            'binGeo/:sacp',
-            aopt_output_switch, 
-            output_filename
-        ]
-
-        
-    elif aopt == 'binGeo':
-        update_progress("AOPT binary geo optimization...")
-        output_directory_binGeo = os.path.join(output_directory, "binGeo")
-        os.mkdir(output_directory_binGeo)
-
-        aopt_cmd = [
-          current_app.config['AOPT_BINARY'], 
-          "-i", 
-          input_file, 
-          "-G", 
-          'binGeo/:saI', 
-          aopt_output_switch, 
-          output_filename
-        ]
-
-
-    else:  
-
-        update_progress("AOPT standard conversion in progress...")
-
-        aopt_cmd = [
-            current_app.config['AOPT_BINARY'], 
-            "-i", 
-            input_file, 
-            aopt_output_switch, 
-            output_filename
-        ]
-
-   
     try:
     
         update_progress("Running AOPT")
@@ -429,6 +391,7 @@ def convert_model(input_file, options=None):
         update_progress("Assembling deliverable...")
         zip_path = os.path.join(download_path, hash)
         compression.zipdir(zip_path, '%s.zip' % hash)
+
         os.chdir(working_directory)
     
     if not current_app.config['DEBUG']:
@@ -441,6 +404,7 @@ def convert_model(input_file, options=None):
     # time.sleep(10)
     result_set = dict(
         hash = hash,
+        filenames = [os.path.basename(output_template_filename), '%s.zip' % hash],
         input_file = input_file,
     )
     return result_set

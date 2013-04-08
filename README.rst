@@ -360,11 +360,16 @@ Install modelconvert requirements with pip:
 Launching
 ---------
 
-Modelconvert uses a `Procfile`_ to manage services during development. You can 
-use this on your local machine to start all required services at once 
-using `Honcho`_ (which has been installed with the requirements). If your 
-Redis server is alreadu running you need to uncomment the respective line
-in the ``Procfile``.
+You can use a `Procfile`_ to manage services during development. This is an easy
+way to start all required services at once on your local machine. In order
+to use this mechanism, copy the file ``Procfile.example`` into ``Procfile`` and
+adapt to match your system. For example, if your Redis server is not already 
+running you need to uncomment and/or adapt the respective line in 
+your ``Procfile``. The Procfile is not checked into the repository, since each
+development environment is a little bit different.
+
+When done, use `Honcho`_ (which has been installed with the requirements) to 
+launch the Procfile.
 
 .. code-block:: bash
     
@@ -534,7 +539,7 @@ STATIC_PATH             Where the static assets for the UI reside.
 
 BUNDLES_PATH            Where the user templates reside. Usually you 
                         don't want to override this.
-                        default: module_dir/templates/bundles
+                        default: module_dir/bundles
                    
 LOGFILE                 Absolute path to a file to pipe stdout logging 
                         to. This should not be used in production. 

@@ -8,7 +8,7 @@ $(document).ready(function(){
     $('#radio-fullsize, #radio-meta').click(function() {
         $('#meta-upload').slideDown();
     });
-    $('#radio-basic').click(function() {
+    $('#radio-basic, #radio-none').click(function() {
         $('#meta-upload').slideUp();
     });
 

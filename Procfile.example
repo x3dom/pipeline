@@ -1,0 +1,18 @@
+# This is a exmaple of a Procfile which can be used for 
+# starting services during development. All you need to do is copy this
+# example to ./Procfile and adapt to your needs. You can use honcho 
+(remcommended) or foreman (ruby) to start the file.
+
+# https://github.com/nickstenning/honcho
+# http://ddollar.github.com/foreman/
+
+# The following entries need adaption to your environment. For exmaple
+# if you don't have redis already running, you need to uncomment the
+# respective lines.
+
+#redis: redis-server share/init/redis.conf
+celery: python manage.py celeryworker 
+web: python manage.py runserver --threaded 
+
+# use this line istead, to allow outside access to your dev box
+#web: python manage.py runserver --threaded --host=0.0.0.0
