@@ -3,6 +3,9 @@
 # remember where we are
 _CWD=`pwd`
 
+apt-get -y install python-software-properties
+apt-get -y update
+apt-get -y upgrade
 
 # ----------------------------------------------------------------------
 # we need recent software, so add PPAs
@@ -24,7 +27,6 @@ EOM
 wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | \
   sudo apt-key add -
 
-apt-get -y install python-software-properties
 
 # recent redis, node
 add-apt-repository ppa:git-core/ppa
