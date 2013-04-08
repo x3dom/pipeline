@@ -4,6 +4,8 @@ from flask import Flask, render_template
 
 from modelconvert.extensions import celery
 from modelconvert.frontend import frontend
+from modelconvert.api import api
+
 
 from modelconvert import settings
 
@@ -22,6 +24,7 @@ def create_app():
     configure_logging(app)
 
     app.register_blueprint(frontend)
+    app.register_blueprint(api, url_prefix='/api')
 
     celery.add_defaults(app.config)
 
