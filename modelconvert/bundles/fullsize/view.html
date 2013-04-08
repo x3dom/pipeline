@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+{# 
+    Note URLs to Web resources are haredcoded in this template to allow
+    indepented location of generated html file 
+#}
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+    <title>v-must</title>
+
+    <script>
+    
+        var MYAPP = {};
+        MYAPP.data = {};
+        MYAPP.curID = -1;
+        MYAPP.jsonFilePath = {{ X3D_METADATA_URL }};
+        MYAPP.cam = "";
+        MYAPP.metaStatus = 2;
+
+    </script>
+
+    <link rel='stylesheet' type='text/css' href='static/x3dom.css' />
+    <script type='text/javascript' src='static/x3dom-full.js'></script>
+
+    <script type="text/javascript" src="static/jquery-1.7.1.min.js"></script>
+    <script type="text/javascript" src="static/jquery-ui.min.js"></script>
+    <link rel="stylesheet" href="static/jquery-ui-1.8.18.custom.css">
+
+    <style type="text/css" media="screen">@import "static/v_must.css";</style>
+    <script src="static/jqtouch.js" type="text/javascript" charset="utf-8"></script>
+    <script src="static/jqtouch-jquery.js" type="text/javascript" charset="utf-8"></script>
+
+    <script type="text/javascript" src="static/ipad.js"></script>
+    <style type="text/css" media="screen">@import "static/ipad.css";</style>
+</head>
+
+<body>
+<div id="jqt">
+    <div id="view">
+        <div id="viewContainer">
+            <div id="metaDataContainer">
+                <ul id="metaData" class="edgetoedge"> </ul>
+            </div>
+            
+            <X3D id="x3dMain" showStat="false" showLog="false" >
+                <scene id='scene'>
+                    <Inline id="x3DomInline" nameSpaceName="inline" mapDEFToID="true" url="{{ X3D_INLINE_URL }}" onload="setCamera();"></Inline>
+                     <Group id="annotationMarker" render="false"></Group>
+                 </scene>
+             </X3D>
+            <div id="links">
+                <p>
+                    <a id="helpOpen" class="button" href="#" onclick="showHelp();">Help</a>
+                    <a target="_blank" id="twitter" class="button" href="http://twitter.com/"><img src="static/twitter.png" /> </a>
+                    <a target="_blank" id="facebook" class="button" href="http://www.facebook.com/"><img src="static/facebook.png" /> </a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="help" title="Help">
+    <p>
+        <strong>Zoom:</strong>      <br/>
+        <img src="static/Help_Icon_zoom.png" />
+    </p>
+    <p>
+        <strong>Swipe:</strong>     <br/>
+        <img src="static/Help_Icon_swipe.png" />
+    </p>
+    <p>
+        <strong>Rotate:</strong>    <br/>
+        <img src="static/Help_Icon_rotate.png" />
+    </p>
+</div>
+
+</body>
+</html>

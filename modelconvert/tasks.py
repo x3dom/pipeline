@@ -218,7 +218,7 @@ def convert_model(input_file, options=None):
 
     if template:
         # intialize template renderer
-        user_tpl = jinja.get_template(os.path.join(template, 'model.html'))
+        user_tpl = jinja.get_template(os.path.join(template, 'view.html'))
 
         #initialize tempalte context dict
         user_tpl_context = { }                
