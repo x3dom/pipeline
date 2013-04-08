@@ -1,7 +1,7 @@
 # This is a exmaple of a Procfile which can be used for 
 # starting services during development. All you need to do is copy this
 # example to ./Procfile and adapt to your needs. You can use honcho 
-(remcommended) or foreman (ruby) to start the file.
+# (remcommended) or foreman (ruby) to start the file.
 
 # https://github.com/nickstenning/honcho
 # http://ddollar.github.com/foreman/
