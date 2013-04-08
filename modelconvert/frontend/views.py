@@ -25,29 +25,6 @@ from modelconvert.utils import ratelimit, humanize, compression
 frontend = Blueprint('frontend', __name__)
 
 
-# TODO: cleanup pubsub business (json, events, and ids)
-# FIXME: This oviously does not scale, we need to use gevent/tornado
-#        or node for pub/sub services.
-def event_stream(channel):
-    pubsub = red.pubsub()
-    pubsub.subscribe(channel)
-    for message in pubsub.listen():
-        yield 'retry: 3000\ndata: %s\n\n' % message['data']
-
-@frontend.route('/stream/<channel>/')
-def stream(channel):
-    return flask.Response(event_stream(channel), mimetype="text/event-stream")
-
-
-@frontend.route("/ping")
-def ping():
-    red.publish('test', 'Hello!')
-    return flask.redirect('/')
-    #tasks.ping.apply_async()
-    #return 'pong'
-
-
-
 
 @frontend.route("/")
 def home():
