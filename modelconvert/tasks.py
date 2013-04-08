@@ -217,6 +217,12 @@ def convert_model(input_file, options=None):
     input_filename = os.path.splitext(os.path.basename(input_file))[0]
 
     if template:
+        # intialize template renderer
+        user_tpl = jinja.get_template(os.path.join(template, 'model.html'))
+
+        #initialize tempalte context dict
+        user_tpl_context = { }                
+
         # the templates always work with inlines
         aopt_output_switch = '-x'
 
@@ -225,11 +231,6 @@ def convert_model(input_file, options=None):
         # name of the ouput file for the model
         output_template_filename = os.path.join(output_directory, input_filename + '.html')
         
-        # the model template for displaying a single model (from bundle)
-        user_tpl = jinja.get_template(template +'/' + 'model.html')
-        
-        with open(output_template_filename, 'w+') as f:
-            f.write(user_tpl.render(X3D_INLINE_URL=output_filename))
 
         output_directory_static = os.path.join(output_directory, 'static')
         input_directory_static = os.path.join(template_path, template, 'static')
@@ -241,10 +242,28 @@ def convert_model(input_file, options=None):
         # copy template resources
         fs.copytree(input_directory_static, output_directory_static)
         
+        user_tpl_context.update(X3D_INLINE_URL=output_filename)
+
+
         # copy metadata to output dir if present
         meta_filename = options.get('meta_filename', None)
+
         if meta_filename:
-            shutil.copy(meta_filename, output_directory)
+            meta_dest_filename = input_filename + os.path.splitext(meta_filename)[1]
+
+            # get the extension without dot, FIXME, this is unsave
+            # well, but last minute shit
+            meta_type = os.path.splitext(meta_filename)[1][1:]
+
+            shutil.copy(meta_filename, os.path.join(output_directory, meta_dest_filename))
+            user_tpl_context.update(X3D_METADATA_URL=os.path.basename(meta_dest_filename))
+            user_tpl_context.update(X3D_METADATA_TYPE=meta_type)
+
+        
+        # finally render template bundle
+        with open(output_template_filename, 'w+') as f:
+            f.write(user_tpl.render(user_tpl_context))
+
 
     else:
         # when no template is selected, we just use plain AOPT HTML output

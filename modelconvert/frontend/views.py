@@ -49,7 +49,6 @@ def ping():
 
 
 
-
 @frontend.route("/")
 def home():
     """ Renders the default home page """
@@ -80,23 +79,23 @@ def upload():
     if request.method == 'POST':
         # FIXME: convert this to WTForms
         meshlab = request.form.getlist('meshlab')
-        
         template = request.form['template']
 
         file = request.files['file']
+        metadata = request.files['metadata']
         url = request.form['url']
 
         # options to pass to convertion task
         options = dict()
 
         # create a UUID like hash for temporary file storage
-        #hash = "%032x" % random.getrandbits(128)
         hash = uuid.uuid4().hex
         options.update(hash=hash)
 
 
 
         # This whole section is kind of flimsy. 
+        # - code more idiomatic
         # - download should be performed asynchrounously, though some checks
         #   should be performed here (allowed hosts, filenames, etc.)
         # - downloading a url triggered via public web form is a HUGE security
@@ -154,18 +153,30 @@ def upload():
                 # shoot off just zip file to the backend worker which contains everything
                 # needed to generate the output. this becomes imporant for scaling out
                 # the worker should have everything it needs in a sane state.
+                # problems: metatdata upload only with files which are non-archives
 
                 # anonymize upload in a path to avoid name conflicts
                 if compression.is_archive(filename):
                     filename = os.path.join(current_app.config['UPLOAD_PATH'], 
                                         hash + os.path.splitext(file.filename)[1])
+                    # save file to final location
+                    file.save(filename)
+
                 else:
                     upload_directory = os.path.join(current_app.config['UPLOAD_PATH'], hash)
                     os.mkdir(upload_directory)
                     filename = os.path.join(current_app.config['UPLOAD_PATH'], hash, file.filename)
 
-                # save file to final location
-                file.save(filename)
+                    # save file to final location
+                    file.save(filename)
+
+                    # in case the user uploaded a meta file, store this as well
+                    # FIXME make sure only processed when valid template selection
+                    if metadata:
+                        meta_filename = os.path.join(upload_directory, 'metadata' + os.path.splitext(metadata.filename)[1])
+                        metadata.save(meta_filename)
+                        # options for task
+                        options.update(meta_filename=meta_filename)
 
             else:
                 flash("Please upload a file of the following type: %s" %
@@ -176,14 +187,6 @@ def upload():
         if meshlab:
             options.update(meshlab=meshlab)
 
-        # in case the user uploaded a meta file, store this as well
-        # FIXME make sure only processed when valid template selection
-        # (DoS)
-        metadata = request.files['metadata']
-        if metadata:
-            meta_filename = os.path.join(current_app.config['UPLOAD_PATH']) + 'metadata' + os.path.splitext(metadata.filename)[1]
-            metadata.save(meta_filename)
-            options.update(meta_filename=meta_filename)
         
         options.update(
             template=template

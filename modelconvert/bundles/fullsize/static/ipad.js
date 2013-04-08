@@ -1,10 +1,3 @@
-var MYAPP = {};
-MYAPP.data = {};
-MYAPP.curID = -1;
-MYAPP.jsonFilePath = "metadata.txt";
-MYAPP.cam = "";
-MYAPP.metaStatus = 2;
-
 jQuery.jQTouch({
     icon : 'jqtouch.png',
     addGlossToIcon : true,

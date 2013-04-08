@@ -5,23 +5,31 @@
     <meta http-equiv="X-UA-Compatible" content="chrome=1,IE=edge" />
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
-	<!-- for productive code use the current libs from the onlie ressources
-    <script type='text/javascript' src='http://www.x3dom.org/download/x3dom.js'></script>
-    <link rel='stylesheet' type='text/css' href='http://www.x3dom.org/download/x3dom.css'/>
-	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.1.1/jquery.mobile-1.1.1.min.css" />
-	<script src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
-	<script src="http://code.jquery.com/mobile/1.1.1/jquery.mobile-1.1.1.min.js"></script> 
-	-->
-	
-  <script type='text/javascript' src='static/x3dom-full.js'></script>
-  <link rel='stylesheet' type='text/css' href='static/x3dom.css'/>
+	<script type='text/javascript' src='static/x3dom-full.js'></script>
+  	<link rel='stylesheet' type='text/css' href='static/x3dom.css'/>
 	<link rel="stylesheet" href="static/jquery.mobile-1.1.1.min.css" />
 	<script src="static/jquery-1.7.1.min.js"></script>
 	<script src="static/jquery.mobile-1.1.1.min.js"></script>
 	
-	
+
 	<link rel="stylesheet" href="static/style.css" />
+	<script>
+	/***************************************************************************
+ 	 * all the initialisation that dose not directly correspond to the model
+	 * is done here after the resources are loaded
+ 	***************************************************************************/
+	jQuery(document).ready(function () {
+		// just to show how this function works
+		//jQuery.get("data/metaData.xml", function (jsonData){ console.log(jsonData.toString());}, "html");
+	
+		jQuery.get("{{ X3D_METADATA_URL }}", createMetaDataList, "{{ X3D_METADATA_TYPE }}");
+	
+		jQuery(".popUp").click(function() {
+			jQuery(".popUp").fadeOut();
+		});
+	});
+	</script>
+
 	<script src="static/main.js"></script>
 
 

@@ -1,20 +1,5 @@
 var MYAPP = {}; // always put global Variables into some object like this or use better technics. This avoids errors.
 
-/***************************************************************************
- * all the initialisation that dose not directly correspond to the model
- * is done here after the resources are loaded
- ***************************************************************************/
-jQuery(document).ready(function () {
-	// just to show how this function works
-	//jQuery.get("data/metaData.xml", function (jsonData){ console.log(jsonData.toString());}, "html");
-	
-	jQuery.get("metadata.xml", createMetaDataList, "xml");
-	
-	jQuery(".popUp").click(function() {
-		jQuery(".popUp").fadeOut();
-	});
-});
-
 function createMetaDataList(xmlData) {
 	var element;
 	var title;
