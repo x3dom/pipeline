@@ -68,9 +68,12 @@ my_models.zip:
 </pre>
         </div>
 
+            <p>Your upload must not exceed {{ config['MAX_CONTENT_LENGTH'] / 1024 /1024 }}MB.</span></p>
+
             <div id="input_group_file" class="grouping">
                 <input type="file" name="file">
-                <span class="help-block">or <a href="#" id="toggle_input_file">use a URL</a> instead of a file.</span>
+
+                <span class="help-block">You can <a href="#" id="toggle_input_file">use a URL</a> instead of a file.</span>
             </div>
             
             <div id="input_group_url" class="grouping hide">
