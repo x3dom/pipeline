@@ -28,8 +28,7 @@ from celery.utils.log import get_task_logger
 
 #logger = get_task_logger(__name__)
 
-
-from jinja2 import Environment, FileSystemLoader
+from jinja2 import Environment, FileSystemLoader, TemplateNotFound
 
 from modelconvert import security
 from modelconvert.extensions import celery, red
@@ -84,7 +83,7 @@ def convert_model(input_file, options=None):
     and optimize one file. If multiple files are uploaded, tasks
     can be chained.
 
-    This task is currently a mess.
+    This task is currently a spaghetti monster mess from hell.
     """
 
     update_progress("Warming up...")
@@ -119,8 +118,20 @@ def convert_model(input_file, options=None):
     meshlab = options.get('meshlab', None)
     
     # alternative template
-    template = options.get('template', None)
-    
+    template = options.get('template', 'basic')
+
+    # copy metadata to output dir if present
+    meta_filename = options.get('meta_filename', None)
+
+
+    # get the filename without extension 
+    # i.e. /path/tp/foo.obj     -> foo
+    #      /path/tp/foo.bar.obj -> foo.bar
+    # FIXME: get rid of this, in case of zip file this is hash.zip
+    # and not usable the way we use it right now
+    input_filename = os.path.splitext(os.path.basename(input_file))[0]
+
+
     update_progress("Starting to process uploaded file")
     logger.info("Uploaded file: {0}".format(input_file))
 
@@ -141,6 +152,14 @@ def convert_model(input_file, options=None):
     # Note that this step should be moved to the controller (or another task)
     # once we switch to a different workflow (upload file->select template->convert)
     # for each model. but for now, we are using the naive approach.
+    # refactor this out
+    
+
+    # format ('infile.obj','outfile.x3d', ['outfile.xml'] or None)
+    # it might make sense to create a class or at least a dict for this 
+    # in the future,
+    models_to_convert = []  
+    
     if compression.is_archive(input_file):
         update_progress("Umcompressing archive")
         
@@ -173,7 +192,6 @@ def convert_model(input_file, options=None):
                 update_progress("Found directory: {0}".format(name))
                 resources_to_copy.append(name)
 
-        models_to_convert = []  # entry format ('filename.x3d', ['meta.xml'] or None)
 
         logger.info("****** FOUND_META: {0}".format(found_metadata))
 
@@ -182,6 +200,10 @@ def convert_model(input_file, options=None):
         # FIXME: this could be improved
         for model in found_models:
             m_root = os.path.splitext(os.path.basename(model))[0]
+
+            m_output_inline = m_root + '.x3d'
+            m_output_html = m_root + '.html'
+
             m_metas = []
             
             # then walk each metadata to find match for model
@@ -193,7 +215,7 @@ def convert_model(input_file, options=None):
 
             # now we have a list of metas belonging to the current model
             # store that in the master list
-            models_to_convert.append( (model, m_metas,) )
+            models_to_convert.append( (model, m_output_inline, m_output_html, m_metas,) )
 
         # we now have list of models with associated metadata
         # and a list of plain resources that simply need to be copied
@@ -216,75 +238,150 @@ def convert_model(input_file, options=None):
             else:
                 shutil.copy(src, dest)
     # }}}
-
-
-
-    # specifically not using the current_app.jinja_env in order to seperate
-    # user templates entirely from the application. The user should not have
-    # access to the request, global object and app configuration.
-    jinja = Environment(loader=FileSystemLoader(template_path))
-
-    
-    # get the filename without extension 
-    # i.e. /path/tp/foo.obj     -> foo
-    #      /path/tp/foo.bar.obj -> foo.bar
-    input_filename = os.path.splitext(os.path.basename(input_file))[0]
-
-    if template:
-        # intialize template renderer
-        user_tpl = jinja.get_template(os.path.join(template, 'view.html'))
-
-        #initialize tempalte context dict
-        user_tpl_context = { }                
-
-        # the templates always work with inlines
-        aopt_output_switch = '-x'
-
-        output_filename = input_filename + '.x3d'
-
-        # name of the ouput file for the model
-        output_template_filename = os.path.join(output_directory, input_filename + '.html')
+    else:
+        # no compression, no multimodel, no, textures..
+        current_input_filename = os.path.splitext(os.path.basename(input_file))[0]
         
-
-        output_directory_static = os.path.join(output_directory, 'static')
-        input_directory_static = os.path.join(template_path, template, 'static')
-        input_directory_shared = os.path.join(template_path, '_shared')
-        
-        # copy shared resources
-        fs.copytree(input_directory_shared, output_directory)
-
-        # copy template resources
-        fs.copytree(input_directory_static, output_directory_static)
-        
-        user_tpl_context.update(X3D_INLINE_URL=output_filename)
-
-
-        # copy metadata to output dir if present
-        meta_filename = options.get('meta_filename', None)
-
+        # we have a meta file which could be named whatever, normalize
+        # this is a mess - but for the review...
+        meta_dest_filename = [None]
         if meta_filename:
             meta_dest_filename = input_filename + os.path.splitext(meta_filename)[1]
-
-            # get the extension without dot, FIXME, this is unsave
-            # well, but last minute shit
-            meta_type = os.path.splitext(meta_filename)[1][1:]
-
             shutil.copy(meta_filename, os.path.join(output_directory, meta_dest_filename))
-            user_tpl_context.update(X3D_METADATA_URL=os.path.basename(meta_dest_filename))
-            user_tpl_context.update(X3D_METADATA_TYPE=meta_type)
 
+        models_to_convert = [ (input_file, current_input_filename+'.x3d', current_input_filename+'.html', meta_dest_filename) ]
+
+
+    logger.info("***** MODELS TO CONVERT: {0} ".format(models_to_convert))
+
+    # ------------------------------------------------------------------
+    # The following steop only generates templates, for the uploaded
+    # data. This can be refactored out. The reason this runs before aopt
+    # is in order to allow live preview of partially optimized models later
+    # on. 
+
+
+    # first copy static assets
+    output_directory_static = os.path.join(output_directory, 'static')
+    input_directory_static = os.path.join(template_path, template, 'static')
+    input_directory_shared = os.path.join(template_path, '_shared')
         
+    # copy shared resources
+    fs.copytree(input_directory_shared, output_directory)
+
+    # copy template resources
+    fs.copytree(input_directory_static, output_directory_static)
+
+
+    # init template engine
+    jinja = Environment(loader=FileSystemLoader(template_path))
+
+    tpl_job_context = {
+        # fixme assuming too much here
+        'archive_uri': hash + '.zip'
+    }
+
+    index_template = os.path.join(template, 'list.html')
+    model_template = os.path.join(template, 'view.html')
+
+    # first render index template if it's present in the template bundle.
+    # we always do this, even if there's only one model to convert
+    try:
+        update_progress("Starting to render list template")
+
+        _tpl = jinja.get_template(index_template)
+        _tpl_context = { }
+
+        _models = []
+
+        for model in models_to_convert:
+            _models.append({
+                'original_name': os.path.basename(model[0]),  #fixme, should be basename from the beginning
+                'inline':  model[1],
+                'preview': model[2],
+                'metadata': model[3][0]
+            })
+
+
+        _tpl_context.update(models=_models, job=tpl_job_context)
+        # we need info on the models, probably a object would be nice
+
+        _tpl_output_filename = os.path.join(output_directory, 'index.html')
         # finally render template bundle
-        with open(output_template_filename, 'w+') as f:
-            f.write(user_tpl.render(user_tpl_context))
+        with open(_tpl_output_filename, 'w+') as f:
+            f.write(_tpl.render(_tpl_context))
+
+    except TemplateNotFound:
+        # not sure if we should stop here, for the moment we proceed
+        # since the index.html list view is technically not necessary
+        update_progress("List template not found, proceeding without")
+        logger.error("Template '{0}'' not found - ignoring list view".format(index_template))
+
+    finally:
+        update_progress("Done processing list template")
 
 
-    else:
-        # when no template is selected, we just use plain AOPT HTML output
-        output_filename = output_template_filename = input_filename + '.html'
-        aopt_output_switch = '-N'
+    
+    # right now, we only support templates with inlines
+    # the 'no template, plain aopt stuff is gone for now'
+    aopt_output_switch = '-x' 
+
+    model_template_context = dict()
+
+    try:
+        model_template_renderer = jinja.get_template(model_template)
+
+        for model in models_to_convert:
+            # now render templates for individual models
+            update_progress("Rendering template for model: {0}".format(model[1]))
+
+            _model_ctx = {
+                'original_name': os.path.basename(model[0]),  #fixme, should be basename from the beginning
+                'inline':  model[1],
+                'preview': model[2],
+            }
+
+            # if metadata is present, update the context
+            if model[3][0]:
+                _meta_ctx = {
+                    'metadata': {
+                    'url': model[3][0],
+                    'type': os.path.splitext(model[3][0])[1][1:] # fixme, use magic|mime
+                    } 
+                }
+
+                _model_ctx.update(_meta_ctx)
+
+            # write out template
+            model_template_context.update(
+                model=_model_ctx,
+                # the job this model belongs to (used for getting archive name)
+                job=tpl_job_context  
+            )
+
+            _tpl_output_filename = os.path.join(output_directory, model[2])
+            with open(_tpl_output_filename, 'w+') as f:
+                f.write(model_template_renderer.render(model_template_context))
 
 
+    except TemplateNotFound:
+        logger.error("Template '{0}'' not found - ignoring list view".format(view_template))
+    
+
+
+    ### temp
+    output_filename = model[1]
+    output_template_filename = model[2]
+
+
+    # end template generation
+    # ------------------------------------------------------------------
+
+
+    # ------------------------------------------------------------------
+    # Meshlab doing it's thing, generating temproary outputs
+    # this should live in its own task
+    # ------------------------------------------------------------------
     working_directory = os.getcwd()
     os.chdir(output_directory)
     
@@ -375,6 +472,13 @@ def convert_model(input_file, options=None):
        update_progress("Skipping Meshlab optimization")
 
 
+    # end Meshlab
+    # ------------------------------------------------------------------
+
+    # ------------------------------------------------------------------
+    # Aopt call
+    # this should live in its own task (or maybe transcoder in the future)
+    # ------------------------------------------------------------------
     update_progress("Starting AOPT conversion")
 
     status = -100
@@ -430,13 +534,21 @@ def convert_model(input_file, options=None):
         raise ConversionError('AOPT RETURNS: {0}'.format(status))
     
     else:
-    
+        # ------------------------------------------------------------------
+        # Final creation of deliverable, could live in it's own task
+        # ------------------------------------------------------------------
         update_progress("Assembling deliverable...")
         zip_path = os.path.join(download_path, hash)
         compression.zipdir(zip_path, '%s.zip' % hash)
 
         os.chdir(working_directory)
     
+
+
+    # ------------------------------------------------------------------
+    # cleaning up
+    # ------------------------------------------------------------------
+
     if not current_app.config['DEBUG']:
         # delete the uploaded file
         update_progress("Cleaning up...")
@@ -446,11 +558,16 @@ def convert_model(input_file, options=None):
             shutil.rmtree(uncompressed_path)
         if os.path.exists(upload_directory):
             shutil.rmtree(upload_directory)
+
+    update_progress("Done.")
     
     # import time
     # time.sleep(10)
+
     result_set = dict(
         hash = hash,
+        preview= '',
+        archive= '',
         filenames = [os.path.basename(output_template_filename), '%s.zip' % hash],
         input_file = input_file,
     )

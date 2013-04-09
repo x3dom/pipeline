@@ -2,13 +2,9 @@ Flask==0.9
 Flask-Script==0.5.3
 redis==2.7.2
 
-# billard is a req of celery. however it's not pinned down
-# and 2.7.3.24 does not work. we also can't get it from pypi it seems
-# so github.
-#billard==2.7.3.22   # not on pypi??
-#git+https://github.com/celery/billiard.git@v2.7.3.22#egg=billard
-
 celery==3.0.17
+billiard==2.7.3.25  #.23/.24 is broken
+
 requests==1.2
 
 # optional to manage celery queues

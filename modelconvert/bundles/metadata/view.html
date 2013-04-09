@@ -22,7 +22,7 @@
 		// just to show how this function works
 		//jQuery.get("data/metaData.xml", function (jsonData){ console.log(jsonData.toString());}, "html");
 	
-		jQuery.get("{{ X3D_METADATA_URL }}", createMetaDataList, "{{ X3D_METADATA_TYPE }}");
+		jQuery.get("{{ model.metadata.url }}", createMetaDataList, "{{ model.metadata.type }}");
 	
 		jQuery(".popUp").click(function() {
 			jQuery(".popUp").fadeOut();
@@ -51,7 +51,7 @@
 					<Viewpoint id="vp" position="43.17066 -151.07855 393.00474" centerofrotation="30 -153 73" description="Camera Main"></Viewpoint>
 
 					<Group id="mainModel" render="true">	
-					   <Inline nameSpaceName="inline" mapDEFToID="true" url="{{ X3D_INLINE_URL }}"></Inline>
+					   <Inline nameSpaceName="inline" mapDEFToID="true" url="{{ model.inline }}"></Inline>
 					</Group>
 					
 					 

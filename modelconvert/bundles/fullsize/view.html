@@ -14,7 +14,7 @@
         var MYAPP = {};
         MYAPP.data = {};
         MYAPP.curID = -1;
-        MYAPP.jsonFilePath = {{ X3D_METADATA_URL }};
+        MYAPP.jsonFilePath = {{ model.metadata.url }};
         MYAPP.cam = "";
         MYAPP.metaStatus = 2;
 
@@ -45,7 +45,7 @@
             
             <X3D id="x3dMain" showStat="false" showLog="false" >
                 <scene id='scene'>
-                    <Inline id="x3DomInline" nameSpaceName="inline" mapDEFToID="true" url="{{ X3D_INLINE_URL }}" onload="setCamera();"></Inline>
+                    <Inline id="x3DomInline" nameSpaceName="inline" mapDEFToID="true" url="{{ model.inline }}" onload="setCamera();"></Inline>
                      <Group id="annotationMarker" render="false"></Group>
                  </scene>
              </X3D>
