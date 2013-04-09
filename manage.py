@@ -36,11 +36,12 @@ def celeryworker():
 # FIXME: move this to a celerybeats task
 #
 @manager.command
-def cleanup():
+def cleanup(longevity=151200):
     """
-    Removes generated files older than 
+    Removes generated files. Use cleanup -h for more info
     """
     download_path = os.path.abspath(app.config["DOWNLOAD_PATH"])
+    upload_path = os.path.abspath(app.config["UPLOAD_PATH"])
     
     # simple protection against dummies. However it is questionable to
     # give them Unix rm command in this case ;)
@@ -51,26 +52,35 @@ def cleanup():
         print("  find /your/path -mtime +30 -exec rm -rf '{}' \;\n")
         exit(-1)
 
-    longevity = 6300 * 24
+    #longevity = 6300 * 24
+    longevity = int(longevity)
     current_time = time.time();
     print("Removing files older than {0}".format(datetime.timedelta(seconds=longevity)))
     
-    
-    for root, dirs, files in os.walk(download_path, topdown=False):
-        for name in files:
-            filepath = os.path.join(root, name)
-            filetime = os.path.getmtime(filepath)
-            if current_time - filetime > longevity:
-                print("Removing file %s" % filepath)
-                os.remove(filepath)
-                
-        for name in dirs:
-            dirpath = os.path.join(root, name)
-            #dirtime = os.path.getmtime(dirpath)
-            #if current_time - dirtime > longevity:
-            if not os.listdir(dirpath):
-                print("Removing directory %s" % dirpath)
-                os.rmdir(dirpath)    
+    def _clean(path, longevity):
+        for root, dirs, files in os.walk(path, topdown=False):
+            for name in files:
+                filepath = os.path.join(root, name)
+                filetime = os.path.getmtime(filepath)
+                if current_time - filetime > longevity:
+                    print("Removing file %s" % filepath)
+                    os.remove(filepath)
+                    
+            for name in dirs:
+                dirpath = os.path.join(root, name)
+                #dirtime = os.path.getmtime(dirpath)
+                #if current_time - dirtime > longevity:
+                if not os.listdir(dirpath):
+                    print("Removing directory %s" % dirpath)
+                    os.rmdir(dirpath)    
+
+    _clean(download_path, longevity)
+    _clean(upload_path, longevity)
+
+@manager.command
+def prune():
+    """ Kill all files in download paths NOW"""
+    cleanup(0)
 
 
 @manager.command
