@@ -95,9 +95,7 @@ def convert_model(input_file, options=None):
     # import time
     # time.sleep(10)
 
-    #log = current_app.logger
     logger = current_app.logger
-
 
     # The current tasks id
     task_id = current_task.request.id
@@ -129,17 +127,24 @@ def convert_model(input_file, options=None):
     download_path = current_app.config['DOWNLOAD_PATH']
     template_path = current_app.config['BUNDLES_PATH']
     upload_path = current_app.config['UPLOAD_PATH']
-    
 
-    # {{{ start code which will be refactored to frontend 
+    # this should actuayll come in as parameter, as we assume too much here
+    upload_directory = os.path.join(current_app.config['UPLOAD_PATH'], hash)
+    
+    # first create where everything is stored
+    output_directory = os.path.join(download_path, hash)
+    os.mkdir(output_directory)
+
+
+    # {{{ ZIPFILES
     # If the uploaded file is a archive, uncompress it.
-    # Note that this step should be moved to the controller once we support
-    # a wizard style: upload file, select template, analyze contents and present
-    # options for each model. but for now, we are using the naive approach.
+    # Note that this step should be moved to the controller (or another task)
+    # once we switch to a different workflow (upload file->select template->convert)
+    # for each model. but for now, we are using the naive approach.
     if compression.is_archive(input_file):
         update_progress("Umcompressing archive")
         
-        uncompressed_path = os.path.join(upload_path, hash)
+        uncompressed_path = upload_directory + '.tmp'
         compression.unzip(input_file, uncompressed_path)
 
         update_progress("Archive uncompressed")
@@ -150,35 +155,31 @@ def convert_model(input_file, options=None):
 
         update_progress("Detecting models and resources")
 
+        # detect and collect models, metadata, and resources
         for root, dirs, files in os.walk(uncompressed_path, topdown=False):
             for name in files:
-
                 if security.is_model_file(name):
                     update_progress("Found model: {0}".format(name))
-                    found_models.append(os.path.join(root, name))
+                    found_models.append(name)
                 elif security.is_meta_file(name):
                     update_progress("Found meta data: {0}".format(name))
-                    found_metadata.append(os.path.join(root, name))
+                    found_metadata.append(name)
                 else:
                     update_progress("Found resource: {0}".format(name))
-                    resources_to_copy.append(os.path.join(root, name))
+                    resources_to_copy.append(name)
                     # just copy over
                     
             for name in dirs:
-                dirpath = os.path.join(root, name)
                 update_progress("Found directory: {0}".format(name))
-                resources_to_copy.append(dirpath)
+                resources_to_copy.append(name)
 
         models_to_convert = []  # entry format ('filename.x3d', ['meta.xml'] or None)
 
         logger.info("****** FOUND_META: {0}".format(found_metadata))
 
-
         update_progress("Associating meata data to models")
 
-        # FIXME: this could be improved with map/reduce
-        # going for explicit for now
-        # walk each found model        
+        # FIXME: this could be improved
         for model in found_models:
             m_root = os.path.splitext(os.path.basename(model))[0]
             m_metas = []
@@ -200,7 +201,22 @@ def convert_model(input_file, options=None):
         #   resources_to_copy
         logger.info("****** MODELS: {0}".format(models_to_convert))
         logger.info("****** RESOURCES: {0}".format(resources_to_copy))
+    
+
+        ####### First copy the resources
+
+        # simplified: we just copy everything that is dir blindly as well
+        # as all files in the root level which are not models.
+        for resource in resources_to_copy:
+            src = os.path.join(uncompressed_path, resource)
+            dest = os.path.join(output_directory, resource)
+
+            if os.path.isdir(src):
+                fs.copytree(src, dest)
+            else:
+                shutil.copy(src, dest)
     # }}}
+
 
 
     # specifically not using the current_app.jinja_env in order to seperate
@@ -208,8 +224,6 @@ def convert_model(input_file, options=None):
     # access to the request, global object and app configuration.
     jinja = Environment(loader=FileSystemLoader(template_path))
 
-    output_directory = os.path.join(download_path, hash)
-    os.mkdir(output_directory)
     
     # get the filename without extension 
     # i.e. /path/tp/foo.obj     -> foo
@@ -298,6 +312,7 @@ def convert_model(input_file, options=None):
 
         mehlab_filter += "</FilterScript>"
 
+        # todo-> name this after model
         mehlab_filter_filename = os.path.join(current_app.config['UPLOAD_PATH'], hash + '.mlx')
         with open(mehlab_filter_filename, 'w+') as f:
             f.write(mehlab_filter)
@@ -425,8 +440,12 @@ def convert_model(input_file, options=None):
     if not current_app.config['DEBUG']:
         # delete the uploaded file
         update_progress("Cleaning up...")
+
         # todo remove upload directory
-        os.remove(input_file)
+        if os.path.exists(uncompressed_path):
+            shutil.rmtree(uncompressed_path)
+        if os.path.exists(upload_directory):
+            shutil.rmtree(upload_directory)
     
     # import time
     # time.sleep(10)

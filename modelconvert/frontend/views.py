@@ -21,10 +21,9 @@ from modelconvert import tasks, security
 from modelconvert.extensions import red
 from modelconvert.utils import ratelimit, humanize, compression
 
+import zipfile
 
 frontend = Blueprint('frontend', __name__)
-
-
 
 @frontend.route("/")
 def home():
@@ -46,6 +45,7 @@ def preview(hash, filename):
 # should use aopt directly.
 #@ratelimit.ratelimit(limit=300, per=60 * 15)
 def upload():
+    logger = current_app.logger
     """
     The upload method takes a uploaded file and puts it into
     the celery processing queue using the Redis backend. Filename
@@ -116,44 +116,22 @@ def upload():
                 return render_template('frontend/index.html')
 
         else:
-            # in case of file upload
+            # in case of file upload place the uploaded file in a folder
+            # named <uuid>
             if file and security.is_allowed_file(file.filename):
                 filename = secure_filename(file.filename)
+                upload_directory = os.path.join(current_app.config['UPLOAD_PATH'], hash)
+                os.mkdir(upload_directory)
+                filename = os.path.join(upload_directory, file.filename)
+                file.save(filename)
 
-                # FIXME: 
-                # this whole section needs rework
-                # The upload and decompression process should happen
-                # here. Also, everything should be in a folder with uuid name
-                # currently decompression happens in the task worker, this way we don't
-                # have immediate feedback if everything worked. the frontend should
-                # handle preperation of content suitable for the worker so we can 
-                # shoot off just zip file to the backend worker which contains everything
-                # needed to generate the output. this becomes imporant for scaling out
-                # the worker should have everything it needs in a sane state.
-                # problems: metatdata upload only with files which are non-archives
-
-                # anonymize upload in a path to avoid name conflicts
-                if compression.is_archive(filename):
-                    filename = os.path.join(current_app.config['UPLOAD_PATH'], 
-                                        hash + os.path.splitext(file.filename)[1])
-                    # save file to final location
-                    file.save(filename)
-
-                else:
-                    upload_directory = os.path.join(current_app.config['UPLOAD_PATH'], hash)
-                    os.mkdir(upload_directory)
-                    filename = os.path.join(current_app.config['UPLOAD_PATH'], hash, file.filename)
-
-                    # save file to final location
-                    file.save(filename)
-
-                    # in case the user uploaded a meta file, store this as well
-                    # FIXME make sure only processed when valid template selection
-                    if metadata:
-                        meta_filename = os.path.join(upload_directory, 'metadata' + os.path.splitext(metadata.filename)[1])
-                        metadata.save(meta_filename)
-                        # options for task
-                        options.update(meta_filename=meta_filename)
+                # in case the user uploaded a meta file, store this as well
+                # FIXME make sure only processed when valid template selection
+                if metadata and not compression.is_archive(filename):
+                    meta_filename = os.path.join(upload_directory, 'metadata' + os.path.splitext(metadata.filename)[1])
+                    metadata.save(meta_filename)
+                    # options for task
+                    options.update(meta_filename=meta_filename)
 
             else:
                 flash("Please upload a file of the following type: %s" %
