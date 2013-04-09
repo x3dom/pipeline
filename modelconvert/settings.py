@@ -140,7 +140,7 @@ SECRET_KEY = env_var('SECRET_KEY', '\xa9!\xea\xe9(\xd4\xae\x1c\xfb!8\x0c\xa4\xf1
 ADMINS = env_var('ADMINS', 'root@localhost', 
                  lambda x: frozenset(x.replace(' ', '').split(',')))
 
-MAX_CONTENT_LENGTH = 16 * 1024 * 1024 # 16Meg upload limit
+MAX_CONTENT_LENGTH = env_var('MAX_CONTENT_LENGTH', 16 * 1024 * 1024) # 16Meg upload limit
 
 # location of the user templates (fullsize, metadata, etc.)
 BUNDLES_PATH = env_var('BUNDLES_PATH', path('bundles'))
