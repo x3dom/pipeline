@@ -36,7 +36,7 @@ def celeryworker():
 # FIXME: move this to a celerybeats task
 #
 @manager.command
-def cleanup(longevity=151200):
+def cleanup(longevity=151200, uploads=False):
     """
     Removes generated files. Use cleanup -h for more info
     """
@@ -75,12 +75,14 @@ def cleanup(longevity=151200):
                     os.rmdir(dirpath)    
 
     _clean(download_path, longevity)
-    _clean(upload_path, longevity)
+    
+    if uploads:
+        _clean(upload_path, longevity)
 
 @manager.command
 def prune():
     """ Kill all files in download paths NOW"""
-    cleanup(0)
+    cleanup(0, uploads=True)
 
 
 @manager.command
