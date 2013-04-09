@@ -6,7 +6,7 @@ redis==2.7.2
 # and 2.7.3.24 does not work. we also can't get it from pypi it seems
 # so github.
 #billard==2.7.3.22   # not on pypi??
-git+https://github.com/celery/billiard.git@v2.7.3.22#egg=billard
+#git+https://github.com/celery/billiard.git@v2.7.3.22#egg=billard
 
 celery==3.0.17
 requests==1.2
