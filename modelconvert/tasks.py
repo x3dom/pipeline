@@ -322,10 +322,6 @@ def convert_model(input_file, options=None):
 
 
     
-    # right now, we only support templates with inlines
-    # the 'no template, plain aopt stuff is gone for now'
-    aopt_output_switch = '-x' 
-
     model_template_context = dict()
 
     try:
@@ -496,9 +492,9 @@ def convert_model(input_file, options=None):
         '-f'
         'PrimitiveSet:normalPerVertex:TRUE',
         '-V',
-        '-G ',
+        '-G',
         aopt_bingeo + '/:sacp',
-        aopt_output_switch, 
+        '-x', 
         output_filename
     ]
 
