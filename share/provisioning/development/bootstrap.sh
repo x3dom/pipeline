@@ -5,7 +5,9 @@ _CWD=`pwd`
 
 apt-get -y install python-software-properties
 apt-get -y update
-apt-get -y upgrade
+
+# non interactive upgrade
+DEBIAN_FRONTEND=noninteractive apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" upgrade
 
 # ----------------------------------------------------------------------
 # we need recent software, so add PPAs
@@ -36,9 +38,6 @@ add-apt-repository ppa:chris-lea/node.js
 add-apt-repository ppa:nginx/development
 
 apt-get update
-
-# upgrading takes forever, don't do this
-#apt-get -y upgrade
 
 # ----------------------------------------------------------------------
 # basic infrastructure
