@@ -7,3 +7,8 @@ ADMINS=root@localhost
 PYTHONWARNINGS="d"
 DOWNLOAD_PATH=/vagrant/tmp/downloads
 UPLOAD_PATH=/vagrant/tmp/uploads
+
+# 256MB POST/PUT limit for dev box, for big models
+# note loading from URI does not have this limitation
+# chunked upload is preferred
+MAX_CONTENT_LENGTH=268435456
