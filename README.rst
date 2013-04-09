@@ -531,6 +531,11 @@ SERVER_NAME             The name and port number of the server.
                         with an application context.
                         default: none
 
+MAX_CONTENT_LENGTH      File upload limit in bytes. The default is rather
+                        loose. If a POST or PUT request exeeds this limit
+                        a http 413 is returned. Tweak this to your needs.
+                        default 67108864 (64MB)
+
 TEMPLATE_PATH           Where the UI templates reside. 
                         default: module_dir/templates
 
