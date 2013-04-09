@@ -66,10 +66,11 @@ The following variables can currentluy be configured via environment:
                         with an application context.
                         default: none
     
-    MAX_CONTENT_LENGTH  File upload limit in bytes. The default is rather
+    MAX_CONTENT_LENGTH  File upload limit in bytes. Caution: the default is very
                         loose. If a POST or PUT request exeeds this limit
-                        a http 413 is returned. Tweak this to your needs.
-                        default 67108864 (64MB)
+                        a http 413 is returned. Tweak this to your needs but 
+                        be aware that POST/PUT bombs are a common attack vector.
+                        default 134217728 (128MB)
 
     ALLOWED_DOWNLOAD_HOSTS  A list of hosts which are allowed to download
                             files from. Basic secuirty for the "download model
@@ -145,7 +146,7 @@ SECRET_KEY = env_var('SECRET_KEY', '\xa9!\xea\xe9(\xd4\xae\x1c\xfb!8\x0c\xa4\xf1
 ADMINS = env_var('ADMINS', 'root@localhost', 
                  lambda x: frozenset(x.replace(' ', '').split(',')))
 
-MAX_CONTENT_LENGTH = env_var('MAX_CONTENT_LENGTH', 64 * 1024 * 1024) # 16Meg upload limit
+MAX_CONTENT_LENGTH = env_var('MAX_CONTENT_LENGTH', 128 * 1024 * 1024) # 16Meg upload limit
 
 # location of the user templates (fullsize, metadata, etc.)
 BUNDLES_PATH = env_var('BUNDLES_PATH', path('bundles'))
