@@ -108,10 +108,10 @@ my_models.zip:
             <input type="radio" name="template" value="basic" id="radio-basic" checked> Basic Viewer
         </label>
         <label class="radio">
-            <input type="radio" name="template" value="fullsize" id="radio-fullsize"> Fullsize Viewer
+            <input type="radio" name="template" value="fullsize" id="radio-fullsize"> Fullsize Viewer <small>(json metadata)</small>
         </label>
         <label class="radio">
-            <input type="radio" name="template" value="metadata" id="radio-meta"> Viewer with Metadata Browser
+            <input type="radio" name="template" value="metadata" id="radio-meta"> Metadata Browser <small>(xml metadata)</small>
         </label>
     </fieldset>
 
@@ -127,9 +127,11 @@ my_models.zip:
         <legend>Start sharing</legend>
         <p>Everything set? Then you are ready to upload your model and start sharing. After hitting the convert button, you will be taken to a new page which provides a download link and a preview link to your model.</p>
 
-        <p><strong>Note:</strong> The converted model files will be deleted from our servers a couple of hours after the conversion took place. Make sure you download the files to your computer as soon as possible.</p>
 
-        <input type="submit" value="Convert and Share" class="btn btn-primary" data-loading-text="Processing..." onclick="$(this).button('loading')" >
+        <p><input type="submit" value="Convert and Share" class="btn btn-primary" data-loading-text="Processing..." onclick="$(this).button('loading')" >
+        </p>
+
+        <p><strong>Note:</strong> The converted model files will be deleted from our servers a couple of hours after the conversion took place. Make sure you download the files to your computer as soon as possible.</p>
 
 
     </fieldset>
