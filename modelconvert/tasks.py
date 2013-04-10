@@ -136,7 +136,7 @@ def convert_model(input_file, options=None):
     logger.info("Uploaded file: {0}".format(input_file))
 
     download_path = current_app.config['DOWNLOAD_PATH']
-    template_path = current_app.config['BUNDLES_PATH']
+    bundles_path = current_app.config['BUNDLES_PATH']
     upload_path = current_app.config['UPLOAD_PATH']
 
     # this should actuayll come in as parameter, as we assume too much here
@@ -192,6 +192,8 @@ def convert_model(input_file, options=None):
                 update_progress("Found directory: {0}".format(name))
                 resources_to_copy.append(name)
 
+        if not found_models:
+            raise ConversionError("No models found in archive. Be sure to put all models at the root level of your archive.")
 
         logger.info("****** FOUND_META: {0}".format(found_metadata))
 
@@ -212,7 +214,7 @@ def convert_model(input_file, options=None):
 
                 'input':  model,
                 'input_format': model_base_split[1][1:], # fixme, use magic|mime instead of extension
-                #'input_path': os.path.abspath(os.path.dirname(input_file)),
+                'input_path': os.path.abspath(uncompressed_path),
 
                 'output': model_base_split[0] + '.x3d',
                 'output_format': 'x3d',
@@ -228,7 +230,7 @@ def convert_model(input_file, options=None):
             for r in found_metadata:
                 # found matching metadata file, mark it
                 r_root = os.path.splitext(os.path.basename(r))[0]
-                r_ext = os.path.splitext(os.path.basename(r))[1]
+                r_ext = os.path.splitext(os.path.basename(r))[1][1:]
                 if r_root == m_root:
                     m_metas.append({
                         'file': r,
@@ -247,7 +249,7 @@ def convert_model(input_file, options=None):
         #   resources_to_copy
         logger.info("****** MODELS: {0}".format(models_to_convert))
         logger.info("****** RESOURCES: {0}".format(resources_to_copy))
-    
+        
 
         ####### First copy the resources
 
@@ -314,8 +316,8 @@ def convert_model(input_file, options=None):
 
     # first copy static assets
     output_directory_static = os.path.join(output_directory, 'static')
-    input_directory_static = os.path.join(template_path, template, 'static')
-    input_directory_shared = os.path.join(template_path, '_shared')
+    input_directory_static = os.path.join(bundles_path, template, 'static')
+    input_directory_shared = os.path.join(bundles_path, '_shared')
         
     # copy shared resources
     fs.copytree(input_directory_shared, output_directory)
@@ -325,37 +327,37 @@ def convert_model(input_file, options=None):
 
 
     # init template engine
-    jinja = Environment(loader=FileSystemLoader(template_path))
+    jinja = Environment(loader=FileSystemLoader(os.path.join(bundles_path, template)))
 
     tpl_job_context = {
         # fixme assuming too much here
         'archive_uri': hash + '.zip'
     }
 
-    index_template = os.path.join(template, 'list.html')
-    model_template = os.path.join(template, 'view.html')
+    list_template = 'list.html'
+    model_template = 'view.html'
 
     # first render index template if it's present in the template bundle.
     # we always do this, even if there's only one model to convert
     try:
         update_progress("Starting to render list template")
 
-        tpl = jinja.get_template(index_template)
+        tpl = jinja.get_template(list_template)
         context = { }
         context.update(models=models_to_convert, job=tpl_job_context)
         # we need info on the models, probably a object would be nice
 
-        tpl_output = os.path.join(output_directory, 'index.html')
+        tpl_output = os.path.join(output_directory, 'list.html')
         # finally render template bundle
         with open(tpl_output, 'w+') as f:
             f.write(tpl.render(context))
 
-    except TemplateNotFound:
+    except TemplateNotFound as tplnf:
         # not sure if we should stop here, for the moment we proceed
-        # since the index.html list view is technically not necessary
+        # since the list.html list view is technically not necessary
+        # to complete rendering
         update_progress("List template not found, proceeding without")
-        logger.error("Template '{0}'' not found - ignoring list view".format(index_template))
-
+        logger.error("Template '{0}' not found - ignoring list view".format(list_template))
     finally:
         update_progress("Done processing list template")
 
@@ -406,10 +408,9 @@ def convert_model(input_file, options=None):
     logger.info("Aopt binary: {0}".format(current_app.config['AOPT_BINARY']))
     logger.info("Meshlab binary: {0}".format(current_app.config['MESHLAB_BINARY']))
 
-    #inputfile = outputfile warning
-    
     
     if meshlab:
+        #inputfile = outputfile could lead to problems later on
         
         update_progress("Meshlab optimization...")
         
@@ -434,45 +435,52 @@ def convert_model(input_file, options=None):
 
 
         # todo-> name this after model
-        mehlab_filter_filename = os.path.join(current_app.config['UPLOAD_PATH'], hash + '.mlx')
+        mehlab_filter_filename = os.path.join(output_directory, hash + '.mlx')
         with open(mehlab_filter_filename, 'w+') as f:
             f.write(mehlab_filter)
         
         # Subprocess in combination with PIPE/STDOUT could deadlock
         # be careful with this. Prefer the Python 2.7 version below or
-        # maybe switch to using envoy or similar.
-        proc = subprocess.Popen([
-            current_app.config['MESHLAB_BINARY'], 
-            "-i", 
-            input_file, 
-            "-o",
-            input_file, 
-            "-s",
-            mehlab_filter_filename,
-            "-om",
-            "ff"
-            ],
-            env=env, 
-            stdout=subprocess.PIPE, 
-            stderr=subprocess.STDOUT)
         
-        output = proc.communicate()[0]
-        returncode = proc.wait()
+        for model in models_to_convert:
+            update_progress("Meshlab optimization: {0}".format(model['input']))
+            
+            meshalb_input_file = os.path.join(model['input_path'], model['input'])
 
-        # create a aopt log in debug mode
-        if current_app.config['DEBUG']:
-            with open(os.path.join(output_directory, 'meshlab.log'), 'a+') as f:
-                f.write(output)
+            proc = subprocess.Popen([
+                current_app.config['MESHLAB_BINARY'], 
+                "-i", 
+                meshalb_input_file, 
+                "-o",
+                meshalb_input_file, 
+                "-s",
+                mehlab_filter_filename,
+                "-om",
+                "ff"
+                ],
+                env=env, 
+                stdout=subprocess.PIPE, 
+                stderr=subprocess.STDOUT)
+            
+            output = proc.communicate()[0]
+            returncode = proc.wait()
+
+            # create a aopt log in debug mode
+            if current_app.config['DEBUG']:
+                with open(os.path.join(output_directory, 'meshlab.log'), 'a+') as f:
+                    f.write(output)
 
 
-        logger.info("Meshlab optimization {0}".format(returncode))
-        logger.info(output)
+            logger.info("Meshlab optimization model: {0} return: {1}".format(meshalb_input_file, returncode))
+            logger.info(output)
 
-        if returncode == 0:
-            update_progress("Meshlab successfull")
-        else:
-            update_progress("Meshlab failed!")
-            logger.error("Meshlab problem exit code {0}".format(returncode))
+            if returncode == 0:
+                update_progress("Meshlab successfull")
+            else:
+                update_progress("Meshlab failed!")
+                logger.error("Meshlab problem: {0} return: {1}".format(meshalb_input_file, returncode))
+
+        
 
         # Python 2.7
         # try:
@@ -512,53 +520,61 @@ def convert_model(input_file, options=None):
     update_progress("Starting AOPT conversion")
 
     status = -100
-    aopt_bingeo = "{0}_bin".format(input_filename)
-    os.mkdir(os.path.join(output_directory, aopt_bingeo))
 
-    aopt_cmd = [
-        current_app.config['AOPT_BINARY'], 
-        '-i', 
-        input_file, 
-        '-F',
-        'Scene:"cacheopt(true)"',
-        '-f',
-        'PrimitiveSet:creaseAngle:4',              
-        '-f'
-        'PrimitiveSet:normalPerVertex:TRUE',
-        '-V',
-        '-G',
-        aopt_bingeo + '/:sacp',
-        '-x', 
-        output_filename
-    ]
+    for model in models_to_convert:
 
-    try:
-    
-        update_progress("Running AOPT")
-        #status = subprocess.call(aopt_cmd)
+        update_progress("Converting: {0}".format(model['input']))
 
+        aopt_bingeo = "{0}_bin".format(model['name'])
+        os.mkdir(os.path.join(output_directory, aopt_bingeo))
 
-        process = subprocess.Popen(aopt_cmd, 
-           stdout=subprocess.PIPE, 
-           stderr=subprocess.STDOUT) 
-        output = process.communicate()[0] 
+        infile  = os.path.join(model['input_path'], model['input'])
+        outfile = os.path.join(output_directory, model['output'])
 
-        status = process.wait()
+        aopt_cmd = [
+            current_app.config['AOPT_BINARY'], 
+            '-i', 
+            infile, 
+            '-F',
+            'Scene:"cacheopt(true)"',
+            '-f',
+            'PrimitiveSet:creaseAngle:4',              
+            '-f'
+            'PrimitiveSet:normalPerVertex:TRUE',
+            '-V',
+            '-G',
+            aopt_bingeo + '/:sacp',
+            '-x', 
+            outfile
+        ]
 
-        # create a aopt log in debug mode
-        if current_app.config['DEBUG']:
-            with open(os.path.join(output_directory, 'aopt.log'), 'a+') as f:
-                f.write(output)
+        try:
+        
+            update_progress("Running AOPT")
+            #status = subprocess.call(aopt_cmd)
 
 
-        logger.info("Aopt return: {0}".format(status))
-        logger.info(output)
+            process = subprocess.Popen(aopt_cmd, 
+               stdout=subprocess.PIPE, 
+               stderr=subprocess.STDOUT) 
+            output = process.communicate()[0] 
 
-    except OSError:
-        update_progress("Failure to execute AOPT")
-        err_msg = "Error: AOPT not found or not executable {0}".format(repr(aopt_cmd))
-        logger.error(err_msg)
-        raise ConversionError(err_msg)
+            status = process.wait()
+
+            # create a aopt log in debug mode
+            if current_app.config['DEBUG']:
+                with open(os.path.join(output_directory, 'aopt.log'), 'a+') as f:
+                    f.write(output)
+
+
+            logger.info("Aopt return: {0}".format(status))
+            logger.info(output)
+
+        except OSError:
+            update_progress("Failure to execute AOPT")
+            err_msg = "Error: AOPT not found or not executable {0}".format(repr(aopt_cmd))
+            logger.error(err_msg)
+            raise ConversionError(err_msg)
 
 
     if status < 0:
@@ -597,16 +613,19 @@ def convert_model(input_file, options=None):
         if os.path.exists(upload_directory):
             shutil.rmtree(upload_directory)
 
-    update_progress("Done.")
+    update_progress("Done")
     
     # import time
     # time.sleep(10)
 
+    if len(models_to_convert) > 1:
+        preview = 'list.html'
+    else:
+        preview = models_to_convert[0]['preview']
+
     result_set = dict(
         hash = hash,
-        preview= '',
-        archive= '',
-        filenames = [os.path.basename(output_template_filename), '%s.zip' % hash],
+        filenames = [preview, '%s.zip' % hash],
         input_file = input_file,
     )
     return result_set

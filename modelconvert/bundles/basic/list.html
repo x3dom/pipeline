@@ -1,46 +1,45 @@
-<h1>List template</h1>
+{% extends "base.html" %}
+{% block title %}Results of converted models{% endblock %}
+{% block content %}
 
-<p>This generates the overview in case more than models are uploaded</p>
+<h1>Your models are ready :)</h1>
 
-<h3>The following models have been uploaded and converted.</h3>
-
-<style>
-table, td { border:1px solid #ccc; padding:1em;}
-</style>
-<table>
-   <thead>
-    <tr>
-        <th>#</th>
-        <th>Input name</th>
-        <th>Input format</th>
-        <th>Preview Link</th>
-        <th>Generated Inline file</th>
-        <th>Metadata</th>
-    </tr>
+<table class="table">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Input name</th>
+            <th>Detected format</th>
+            <th>Preview Link</th>
+            <th>Generated Inline file</th>
+            <th>Metadata</th>
+        </tr>
     </thead>
+    <tbody>
 
-<tbody>
-
-{% for model in models %}
-    <tr>
-    <td>{{ loop.index }}</td>
-    <td>{{ model.input }}</td>
-    <td>{{ model.input_format }}</td>
-    <td><a href="{{ model.preview }}">{{ model.preview }}</a></td>
-    <td>{{ model.inline }}</td>
-    <td>
-        {% if model.metadata %}
-            {{ model.metadata }}
-        {% else %}
-            No metadata
-        {% endif %}
-    </td>
-    </tr>
-{% endfor %}
-
-</tbody>
-
+        {% for model in models %}
+            <tr>
+            <td>{{ loop.index }}</td>
+            <td>{{ model.input }}</td>
+            <td>{{ model.input_format }}</td>
+            <td><a href="{{ model.preview }}">{{ model.preview }}</a></td>
+            <td>{{ model.inline }}</td>
+            <td>
+                {% if model.metadata %}
+                    {% for meta in model.metadata %}
+                        <ul class="unstyled">
+                            <li>{{ meta.file }} <small>({{ meta.type }})</small></li>
+                        </ul>
+                    {% endfor %}
+                {% else %}
+                    No metadata found
+                {% endif %}
+            </td>
+            </tr>
+        {% endfor %}
+    </tbody>
 </table>
 
-<p><a href="{{ job.archive_uri }}">Download the whole package</a> here.</p>
+<p><i class="icon-download"></i><a href="{{ job.archive_uri }}">Download the whole package as ZIP</a></p>
 
+{% endblock %}

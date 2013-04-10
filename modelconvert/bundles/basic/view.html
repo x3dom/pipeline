@@ -1,12 +1,8 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta http-equiv='X-UA-Compatible' content='chrome=1'></meta>
-    <meta http-equiv='Content-Type' content='text/html;charset=utf-8'></meta>
-    <link rel='stylesheet' type='text/css' href='static/x3dom.css'></link>
-    <script type='text/javascript' src='static/x3dom-full.js'></script>
-  </head>
-  <body>
+{% extends "base.html" %}
+{% block title %}Model: {{ model.name }} {% endblock %}
+{% block content %}
+
+    {# TODO: this is crappy aopt output thingy. make this looking really cool #}
     <div> 
       <div class='group' style='width:300px;float:right;margin-right:5%;'> 
         <fieldset style='margin:4px;'> 
@@ -46,22 +42,25 @@
             </tr> 
             <tr> 
               <td> 
-                <button onclick='document.getElementById(&apos;x3d_main&apos;).runtime.showAll();'> Show Everything
+                <button class="btn" onclick='document.getElementById(&apos;x3d_main&apos;).runtime.showAll();'> Show Everything
                 </button> 
               </td> 
               <td> 
-                <button onclick='document.getElementById(&apos;x3d_main&apos;).runtime.resetView();'> Reset View
+                <button class="btn" onclick='document.getElementById(&apos;x3d_main&apos;).runtime.resetView();'> Reset View
                 </button> 
               </td> 
             </tr> 
           </table> 
         </fieldset> 
       </div> 
+      
+
       <div class='group'> 
-        <h1>Minimalistic X3DOM Viewer</h1> 
-        <p>Output created with <a href='http://www.instantreality.org'>InstantReality</a> aopt tool <a href="http://github.com/x3dom/pipeline">pipeline</a>.
-        </p> 
+        <h1>Model: {{ model.name }}</h1> 
+        <p>Output created with the <a href="http://github.com/x3dom/pipeline">Modelconvert</a> pipeline using <a href="http://instantreality.org">InstantReality</a> and <a href="http://meshlab.sourceforge.net/">Meshalb</a>.</p> 
       </div> 
+
+
     </div>
 
 
@@ -71,5 +70,9 @@
       </scene>
      </x3d>
 
-  </body>
-</html>
+      <div class='group'> 
+        <p>Back to <a href="list.html">overview</a>.</p> 
+      </div> 
+
+
+{% endblock %}
