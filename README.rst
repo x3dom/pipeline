@@ -680,29 +680,32 @@ Contributing
 
 Developing patches should follow this workflow:
 
-  1.  Fork on GitHub (click Fork button)
-  2.  Clone to computer: `git clone git@github.com:«github account»/x3dom/pipeline.git modelconvert`
-  3.  cd into your repo: `cd x3dom`
-  4.  Set up remote upstream: `git remote add -f upstream git://github.com/x3dom/pipeline.git`
-  5.  Create a branch for the new feature: `git checkout -b my_new_feature`
-  6.  Work on your feature, add and commit as usual
+  1. Fork on GitHub (click Fork button)
+  2. Clone to computer: ``git clone git@github.com:«github account»/x3dom/pipeline.git modelconvert``
+  3. cd into your repo: ``cd x3dom``
+  4. Set up remote upstream: ``git remote add -f upstream git://github.com/x3dom/pipeline.git``
+  5. Create a branch for the new feature: ``git checkout -b my_new_feature``
+  6. Work on your feature, add and commit as usual
 
 Creating a branch is not strictly necessary, but it makes it easy to delete 
 your branch when the feature has been merged into upstream, diff your branch 
 with the version that actually ended in upstream, and to submit pull requests 
 for multiple features (branches).
 
-  7.  Push branch to GitHub: `git push origin my_new_feature`
+  7.  Push branch to GitHub: ``git push origin my_new_feature``
   8.  Issue pull request: Click Pull Request button on GitHub
 
 
 **Useful Commands**
 
 If a lot of changes has happened upstream you can replay your local changes 
-on top of these, this is done with `rebase`, e.g.:
+on top of these, this is done with ``rebase``, e.g.:
+
+.. code-block:: bash
 
     git fetch upstream
     git rebase upstream/master
+
 
 This will fetch changes and re-apply your commits on top of these.
 
@@ -710,11 +713,12 @@ This is generally better than merge, as it will give a clear picture of which
 commits are local to your branch. It will also “prune” any of your local 
 commits if the same changes have been applied upstream.
 
-You can use `-i` with `rebase` for an “interactive” rebase. This allows you 
+You can use ``-i`` with ``rebase`` for an “interactive” rebase. This allows you 
 to drop, re-arrange, merge, and reword commits, e.g.:
 
-    git rebase -i upstream/master
+.. code-block:: bash
 
+    git rebase -i upstream/master
 
 
 ================
