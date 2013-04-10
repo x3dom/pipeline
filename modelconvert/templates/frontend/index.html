@@ -84,7 +84,7 @@ my_models.zip:
 
 
     <fieldset>
-        <legend>Choose the optimization type (optional) <a class="toggler" data-toggle-on="Hide help" data-toggle-off="Show help" href="#optimization_help">Show help</a></legend>
+        <legend>Choose the optimization (optional) <a class="toggler" data-toggle-on="Hide help" data-toggle-off="Show help" href="#optimization_help">Show help</a></legend>
 
         <div id="optimization_help" class="help">
             <h4>Meshlab optimization</h4>
@@ -101,8 +101,16 @@ my_models.zip:
            <input type="checkbox" name="meshlab" value="Remove Zero Area Faces"> Remove Zero Area Faces
         </label>
         <label class="checkbox">
-           <input type="checkbox" name="meshlab" value="Remove Unreferenced Vertices"> Remove Unreferenced Vertices
+           <input type="checkbox" name="meshlab" value="Remove Unreferenced Vertex"> Remove Unreferenced Vertices
         </label>
+        <label class="checkbox">
+           <input type="checkbox" name="meshlab" value="Remove Isolated pieces (wrt Face Num.)"> Remove Isolated pieces
+           {# Need to do something about the params  <Param type="RichInt" value="50" name="MinComponentSize"/> it's currently hard coded in the backend #}
+        </label>
+        <label class="checkbox">
+           <input type="checkbox" name="meshlab" value="Extract Information"> Extract Infromation
+        </label>
+
     </fieldset> 
 
     <fieldset>

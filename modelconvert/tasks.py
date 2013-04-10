@@ -396,14 +396,23 @@ def convert_model(input_file, options=None):
         
         env = os.environ.copy()
         env['DISPLAY'] = current_app.config['MESHLAB_DISPLAY']
-        
+
+                
         mehlab_filter = ""
         mehlab_filter += "<!DOCTYPE FilterScript><FilterScript>"
 
         for item in meshlab:
-            mehlab_filter += '<filter name="' + item + '"/>' 
+            # fixme, parameterization could be dynamic, not hardcoded
+            if item == "Remove Isolated pieces (wrt Face Num.)":
+                mehlab_filter += '<filter name="' + item + '">'
+                mehlab_filter += '<Param type="RichInt" value="50" name="MinComponentSize"/>'
+                mehlab_filter += '</filter>'
+            else:
+                mehlab_filter += '<filter name="' + item + '"/>' 
 
         mehlab_filter += "</FilterScript>"
+
+
 
         # todo-> name this after model
         mehlab_filter_filename = os.path.join(current_app.config['UPLOAD_PATH'], hash + '.mlx')
