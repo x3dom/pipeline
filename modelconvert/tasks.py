@@ -159,7 +159,7 @@ def convert_model(input_file, options=None):
     # it might make sense to create a class or at least a dict for this 
     # in the future,
     models_to_convert = []  
-    
+
     if compression.is_archive(input_file):
         update_progress("Umcompressing archive")
         
@@ -204,18 +204,42 @@ def convert_model(input_file, options=None):
             m_output_inline = m_root + '.x3d'
             m_output_html = m_root + '.html'
 
-            m_metas = []
-            
+            # now we have a list of metas belonging to the current model
+            # store that in the master list
+            model_base_split = os.path.splitext(os.path.basename(model))
+            model_info_dict = {
+                'name':   model_base_split[0],
+
+                'input':  model,
+                'input_format': model_base_split[1][1:], # fixme, use magic|mime instead of extension
+                #'input_path': os.path.abspath(os.path.dirname(input_file)),
+
+                'output': model_base_split[0] + '.x3d',
+                'output_format': 'x3d',
+                
+                'inline': model_base_split[0] + '.x3d',
+                'preview': model_base_split[0] + '.html',
+                
+                'resources': resources_to_copy,
+            }
+
             # then walk each metadata to find match for model
+            m_metas = []
             for r in found_metadata:
                 # found matching metadata file, mark it
                 r_root = os.path.splitext(os.path.basename(r))[0]
+                r_ext = os.path.splitext(os.path.basename(r))[1]
                 if r_root == m_root:
-                    m_metas.append(r)
+                    m_metas.append({
+                        'file': r,
+                        'type': r_ext,
+                    })
 
-            # now we have a list of metas belonging to the current model
-            # store that in the master list
-            models_to_convert.append( (model, m_output_inline, m_output_html, m_metas,) )
+            if m_metas:
+                model_info_dict.update(metadata=m_metas)
+
+            models_to_convert.append(model_info_dict)
+#            models_to_convert.append( (model, m_output_inline, m_output_html, m_metas,) )
 
         # we now have list of models with associated metadata
         # and a list of plain resources that simply need to be copied
@@ -241,15 +265,43 @@ def convert_model(input_file, options=None):
     else:
         # no compression, no multimodel, no, textures..
         current_input_filename = os.path.splitext(os.path.basename(input_file))[0]
-        
+
+        model_base_split = os.path.splitext(os.path.basename(input_file))
+        model_info_dict = {
+            'name':   model_base_split[0],
+
+            'input':  os.path.basename(input_file),
+            'input_format': model_base_split[1][1:], # fixme, use magic|mime instead of extension
+            'input_path': os.path.abspath(os.path.dirname(input_file)),
+
+            'output': model_base_split[0] + '.x3d',
+            'output_format': 'x3d',
+            
+            'inline': model_base_split[0] + '.x3d',
+            'preview': model_base_split[0] + '.html',
+            
+            'resources': None,
+        }
+
         # we have a meta file which could be named whatever, normalize
         # this is a mess - but for the review...
-        meta_dest_filename = [None]
         if meta_filename:
+            
             meta_dest_filename = input_filename + os.path.splitext(meta_filename)[1]
             shutil.copy(meta_filename, os.path.join(output_directory, meta_dest_filename))
 
-        models_to_convert = [ (input_file, current_input_filename+'.x3d', current_input_filename+'.html', meta_dest_filename) ]
+            meta_data_list = [{
+                'file': meta_dest_filename,
+                'type': os.path.splitext(meta_filename)[1],
+            }],
+
+            model_info_dict.update(metadata=meta_data_list)
+
+        models_to_convert.append(model_info_dict);
+        logger.info("***** MODELS TO CONVERT: {0} ".format(models_to_convert))
+
+#        models_to_convert = [ (input_file, current_input_filename+'.x3d', current_input_filename+'.html', meta_dest_filename) ]
+
 
 
     logger.info("***** MODELS TO CONVERT: {0} ".format(models_to_convert))
@@ -259,7 +311,6 @@ def convert_model(input_file, options=None):
     # data. This can be refactored out. The reason this runs before aopt
     # is in order to allow live preview of partially optimized models later
     # on. 
-
 
     # first copy static assets
     output_directory_static = os.path.join(output_directory, 'static')
@@ -289,27 +340,15 @@ def convert_model(input_file, options=None):
     try:
         update_progress("Starting to render list template")
 
-        _tpl = jinja.get_template(index_template)
-        _tpl_context = { }
-
-        _models = []
-
-        for model in models_to_convert:
-            _models.append({
-                'original_name': os.path.basename(model[0]),  #fixme, should be basename from the beginning
-                'inline':  model[1],
-                'preview': model[2],
-                'metadata': model[3][0]
-            })
-
-
-        _tpl_context.update(models=_models, job=tpl_job_context)
+        tpl = jinja.get_template(index_template)
+        context = { }
+        context.update(models=models_to_convert, job=tpl_job_context)
         # we need info on the models, probably a object would be nice
 
-        _tpl_output_filename = os.path.join(output_directory, 'index.html')
+        tpl_output = os.path.join(output_directory, 'index.html')
         # finally render template bundle
-        with open(_tpl_output_filename, 'w+') as f:
-            f.write(_tpl.render(_tpl_context))
+        with open(tpl_output, 'w+') as f:
+            f.write(tpl.render(context))
 
     except TemplateNotFound:
         # not sure if we should stop here, for the moment we proceed
@@ -320,45 +359,25 @@ def convert_model(input_file, options=None):
     finally:
         update_progress("Done processing list template")
 
-
     
     model_template_context = dict()
-
     try:
         model_template_renderer = jinja.get_template(model_template)
 
         for model in models_to_convert:
             # now render templates for individual models
-            update_progress("Rendering template for model: {0}".format(model[1]))
-
-            _model_ctx = {
-                'original_name': os.path.basename(model[0]),  #fixme, should be basename from the beginning
-                'inline':  model[1],
-                'preview': model[2],
-            }
-
-            # if metadata is present, update the context
-            if model[3][0]:
-                _meta_ctx = {
-                    'metadata': {
-                    'url': model[3][0],
-                    'type': os.path.splitext(model[3][0])[1][1:] # fixme, use magic|mime
-                    } 
-                }
-
-                _model_ctx.update(_meta_ctx)
+            update_progress("Rendering template for model: {0}".format(model['name']))
 
             # write out template
             model_template_context.update(
-                model=_model_ctx,
+                model=model,
                 # the job this model belongs to (used for getting archive name)
                 job=tpl_job_context  
             )
 
-            _tpl_output_filename = os.path.join(output_directory, model[2])
-            with open(_tpl_output_filename, 'w+') as f:
+            tpl_output = os.path.join(output_directory, model['preview'])
+            with open(tpl_output, 'w+') as f:
                 f.write(model_template_renderer.render(model_template_context))
-
 
     except TemplateNotFound:
         logger.error("Template '{0}'' not found - ignoring list view".format(view_template))
@@ -366,8 +385,8 @@ def convert_model(input_file, options=None):
 
 
     ### temp
-    output_filename = model[1]
-    output_template_filename = model[2]
+    output_filename = models_to_convert[0]['output']
+    output_template_filename = models_to_convert[0]['preview']
 
 
     # end template generation
@@ -437,11 +456,17 @@ def convert_model(input_file, options=None):
             stdout=subprocess.PIPE, 
             stderr=subprocess.STDOUT)
         
-        out = proc.communicate()[0]
+        output = proc.communicate()[0]
         returncode = proc.wait()
 
+        # create a aopt log in debug mode
+        if current_app.config['DEBUG']:
+            with open(os.path.join(output_directory, 'meshlab.log'), 'a+') as f:
+                f.write(output)
+
+
         logger.info("Meshlab optimization {0}".format(returncode))
-        logger.info(out)
+        logger.info(output)
 
         if returncode == 0:
             update_progress("Meshlab successfull")
@@ -510,16 +535,24 @@ def convert_model(input_file, options=None):
     try:
     
         update_progress("Running AOPT")
-        status = subprocess.call(aopt_cmd)
-        # process = subprocess.Popen(aopt_cmd, 
-        #    stdout=subprocess.PIPE, 
-        #    stderr=subprocess.STDOUT) 
-        # output = process.communicate()[0] 
+        #status = subprocess.call(aopt_cmd)
 
-        # status = process.wait()
+
+        process = subprocess.Popen(aopt_cmd, 
+           stdout=subprocess.PIPE, 
+           stderr=subprocess.STDOUT) 
+        output = process.communicate()[0] 
+
+        status = process.wait()
+
+        # create a aopt log in debug mode
+        if current_app.config['DEBUG']:
+            with open(os.path.join(output_directory, 'aopt.log'), 'a+') as f:
+                f.write(output)
+
 
         logger.info("Aopt return: {0}".format(status))
-        # logger.info(output)
+        logger.info(output)
 
     except OSError:
         update_progress("Failure to execute AOPT")

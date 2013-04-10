@@ -80,7 +80,7 @@ def cleanup(longevity=151200, uploads=False):
         _clean(upload_path, longevity)
 
 @manager.command
-def prune():
+def purge():
     """ Kill all files in download paths NOW"""
     cleanup(0, uploads=True)
 

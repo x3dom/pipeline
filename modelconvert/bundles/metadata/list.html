@@ -11,7 +11,8 @@ table, td { border:1px solid #ccc; padding:1em;}
    <thead>
     <tr>
         <th>#</th>
-        <th>Original Name</th>
+        <th>Input name</th>
+        <th>Input format</th>
         <th>Preview Link</th>
         <th>Generated Inline file</th>
         <th>Metadata</th>
@@ -23,7 +24,8 @@ table, td { border:1px solid #ccc; padding:1em;}
 {% for model in models %}
     <tr>
     <td>{{ loop.index }}</td>
-    <td>{{ model.original_name }}</td>
+    <td>{{ model.input }}</td>
+    <td>{{ model.input_format }}</td>
     <td><a href="{{ model.preview }}">{{ model.preview }}</a></td>
     <td>{{ model.inline }}</td>
     <td>

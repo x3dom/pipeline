@@ -1,19 +1,18 @@
 TODOs
 =====
 
-- Vagrant box
-- rename etc -> share
 - Multi files
 - metarefresh->ajax poll
 - hub/vmust split
-- 12.4 ir download?
+- 12.04 ir download for aopt?
 
-- switch to dir for each upload
+- overrideable  tempaltes, not only static file (bundles/_shared)
+
+- switch to dir for each upload: done, but needs cleanup (task should get
+  a directory or a ZIP and discover everything else)
 - zip upload 
-- sha/index.hml not sha/sha.html
-- Uploader (nginx/progress)
+- Uploader (nginx/progress/chunked upload)
 - better basic viewer
-
 
 - cleanup & unit tests
 - convert deployment to virtualenv on server
@@ -23,8 +22,21 @@ TODOs
 - sessions
 - uploadable user templates
 - package all resources for default templates in zipfile instead of hotlinking
-- upload progress indicator
 - queue list with status info of conversion process
 - API
+- scaling
 
 
+More tossing around of those ideas
+----------------------------------
+
+- Maybe also put possible meshlab options with the template bundles
+  This associates the UI for meshlab options to the template and can
+  simply be customized.
+- Maybe also put customs tasks to the template bundles. this way users
+  can run additional tasks before and after aopt.
+- maybe this should not be templates bundels at all anymore but deployable
+  python modules. this way it's entirely seperated from the application and
+  can be hooked in dynamically. also instead of only output templates, 
+  much more can be provided by the user, if so desired
+- probably switch to Pyramid for this as underlying layer above wsgi (no falsk)
