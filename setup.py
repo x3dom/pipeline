@@ -20,7 +20,7 @@ deps = [
 
 setup(
     name='modelconvert',
-    version='0.2.0',
+    version='0.3.0',
     description='3D model conversion service',
     long_description=__doc__,
     packages=['modelconvert'],
