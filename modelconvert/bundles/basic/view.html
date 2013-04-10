@@ -56,8 +56,9 @@
       
 
       <div class='group'> 
-        <h1>Model: {{ model.name }}</h1> 
+        <h1>Model: {{ model.input }}</h1> 
         <p>Output created with the <a href="http://github.com/x3dom/pipeline">Modelconvert</a> pipeline using <a href="http://instantreality.org">InstantReality</a> and <a href="http://meshlab.sourceforge.net/">Meshalb</a>.</p> 
+         <p>See <a href="list.html">all converted models</a>.</p> 
       </div> 
 
 
@@ -69,10 +70,6 @@
         <inline id="x3d_main_inline" nameSpaceName="inline" mapDEFToID="true" url="{{ model.inline }}"></inline>
       </scene>
      </x3d>
-
-      <div class='group'> 
-        <p>Back to <a href="list.html">overview</a>.</p> 
-      </div> 
 
 
 {% endblock %}

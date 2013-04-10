@@ -165,6 +165,7 @@ def convert_model(input_file, options=None):
         
         uncompressed_path = upload_directory + '.tmp'
         os.mkdir(uncompressed_path)
+
         compression.unzip(input_file, uncompressed_path)
 
         update_progress("Archive uncompressed")
