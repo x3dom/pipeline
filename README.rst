@@ -38,10 +38,10 @@ Main Features
 * Converted/Optimized models can be embedded in different tempaltes
 * Asynchronous process
 * Server-Sent Events for fast status updates
+* Upload archives with many models and textures at once
 
 And soon:
 
-* Upload archives with many models and textures at once
 * Personalized upload manager for multiple uploads in one view
 * Come back later and reprocess models with different settings without
   uploading again
