@@ -1,3 +1,19 @@
+**************************
+The Output Template System
+**************************
+
+**Table of Contents**
+
+.. contents::
+    :local:
+    :depth: 2
+    :backlinks: none
+
+
+========
+Overview
+========
+
 This is the root of the prepackaged
 content template bundels.
 
@@ -34,3 +50,9 @@ Resulting in
 output/static/x3dom.js    (from _shared/static/x3dom.js)
 output/static/x3dom.css   (from plain/static/x3dom.css)
 
+The system is using the `Jinja`_ Template engine. You can use all the
+default features of this system.
+
+
+
+.. _Jinja: http://jinja.pocoo.org/
