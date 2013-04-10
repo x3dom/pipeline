@@ -680,20 +680,20 @@ Contributing
 
 Developing patches should follow this workflow:
 
-  1. Fork on GitHub (click Fork button)
-  2. Clone to computer: ``git clone git@github.com:«github account»/x3dom/pipeline.git modelconvert``
-  3. cd into your repo: ``cd x3dom``
-  4. Set up remote upstream: ``git remote add -f upstream git://github.com/x3dom/pipeline.git``
-  5. Create a branch for the new feature: ``git checkout -b my_new_feature``
-  6. Work on your feature, add and commit as usual
+    1. Fork on GitHub (click Fork button)
+    2. Clone to computer: ``git clone git@github.com:«github account»/x3dom/pipeline.git modelconvert``
+    3. cd into your repo: ``cd x3dom``
+    4. Set up remote upstream: ``git remote add -f upstream git://github.com/x3dom/pipeline.git``
+    5. Create a branch for the new feature: ``git checkout -b my_new_feature``
+    6. Work on your feature, add and commit as usual
 
 Creating a branch is not strictly necessary, but it makes it easy to delete 
 your branch when the feature has been merged into upstream, diff your branch 
 with the version that actually ended in upstream, and to submit pull requests 
 for multiple features (branches).
 
-  7.  Push branch to GitHub: ``git push origin my_new_feature``
-  8.  Issue pull request: Click Pull Request button on GitHub
+    7.  Push branch to GitHub: ``git push origin my_new_feature``
+    8.  Issue pull request: Click Pull Request button on GitHub
 
 
 **Useful Commands**
