@@ -30,6 +30,23 @@
                 {% endfor %}
             </p>
 
+            <h4>Loading from URL</h4>
+            <p>The last part of the URL needs to be a valid filename. The system does not handle streaming or extensionless endpoints by looking up mime types or magic chars. Please prepare your data like this</p>
+
+<pre>
+GOOD:
+
+http://somplace.com/models/models.zip
+http://somplace.com/models/model.ply
+http://somplace.com/models/model.obj
+
+BAD (even if sent with correct mimetype)
+http://somplace.com/models/1/obj
+http://somplace.com/models/1/view?format=zip
+http://somplace.com/models/2/index.html
+http://somplace.com/model.list#zip
+</pre>
+
 
             <h4>Textured models</h4>
             <p>If you need to upload textures with your model, you need to prepare and upload a ZIP file which also contains your textures. Directory names and texture files as well as the refenreces in your models are not touched during conversion and simply copied over. So are any other files provided in the ZIP package. For more on uploading ZIP files read the next section.</p>

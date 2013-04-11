@@ -92,7 +92,6 @@ def upload():
             # download file to disk
             r = requests.get(url, stream=True, verify=False)
             filename = secure_filename(os.path.split(url)[-1].split("?")[0])
-            filename = os.path.join(current_app.config['UPLOAD_PATH'], filename)
 
             # FIXME: this should check the mimetype in the http response header
             # as well
@@ -107,6 +106,10 @@ def upload():
                     flash("File too big. Please don't upload files greater than {0}".format(humanize.bytes(current_app.config['MAX_CONTENT_LENGTH'])), 'error')
                     return render_template('frontend/index.html')
                 else:
+                    
+                    upload_directory = os.path.join(current_app.config['UPLOAD_PATH'], hash)
+                    os.mkdir(upload_directory)
+                    filename = os.path.join(upload_directory, filename)
 
                     with open(filename, "wb") as data:
                         data.write(r.content)
