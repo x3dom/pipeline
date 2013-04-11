@@ -20,7 +20,7 @@
                 return;
             }
 
-            var source = new EventSource($SCRIPT_ROOT +'/api/v1/stream/{{ result.id }}');
+            var source = new EventSource('/api/v1/stream/{{ result.id }}');
 
             source.addEventListener('message', function(e) {
                 console.log(e.data);
