@@ -69,6 +69,7 @@
         });
 
     </script>
+
     <noscript>
         {% if not result.ready()%}
         <meta http-equiv="refresh" content="10; URL={{url_for('frontend.status', task_id=result.id)}}">
