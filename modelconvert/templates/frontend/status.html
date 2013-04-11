@@ -14,31 +14,66 @@
             // FIXME: Fallback to meta refresh in case of no JS
             // FIXME: Use JSON response vs. plain text cruft
             // FIXME: Fallback to polling in case of no EventSource => better polyfill
-            if (!!window.EventSource) {
-                var status = $('#status');
-                if (status.length <= 0) {
-                    return;
-                }
-
-                var source = new EventSource('/api/v1/stream/{{ result.id }}');
-
-                source.addEventListener('message', function(e) {
-                    console.log(e.data);
-                    if (e.data != '1') {
-                        status.text(e.data);
-                    }
-                }, false);
-
-            } else {
-              // Result to xhr polling :(
+            
+            var status = $('#status');
+            if (status.length <= 0) {
+                return;
             }
+
+            var source = new EventSource($SCRIPT_ROOT +'/api/v1/stream/{{ result.id }}');
+
+            source.addEventListener('message', function(e) {
+                console.log(e.data);
+                if (e.data != '1') {
+                    status.text(e.data);
+                }
+            }, false);
+
+            
+            // source.addEventListener('open', function(e) {
+            //     status.text("Waiting for updates...");
+            // }, false);
+
+            source.addEventListener('error', function(e) {
+                if (e.readyState == EventSource.CLOSED) {
+                    status.text("Connection closed... Please wait.");
+                }
+            }, false);
+            
+
+            // we also need polling to get rid of the meta-refresh
+            $(function () {
+                var status = $("#status");
+
+                // this function will run each 1000 ms until stopped with clearInterval()
+                var i = setInterval(function () {
+                    $.ajax({
+                        success: function (json) {
+                            // when the worker process is done, stop execution
+                            if (json.state == 'SUCCESS') {
+                                clearInterval(i);
+                                // this is naive, it should really get
+                                // all the info from json to build the success
+                                // screen
+                                window.location.reload();
+                            }
+                        },
+                        error: function () {
+                            // on error, stop execution
+                            clearInterval(i);
+                        }
+                    });
+                }, 2500);  // the polling timeout, 2.5sec so we don't kill the server
+            });
+
         });
 
     </script>
-
+    <noscript>
         {% if not result.ready()%}
         <meta http-equiv="refresh" content="10; URL={{url_for('frontend.status', task_id=result.id)}}">
         {% endif %}
+    </noscript>
 
     {% endblock %}
 

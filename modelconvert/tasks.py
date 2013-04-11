@@ -555,7 +555,7 @@ def convert_model(input_file, options=None):
 
         try:
         
-            update_progress("Running AOPT")
+            update_progress("Running AOPT on: {0}".format(model['input']))
             #status = subprocess.call(aopt_cmd)
 
 
