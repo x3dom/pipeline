@@ -18,6 +18,12 @@ env.hosts = ['x3dom.org']
 
 env.APP_ROOT = '/var/www/modelconvert/modelconvert'
 
+
+def hub():
+    env.APP_ROOT = '/home/localadmin/app/modelconvert'
+    env.hosts = ['hub.igd.fraunhofer.org']
+
+
 # expects the app to be cloned once there manually
 # fix this in the future and deliver a package vs. git checkout
 @task
