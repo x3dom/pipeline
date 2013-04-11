@@ -615,6 +615,7 @@ def convert_model(input_file, options=None):
         update_progress("Cleaning up...")
 
         # todo remove upload directory
+        uncompressed_path = upload_directory + '.tmp'
         if os.path.exists(uncompressed_path):
             shutil.rmtree(uncompressed_path)
         if os.path.exists(upload_directory):
