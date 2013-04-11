@@ -548,7 +548,7 @@ def convert_model(input_file, options=None):
             'PrimitiveSet:normalPerVertex:TRUE',
             '-V',
             '-G',
-            aopt_bingeo + '/:sacp',
+            aopt_bingeo + '/:sac',
             '-x', 
             outfile
         ]
