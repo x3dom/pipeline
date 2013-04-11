@@ -3,7 +3,8 @@ Flask-Script==0.5.3
 redis==2.7.2
 
 celery==3.0.17
-billiard==2.7.3.25  #.23/.24 is broken
+#.23/.24 is broken
+billiard==2.7.3.25
 
 requests==1.2
 
