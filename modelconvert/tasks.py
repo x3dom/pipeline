@@ -289,15 +289,18 @@ def convert_model(input_file, options=None):
 
         # we have a meta file which could be named whatever, normalize
         # this is a mess - but for the review...
+        # this should be handled by the zip code above, since its the same
+        # but only one file.
         if meta_filename:
             
             meta_dest_filename = input_filename + os.path.splitext(meta_filename)[1]
             shutil.copy(meta_filename, os.path.join(output_directory, meta_dest_filename))
 
-            meta_data_list = [{
+            meta_data_list = []
+            meta_data_list.append({
                 'file': meta_dest_filename,
-                'type': os.path.splitext(meta_filename)[1],
-            }],
+                'type': os.path.splitext(meta_filename)[1][1:]
+            })
 
             model_info_dict.update(metadata=meta_data_list)
 
@@ -564,6 +567,8 @@ def convert_model(input_file, options=None):
             status = process.wait()
 
             # create a aopt log in debug mode
+            # this is a secuirty concern as long as aopt does include
+            # full path names in the log output
             if current_app.config['DEBUG']:
                 with open(os.path.join(output_directory, 'aopt.log'), 'a+') as f:
                     f.write(output)

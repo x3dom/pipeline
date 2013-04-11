@@ -22,8 +22,19 @@
 		// just to show how this function works
 		//jQuery.get("data/metaData.xml", function (jsonData){ console.log(jsonData.toString());}, "html");
 	
-		jQuery.get("{{ model.metadata.url }}", createMetaDataList, "{{ model.metadata.type }}");
-	
+		
+        // note this only uses the last metadata element
+        // this template does not handle more than one metadata file
+        // {% if model.metadata %}
+        //     {% for meta in model.metadata %}
+        //         MYAPP.jsonFilePath = '{{ meta.file }}'
+        //     {% endfor %}
+        // {% else %}
+        //         MYAPP.jsonFilePath = 'some_kind_of_default.json'
+        // {% endif %}
+
+		jQuery.get("{{ model.metadata[0].file }}", createMetaDataList, "{{ model.metadata[0].type }}");
+
 		jQuery(".popUp").click(function() {
 			jQuery(".popUp").fadeOut();
 		});

@@ -70,7 +70,7 @@ The following variables can currentluy be configured via environment:
                         loose. If a POST or PUT request exeeds this limit
                         a http 413 is returned. Tweak this to your needs but 
                         be aware that POST/PUT bombs are a common attack vector.
-                        default 134217728 (128MB)
+                        default: 134217728 (=128MB)
 
     ALLOWED_DOWNLOAD_HOSTS  A list of hosts which are allowed to download
                             files from. Basic secuirty for the "download model
@@ -195,6 +195,7 @@ SUPPORTED_FORMATS = (
 SUPPORTED_META_DATA = (
     ('xml', 'XML Metadata'),
     ('txt', 'Text metadata'),
+    ('json', 'JSON metadata'),
 )
 
 SUPPORTED_ARCHIVES = (
@@ -238,7 +239,7 @@ CELERY_IMPORTS = ("modelconvert.tasks", )
 #CELERY_TASK_RESULT_EXPIRES = 300 # default is one day
 CELERY_HIJACK_ROOT_LOGGER = False
 CELERYD_LOG_COLOR=False
-#CELERYD_MAX_TASKS_PER_CHILD=1 
+CELERYD_MAX_TASKS_PER_CHILD=1 
 
 # simplify log output during development
 if DEBUG:
