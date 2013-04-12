@@ -462,7 +462,6 @@ def convert_model(input_file, options=None):
                 mehlab_filter_filename,
                 "-om",
                 "vc",
-                "ff"
                 ],
                 env=env, 
                 stdout=subprocess.PIPE, 
