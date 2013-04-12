@@ -14,7 +14,8 @@ MYAPP.model.InfotGod     = MYAPP.path + "ENKOMI_F.E.63_16_IngotGod/ENKOMI_F.E.63
 MYAPP.model.mirror       = MYAPP.path + "KITION_F.E._T.8-34_IvoryMirrorHandle/KITION_F.E._T.8-34_IvoryMirrorHandle_PoissonMesh_Tex_Quadric.ply_conv" + MYAPP.modelName;
 MYAPP.model.limesone     = MYAPP.path + "1997-VII-15-3_LimestoneSphinxAndLionComplexDec/1997-VII-15-3_LimestoneSphinxAndLionComplexDec.ply_conv" + MYAPP.modelName;
 
-MYAPP.pathShader         = "";
+MYAPP.pathShader         = "static/shader/";
+//MYAPP.pathShader         = "";
 
 MYAPP.cam = "";
 
@@ -44,7 +45,7 @@ function init(){
 }
 
 function initInline(){
-    MYAPP.pathShader = getRelativeShaderPath();
+    //MYAPP.pathShader = getRelativeShaderPath();
 
     //console.log("initInline()");
     modifyX3DModel();
