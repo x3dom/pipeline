@@ -2,6 +2,6 @@ language: python
 python:
   - "2.6"
   - "2.7"
+before_install: sudo apt-get install -y libevent-dev python-gevent python-lxml
 install: "pip install -r requirements.txt --use-mirrors"
 script: python tests/tests.py
-
