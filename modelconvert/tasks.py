@@ -461,6 +461,7 @@ def convert_model(input_file, options=None):
                 "-s",
                 mehlab_filter_filename,
                 "-om",
+                "vc",
                 "ff"
                 ],
                 env=env, 
