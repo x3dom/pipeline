@@ -8,6 +8,10 @@ billiard==2.7.3.25
 
 requests==1.2
 
+# wgsi server used with circus deployment
+chaussette==0.8
+gevent==0.13.8
+
 # optional to manage celery queues
 Flower
 

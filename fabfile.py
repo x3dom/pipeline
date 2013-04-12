@@ -19,10 +19,6 @@ env.hosts = ['x3dom.org']
 env.APP_ROOT = '/var/www/modelconvert/modelconvert'
 
 
-def hub():
-    env.APP_ROOT = '/home/localadmin/app/modelconvert'
-    env.hosts = ['hub.igd.fraunhofer.org']
-
 
 # expects the app to be cloned once there manually
 # fix this in the future and deliver a package vs. git checkout
@@ -35,10 +31,10 @@ def deploy():
     with cd(env.APP_ROOT):
         run('git fetch origin; git reset --hard origin/master')
 #        run('python -c "import compileall; compileall.compile_dir(\'.\')"')
-        run('touch wsgi.py')
+        run('touch modelconvert/wsgi.py')
         sudo('/etc/init.d/apache2 restart', pty=False)
         sudo('supervisorctl restart celery', pty=False)
-
+#        sudo('circusctl restart webapp')
 
 @task
 def bootstrap():
