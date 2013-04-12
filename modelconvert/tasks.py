@@ -548,7 +548,7 @@ def convert_model(input_file, options=None):
             'Scene:"cacheopt(true)"',
             '-f',
             'PrimitiveSet:creaseAngle:4',              
-            '-f'
+            '-f',
             'PrimitiveSet:normalPerVertex:TRUE',
             '-V',
             '-G',
