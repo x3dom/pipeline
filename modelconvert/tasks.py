@@ -435,6 +435,10 @@ def convert_model(input_file, options=None):
             else:
                 mehlab_filter += '<filter name="' + item + '"/>' 
 
+        # hack, order should be given
+        if "Remove Unreferenced Vertex" in meshlab:
+            mehlab_filter += '<filter name="Remove Unreferenced Vertex"/>' 
+
         mehlab_filter += "</FilterScript>"
 
 
