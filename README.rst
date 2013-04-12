@@ -2,7 +2,7 @@
 3D model optimization for humans
 ********************************
 
-Modelconvert is a experimental 3D model optimization and
+Modelconvert is an experimental 3D model optimization and
 sharing service. It allows optimization and conversion 
 of 3D models for Web presentation and sharing these
 models on the web.
@@ -33,9 +33,9 @@ Main Features
 
 * Upload and conversion of 3D Models to X3DOM
 * Sharing of models on the web (permalinks to converted models)
-* Downloadble ZIP packages of converted models
+* Downloadable ZIP packages of converted models
 * Triangular Mesh optimization of models
-* Converted/Optimized models can be embedded in different tempaltes
+* Converted/Optimized models can be embedded in different templates
 * Asynchronous process
 * Server-Sent Events for fast status updates
 * Upload archives with many models and textures at once
@@ -46,7 +46,7 @@ And soon:
 * Come back later and reprocess models with different settings without
   uploading again
 * Manage your models and what you share with whom
-* User uploadable tempaltes
+* User uploadable templates
 * Much more
 
 
@@ -174,7 +174,7 @@ pip command in the following instructions with ``sudo``.
 .. note:: Please do not use your systems package manager (e.g. apt, yum, pacman) to 
    install Python libraries. Always use pip.
 
-The steps outline here are tested on Ubuntu 10.4 LTS (lucid32), but should be 
+The steps outlined here are tested on Ubuntu 10.04 LTS (lucid32), but should be 
 similar on other distributions.
 
 We have not tested this application on Windows. The development enviornment
@@ -450,7 +450,7 @@ Alternatively, just create a small shell script:
 
 
 .. warning:: Be sure you don't have leading or trailing whitespaces in the 
-             environemnt variable values. To be certain, use quotes around
+             environment variable values. To be certain, use quotes around
              the values.
 
 
