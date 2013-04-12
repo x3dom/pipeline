@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv='Content-Type' content='text/html;charset=utf-8'/>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1,IE=edge" />
+
+    <title>RS shader inline Model, JS creates Appearance  </title>
+
+    <script type='text/javascript' src='static/libs/x3dom.js'></script>
+    <link rel='stylesheet' type='text/css' href='static/libs/x3dom.css'>
+
+    <link rel="stylesheet" href="static/libs/JQueryUI/css/ui-lightness/jquery-ui-1.8.20.custom.css">
+    <script type="text/javascript" src="static/libs/JQuery/js/jquery-1.7.1.min.js"></script>
+    <script type="text/javascript" src="static/libs/JQueryUI/js/jquery-ui-1.8.20.custom.min.js"></script>
+
+
+    <link rel="stylesheet" type="text/css" href="static/css/style.css"/>
+    <script type="text/javascript" src="static/js/main.js"></script>
+    <script type="text/javascript" src="static/js/colorPicker.js"></script>
+    <script type="text/javascript" src="static/js/menu.js"></script>
+
+</head>
+
+<body>
+
+<X3D id="x3dMain" showStat="false" showLog="false" backend="desktop">
+    <Scene DEF='scene'>
+        <!--Background id='back'
+                    backUrl='"static/media/texture/cubemap/bBK.png"'   bottomUrl='"static/media/texture/cubemap/bDN.png"'
+                    frontUrl='"static/media/texture/cubemap/bFR.png"'  leftUrl='"static/media/texture/cubemap/bLF.png"'
+                    rightUrl='"static/media/texture/cubemap/bRT.png"'  topUrl='"static/media/texture/cubemap/bUP.png"'>
+        </Background-->
+        <Background id='back'
+                    backUrl= '"static/media/texture/cubemap/ocean_3_back.jpg"' bottomUrl='"static/media/texture/cubemap/ocean_3_bottom.jpg"'
+                    frontUrl='"static/media/texture/cubemap/ocean_3_front.jpg"'  leftUrl='"static/media/texture/cubemap/ocean_3_left.jpg"'
+                    rightUrl='"static/media/texture/cubemap/ocean_3_right.jpg"'   topUrl='"static/media/texture/cubemap/ocean_3_top.jpg"'>
+        </Background>
+
+        <Viewpoint DEF="vp" position='0 0 5'></Viewpoint>
+
+        <Transform id="mainModel" translation="0 -0.5 0" scale='0.01 0.01 0.01' >
+            <Inline id="x3DomInline" nameSpaceName="inline" mapDEFToID="true" onload="initInline();" url="{{ model.inline }}"></Inline>
+            <!--
+            <Inline id="x3DomInline" nameSpaceName="inline" mapDEFToID="true" onload="initInline();" url="static/Data/Models/1963-XI-22-9_GlassFlask/1963-XI-22-9_GlassFlask_PoissonMeshQuadric.ply_conv/model-cacheoptsac.x3d"></Inline>
+            <Inline id="x3DomInline" nameSpaceName="inline" mapDEFToID="true" onload="initInline();" url="static/Data/Models/B_56_Birth/B_56_PoissonMeshQuadric.ply_conv/model-cacheoptsac.x3d"></Inline>
+            -->
+        </Transform>
+
+        <PointLight id='sunLight' DEF='sunLight' location='2 2 1' on='TRUE' intensity='0.7' 
+                    ambientIntensity='0.4' color='1 1 1' attenuation='1.0 0.0 0.0' radius='200.0'>
+        </PointLight>
+         
+        <Transform id='sun' translation='2 2 1' scale='0.1 0.1 0.1'>
+            <Shape>
+                <Appearance>
+                    <Material id='sunMat' diffuseColor='1 1 0' specularColor='1 1 1' shininess='0.5'></Material>
+                </Appearance>
+                <Sphere radius="0.5"></Sphere>
+            </Shape>
+        </Transform>
+        
+    </Scene>
+</X3D>
+
+
+<!--  MENU -->
+
+<div>
+    <div id="menu" class="ui-widget-content ui-corner-all">
+        <p><a id="menuOpener" href="#">Menu</a></p>
+
+        <!--p id="output">test</p-->
+        <div id="menuList"></div>
+    </div>
+
+    <div id="colorPicker" class="ui-widget-content ui-corner-all">
+        <div id="red"></div>
+        <div id="green"></div>
+        <div id="blue"></div>
+        <div id="all"></div>
+
+        <div id="colorPickerSwatch" class="ui-widget-content ui-corner-all"></div>
+        <div id="colorPickerButtons">
+            <a id="colorPickerOK" href="#">OK</a>
+            <a id="colorPickerCancel" href="#">cancel</a>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
