@@ -56,31 +56,3 @@ function createMetaDataItem(title, content) {
 function popup(){
 	jQuery(".popUp").fadeIn();
 }
-
-
-
-
-
-
-
-
-
-// just for your infromation :)
-function testConversion(){
-	var myObj = {
-		test: "bla"
-	};
-	var jqObj = jsObjToJqObj(myObj);
-	var jsObj = jqObjToJsObj(jqObj);
-	
-	console.log(myObj.test);				// original JS Object
-	console.log(jqObj.test);				// convertet JQuery Object -> fail (wrong access)
-	console.log(jsObj.test);				// backword convertet JS Object
-}
-function jqObjToJsObj(jqObj){
-	return jqObj[0];
-}
-function jsObjToJqObj(jqObj){
-	return $(jqObj);
-}
-

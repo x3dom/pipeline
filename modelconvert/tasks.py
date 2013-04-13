@@ -161,7 +161,7 @@ def convert_model(input_file, options=None):
     models_to_convert = []  
 
     if compression.is_archive(input_file):
-        update_progress("Umcompressing archive")
+        update_progress("Uncompressing archive")
         
         uncompressed_path = upload_directory + '.tmp'
         os.mkdir(uncompressed_path)
@@ -170,7 +170,7 @@ def convert_model(input_file, options=None):
 
         update_progress("Archive uncompressed")
 
-        resources_to_copy =  []  # etnry format path/to/resource
+        resources_to_copy =  []  # entry format path/to/resource
         found_models = [] 
         found_metadata = []
 
@@ -185,6 +185,7 @@ def convert_model(input_file, options=None):
                 elif security.is_meta_file(name):
                     update_progress("Found meta data: {0}".format(name))
                     found_metadata.append(name)
+                    resources_to_copy.append(name)
                 else:
                     update_progress("Found resource: {0}".format(name))
                     resources_to_copy.append(name)
@@ -199,7 +200,7 @@ def convert_model(input_file, options=None):
 
         logger.info("****** FOUND_META: {0}".format(found_metadata))
 
-        update_progress("Associating meata data to models")
+        update_progress("Associating meta data to models")
 
         # FIXME: this could be improved
         for model in found_models:
@@ -456,6 +457,7 @@ def convert_model(input_file, options=None):
             
             meshalb_input_file = os.path.join(model['input_path'], model['input'])
 
+            # options to account for many different attributes: -om vc fc vn wt
             proc = subprocess.Popen([
                 current_app.config['MESHLAB_BINARY'], 
                 "-i", 

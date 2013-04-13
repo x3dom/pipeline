@@ -5,13 +5,13 @@
     <meta http-equiv="X-UA-Compatible" content="chrome=1,IE=edge" />
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    
 	<script type='text/javascript' src='static/x3dom-full.js'></script>
   	<link rel='stylesheet' type='text/css' href='static/x3dom.css'/>
 	<link rel="stylesheet" href="static/jquery.mobile-1.1.1.min.css" />
 	<script src="static/jquery-1.7.1.min.js"></script>
 	<script src="static/jquery.mobile-1.1.1.min.js"></script>
 	
-
 	<link rel="stylesheet" href="static/style.css" />
 	<script>
 	/***************************************************************************
@@ -42,9 +42,8 @@
 	</script>
 
 	<script src="static/main.js"></script>
+</head>
 
-
-</head> 
 <body> 
 <div id="mainpage" data-role="page">
 	<div id="leftpane">
@@ -53,20 +52,18 @@
 	
 	<div id="rightpane">
 		<div data-role="header">
-			<h1>3D-Model with Metadata</h1>
+			<h1>3D Model with Metadata</h1>
 		</div><!-- /header -->
 		
 		<div id="x3dViewport" data-role="content">	
 			<X3D id='x3dElement' swfpath="static/x3dom.swf" showStat='false' showLog='false'>
 				<Scene id='scene'>
-					<Viewpoint id="vp" position="43.17066 -151.07855 393.00474" centerofrotation="30 -153 73" description="Camera Main"></Viewpoint>
-
+				    
 					<Group id="mainModel" render="true">	
 					   <Inline nameSpaceName="inline" mapDEFToID="true" url="{{ model.inline }}"></Inline>
 					</Group>
 					
-					 
-					<Group id="annotationMarker" render="true">		
+					<!--Group id="annotationMarker" render="true">		
 						<transform translation="96.658361185 -103.45333 72.46436756" scale="25 25 25">					
 							<shape id="annotation_Marker_1" onclick="popup();" ispickable="true" bboxcenter="0,0,0" bboxsize="-1,-1,-1">
 								<sphere solid="true" ccw="true" radius="0.3" subdivision="24,24"></sphere>
@@ -76,7 +73,7 @@
 								</appearance>
 							</shape>
 						</transform>
-					</Group>
+					</Group-->
 				</Scene>
 			</X3D>
 		</div><!-- /content -->
@@ -84,7 +81,7 @@
 </div><!-- /page -->
 
 
-<div class="popUp ui-overlay-shadow ui-body-a ui-corner-all">
+<!--div class="popUp ui-overlay-shadow ui-body-a ui-corner-all">
 	<h3>custom title</h3>
 	<p>	
 		some costom annotations. some costom  costom annotations. some costom  costom annotations. <br>
@@ -92,7 +89,7 @@
 		some costom annotations. some costom  costom annotations. <br>
 		<a target="_blank" href="http://en.wikipedia.org/">http://en.wikipedia.org/</a>
 	</p>
-</div>
+</div-->
 
 </body>
 </html>
