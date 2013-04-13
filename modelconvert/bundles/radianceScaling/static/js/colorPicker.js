@@ -1,6 +1,5 @@
-
 function mod_colorPicker() {
-    var public = {};
+    var publicMod = {};
 
     /********* private section *************/
 
@@ -75,7 +74,7 @@ function mod_colorPicker() {
 
     /********* public section *************/
         // register menu Events
-    public.init = function (){
+    publicMod.init = function (){
         // init slider
         $("#red, #green, #blue").slider({
             orientation:"horizontal",
@@ -128,7 +127,7 @@ function mod_colorPicker() {
         $("#colorPicker").hide();
     }
 
-    public.open = function (targetId, attribute){
+    publicMod.open = function (targetId, attribute){
         $("#colorPicker").data("targetLight", document.getElementById(targetId + "Light"));
         $("#colorPicker").data("targetMat", document.getElementById(targetId + "Mat"));
         $("#colorPicker").data("attribute", attribute);
@@ -142,7 +141,5 @@ function mod_colorPicker() {
         $("#colorPicker").fadeIn();
     }
 
-    return public;
+    return publicMod;
 }
-
-

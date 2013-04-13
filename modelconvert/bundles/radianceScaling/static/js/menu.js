@@ -1,5 +1,5 @@
 function mod_menu() {
-    var public = {};
+    var publicMod = {};
 
     /********* private section *************/
 
@@ -21,7 +21,7 @@ function mod_menu() {
 
     /********* public section *************/
         // register menu Events
-    public.init = function () {
+    publicMod.init = function () {
         $("#menu").draggable();
         $("#menuList").hide();
         $("#menu").addClass("menuOpened");
@@ -46,7 +46,7 @@ function mod_menu() {
         });
     }
 
-    public.addButton = function (parent, text, callback) {
+    publicMod.addButton = function (parent, text, callback) {
         var div = $('<div class="buttonContainer"></div>');
         var a = $('<a href="#">' + text + '</a>');
 
@@ -64,7 +64,7 @@ function mod_menu() {
     }
 
 
-    public.addSlider = function (parent, target, attribute, text, isFloat, max) {
+    publicMod.addSlider = function (parent, target, attribute, text, isFloat, max) {
         var div = $('<div class="sliderContainer"></div>');
         var label = $('<div class="sliderLabel">' + text + ' <span class="sliderVal"> </span></div>');
         var slider = $('<div class="slider"></div>');
@@ -77,7 +77,7 @@ function mod_menu() {
         div.attr("data-isFloat", isFloat.toString());
         div.data("target", document.getElementById(target));
         div.data("attribute", attribute);
-		
+
 
         label.find(".sliderVal").text("( " + val + " )");
         if (isFloat) {
@@ -98,9 +98,5 @@ function mod_menu() {
         parent.append(div);
     }
 
-
-
-    return public;
+    return publicMod;
 }
-
-

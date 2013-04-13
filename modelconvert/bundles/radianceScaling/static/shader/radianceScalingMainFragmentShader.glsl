@@ -13,38 +13,31 @@ varying vec3 fragMatDiffuse;
 varying vec3 fragMatSpecular;
 
 varying vec4 fragRendTexCoord;
-
 varying vec4 fragColor;
 
 uniform sampler2D 	tex;
 
-uniform float       fieldSpecularPower;			// ist das shinynes?
+uniform float       fieldSpecularPower;			// shininess?
 uniform float       fieldAlpha;
 uniform float       fieldGamma;
 
-//float       fieldAlpha = 0.0;
-//float       fieldGamma = 4.0;
 
 float curvature(vec2 proj);
 float scaled(in float impfunc,in float beta);
 vec4 blinnPhong(in vec3 norm, in vec3 lightDir, in vec3 eyeDir);
 
 void main() {
-	vec3 eye      = normalize( fragEyeVec );		// im Objectspace
-	vec3 lightDir = normalize( fragLightVec );	// im Objectspace
+	vec3 eye      = normalize( fragEyeVec );	// objectspace
+	vec3 lightDir = normalize( fragLightVec );	// objectspace
 
 	vec2 proj = fragRendTexCoord.xy / fragRendTexCoord.w;
 	proj = (1.0 + proj) / 2.0;
 	vec3 normal = texture2D(tex, proj).xyz * 2.0 - 1.0;
 
-
 	vec4 phongCol = blinnPhong(normal, lightDir, eye);	
-	vec4 color = fragColor * (phongCol +  scaled(length(phongCol.xyz), curvature(proj)) );
+	vec4 color = fragColor * (phongCol +  scaled(length(phongCol.xyz), curvature(proj)));
 	float scale = scaled(length(phongCol.xyz), curvature(proj));
-	//color = vec4(scale, scale, scale, 1.0);
-	//gl_FragColor = fragColor * phongCol;
 	gl_FragColor = color;
-	//gl_FragColor = vec4(normal, 1.0);
 }
 
 // **** PHONG ****
@@ -61,9 +54,6 @@ vec4 blinnPhong(in vec3 norm, in vec3 lightDir, in vec3 eyeDir){
 	return fvTotalAmbient + fvTotalDiffuse + fvTotalSpecular;
 }
 
-
-
-
 // **** SCALING FUNCTION ****
 float scaled(in float delta,in float kappa) {
 	float k = sign(kappa) * pow(kappa, 1.0 / fieldGamma);
@@ -78,11 +68,11 @@ float scaled(in float delta,in float kappa) {
 		   (alpha + delta * (expbeta - alpha - aexpbeta));
 }
 */
-							
+
 // **** CURVATURE CALCULATION ****
 float curvature(vec2 proj) {
 	float size = 1.0 / 1024.0;
-	// | |n| |		// original ist anders !! das ist der normalenvector nicht die kruemmung!!!
+	// | |n| |		// normal vector
 	// |w|x|e|
 	// | |s| |
 
@@ -92,7 +82,6 @@ float curvature(vec2 proj) {
 	float s = texture2D(tex, vec2(proj.x, proj.y - size)).y * 2.0 - 1.0;
 
 	float erg = s - n + w - e;
-	//if(erg < -0.98 || erg > 0.98) { erg = 0.0; }
 
 	return 0.25 * erg;
 }
