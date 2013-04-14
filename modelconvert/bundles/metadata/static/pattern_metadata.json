@@ -1,0 +1,390 @@
+{
+    "Collection": [
+        {
+            "title": "Title",
+            "path": "0 0 0"
+        },
+        {
+            "title": "Rights",
+            "path": "0 0 1"
+        },
+        {
+            "title": "Source",
+            "path": "0 0 2"
+        },
+        {
+            "title": "Language",
+            "path": "0 0 4"
+        },
+        {
+            "title": "Location",
+            "path": "0 0 5"
+        },
+        {
+            "title": "creation date",
+            "path": "0 0 7"
+        }
+    ],
+    "Subject": [
+        {
+            "title": "creator",
+            "path": "0 1 0 2"
+        },
+        {
+            "title": "creation date",
+            "path": "0 1 0 3"
+        },
+        {
+            "title": "country",
+            "path": "0 1 0 4"
+        },
+        {
+            "title": "language",
+            "path": "0 1 0 5"
+        },
+        {
+            "title": "rights",
+            "path": "0 1 0 6"
+        },
+        {
+            "title": "Name",
+            "path": "0 1 1 0"
+        },
+        {
+            "title": "Type",
+            "path": "0 1 4"
+        },
+        {
+            "title": "Location Name",
+            "path": "0 1 6 0"
+        }
+    ],
+    "Data acquisition process": [
+        {
+            "title": "Technology",
+            "path": "0 2 0 0 0"
+        },
+        {
+            "title": "Software",
+            "path": "0 2 0 0 1"
+        },
+        {
+            "title": "Device Features",
+            "path": "0 2 0 0 2"
+        },
+        {
+            "title": "Model",
+            "path": "0 2 0 0 3 0"
+        },
+        {
+            "title": "Model",
+            "path": "0 2 0 0 4 0"
+        },
+        {
+            "title": "Aperture",
+            "path": "0 2 0 0 4 2"
+        },
+        {
+            "title": "Number of operators",
+            "path": "0 2 0 0 11"
+        },
+        {
+            "title": "time required",
+            "path": "0 2 0 0 12"
+        },
+        {
+            "title": "institution author",
+            "path": "0 2 0 0 14"
+        }
+    ],
+    "Data post processing": [
+        {
+            "title": "source",
+            "path": "0 2 1 0 0 0 1"
+        },
+        {
+            "title": "creator",
+            "path": "0 2 1 0 0 0 2"
+        },
+        {
+            "title": "creation date",
+            "path": "0 2 1 0 0 0 3"
+        },
+        {
+            "title": "country",
+            "path": "0 2 1 0 0 0 4"
+        },
+        {
+            "title": "language",
+            "path": "0 2 1 0 0 0 5"
+        },
+        {
+            "title": "rights",
+            "path": "0 2 1 0 0 0 6"
+        },
+        {
+            "title": "Name",
+            "path": "0 2 1 0 0 1 0"
+        },
+        {
+            "title": "Software",
+            "path": "0 2 1 0 0 2"
+        },
+        {
+            "title": "Number of photos",
+            "path": "0 2 1 0 0 3"
+        },
+        {
+            "title": "Data format input",
+            "path": "0 2 1 0 0 4"
+        },
+        {
+            "title": "Number of vertices",
+            "path": "0 2 1 0 0 5"
+        },
+        {
+            "title": "Number of faces",
+            "path": "0 2 1 0 0 6"
+        },
+        {
+            "title": "Data weight",
+            "path": "0 2 1 0 0 7"
+        },
+        {
+            "title": "Institution author",
+            "path": "0 2 1 0 0 9"
+        },
+        {
+            "title": "Copyright",
+            "path": "0 2 1 0 0 10"
+        },
+        {
+            "title": "source",
+            "path": "0 2 1 1 0 0 1"
+        },
+        {
+            "title": "creator",
+            "path": "0 2 1 1 0 0 2"
+        },
+        {
+            "title": "creation date",
+            "path": "0 2 1 1 0 0 3"
+        },
+        {
+            "title": "country",
+            "path": "0 2 1 1 0 0 4"
+        },
+        {
+            "title": "language",
+            "path": "0 2 1 1 0 0 5"
+        },
+        {
+            "title": "rights",
+            "path": "0 2 1 1 0 0 6"
+        },
+        {
+            "title": "Name",
+            "path": "0 2 1 1 0 1 0"
+        },
+        {
+            "title": "Software",
+            "path": "0 2 1 1 0 2"
+        },
+        {
+            "title": "Number of photos",
+            "path": "0 2 1 1 0 3"
+        },
+        {
+            "title": "Data format input",
+            "path": "0 2 1 1 0 4"
+        },
+        {
+            "title": "Number of vertices",
+            "path": "0 2 1 1 0 5"
+        },
+        {
+            "title": "Number of faces",
+            "path": "0 2 1 1 0 6"
+        },
+        {
+            "title": "Data weight",
+            "path": "0 2 1 1 0 7"
+        },
+        {
+            "title": "Institution author",
+            "path": "0 2 1 1 0 9"
+        },
+        {
+            "title": "Copyright",
+            "path": "0 2 1 1 0 10"
+        }
+    ],
+    "Digital resource": [
+        {
+            "title": "creator",
+            "path": "0 3 3 0 2"
+        },
+        {
+            "title": "creation_date",
+            "path": "0 3 3 0 3"
+        },
+        {
+            "title": "country",
+            "path": "0 3 3 0 4"
+        },
+        {
+            "title": "language",
+            "path": "0 3 3 0 5"
+        },
+        {
+            "title": "rights",
+            "path": "0 3 3 0 6"
+        },
+        {
+            "title": "height",
+            "path": "0 3 3 5 0"
+        },
+        {
+            "title": "length",
+            "path": "0 3 3 5 1"
+        },
+        {
+            "title": "width",
+            "path": "0 3 3 5 2"
+        },
+        {
+            "title": "units",
+            "path": "0 3 3 5 3"
+        },
+        {
+            "title": "data_format",
+            "path": "0 3 3 6"
+        },
+        {
+            "title": "data_weight",
+            "path": "0 3 3 7"
+        },
+        {
+            "title": "number_of_vertices",
+            "path": "0 3 3 13"
+        },
+        {
+            "title": "number_of_faces",
+            "path": "0 3 3 14"
+        },
+        {
+            "title": "source",
+            "path": "0 3 4 0 1"
+        },
+        {
+            "title": "creator",
+            "path": "0 3 4 0 2"
+        },
+        {
+            "title": "creation_date",
+            "path": "0 3 4 0 3"
+        },
+        {
+            "title": "country",
+            "path": "0 3 4 0 4"
+        },
+        {
+            "title": "language",
+            "path": "0 3 4 0 5"
+        },
+        {
+            "title": "rights",
+            "path": "0 3 4 0 6"
+        },
+        {
+            "title": "Name",
+            "path": "0 3 4 1 0"
+        },
+        {
+            "title": "subject",
+            "path": "0 3 4 3"
+        },
+        {
+            "title": "software",
+            "path": "0 3 4 4"
+        },
+        {
+            "title": "data_format",
+            "path": "0 3 4 5"
+        },
+        {
+            "title": "data_weight",
+            "path": "0 3 4 6"
+        },
+        {
+            "title": "Date",
+            "path": "0 3 4 9"
+        },
+        {
+            "title": "Description",
+            "path": "0 3 4 12"
+        },
+        {
+            "title": "width",
+            "path": "0 3 4 13"
+        },
+        {
+            "title": "height",
+            "path": "0 3 4 14"
+        }
+    ],
+    "Activity": [
+        {
+            "title": "creator",
+            "path": "0 4 0 2"
+        },
+        {
+            "title": "creation_date",
+            "path": "0 4 0 3"
+        },
+        {
+            "title": "country",
+            "path": "0 4 0 4"
+        },
+        {
+            "title": "language",
+            "path": "0 4 0 5"
+        },
+        {
+            "title": "rights",
+            "path": "0 4 0 6"
+        },
+        {
+            "title": "Name",
+            "path": "0 4 1 0"
+        },
+        {
+            "title": "Description",
+            "path": "0 4 2"
+        },
+        {
+            "title": "Actors",
+            "path": "0 4 3"
+        },
+        {
+            "title": "Event_type",
+            "path": "0 4 4"
+        },
+        {
+            "title": "Temporal",
+            "path": "0 4 5"
+        },
+        {
+            "title": "Spatial",
+            "path": "0 4 7"
+        },
+        {
+            "title": "Event_method",
+            "path": "0 4 8"
+        },
+        {
+            "title": "Material_and_techniques_used",
+            "path": "0 4 9"
+        }
+    ]
+}
