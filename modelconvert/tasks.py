@@ -467,7 +467,7 @@ def convert_model(input_file, options=None):
                 "-s",
                 mehlab_filter_filename,
                 "-om",
-                "vc",
+                "vc" if model['input_format'] != "obj" else "",
                 "ff"
                 ],
                 env=env, 
@@ -555,7 +555,7 @@ def convert_model(input_file, options=None):
             'PrimitiveSet:normalPerVertex:TRUE',
             '-V',
             '-G',
-            aopt_bingeo + '/:sac',
+            aopt_bingeo + '/:sa',
             '-x', 
             outfile
         ]
