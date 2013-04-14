@@ -33,11 +33,12 @@
         //         MYAPP.jsonFilePath = 'some_kind_of_default.json'
         // {% endif %}
 
-		jQuery.get("{{ model.metadata[0].file }}", createMetaDataList, "{{ model.metadata[0].type }}");
+		jQuery.get("{{ model.metadata[0].file }}", readXML, "{{ model.metadata[0].type }}");
+		jQuery.get("static/pattern_metadata.json", readPattern, "json");
 
-		jQuery(".popUp").click(function() {
-			jQuery(".popUp").fadeOut();
-		});
+		//jQuery(".popUp").click(function() {
+		//	jQuery(".popUp").fadeOut();
+		//});
 	});
 	</script>
 
