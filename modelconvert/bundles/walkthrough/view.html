@@ -12,20 +12,45 @@
     
     <link rel='stylesheet' type='text/css' href='static/x3dom.css' />
     <script type='text/javascript' src='static/x3dom.js'></script>
-    
+
+	<link rel="stylesheet" href="static/libs/jquery.mobile-1.1.1.min.css" />
+	<script src="static/libs/jquery-1.7.1.min.js"></script>
+	<script src="static/libs/jquery.mobile-1.1.1.min.js"></script>
+
 	<link rel="stylesheet" href="static/style.css" />
 	<script src="static/main.js"></script>
 </head>
 
 <body>
+<div id="mainpage" data-role="page">
 
-<div id="mainpage">
-    <X3D id='x3dElement' swfpath="static/x3dom.swf" showStat='false' showLog='false'>
-        <Scene id='scene'>
-            <Inline nameSpaceName="inline" mapDEFToID="true" url="{{ model.inline }}"></Inline>
-        </Scene>
-    </X3D>
-</div>
+    <div data-role="header" data-theme="a">
+        <h1 id="headerTitle">Walk Through</h1>
+        <div id="dropdown" data-role="fieldcontain">
+            <select name="select-choice-1" id="select-choice-1">
+                <option value="walk" >Walk</option>
+                <option value="fly">Fly</option>
+                <option value="examine">Examine</option>
+                <option value="lookat">LookAt</option>
+                <option value="helicopter">Helicopter</option>
+                <option value="none">None</option>
+            </select>
+        </div>
+    </div><!-- /header -->
+
+    <div id="x3dViewport" data-role="content">
+        <X3D id='x3dElement' swfpath="static/x3dom.swf" showStat='false' showLog='false'>
+            <Scene id='scene'>
+                <NavigationInfo id="navInfo" type='"walk" "any"'></NavigationInfo>
+
+                <Group id="mainModel">
+                   <Inline nameSpaceName="inline" mapDEFToID="true" url="{{ model.inline }}"></Inline>
+                </Group>
+            </Scene>
+        </X3D>
+    </div><!-- /content -->
+
+</div><!-- /page -->
 
 </body>
 </html>

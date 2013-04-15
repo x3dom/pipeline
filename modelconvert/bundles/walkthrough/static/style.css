@@ -1,0 +1,60 @@
+html, body, #mainpage{
+	margin: 0px;
+	padding: 0px;
+	height: 100%;
+	
+    color: white !important;
+    text-shadow: 0 1px 0 gray !important;
+}
+
+#mainpage{
+    -moz-box-sizing: border-box;
+    -ms-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    background: rgb(67, 67, 67); /* Old browsers */
+    background: -moz-linear-gradient(top, rgba(67, 67, 67, 1) 0%, rgba(7, 7, 7, 1) 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, rgba(67, 67, 67, 1)), color-stop(100%, rgba(7, 7, 7, 1))); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top, rgba(67, 67, 67, 1) 0%, rgba(7, 7, 7, 1) 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top, rgba(67, 67, 67, 1) 0%, rgba(7, 7, 7, 1) 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top, rgba(67, 67, 67, 1) 0%, rgba(7, 7, 7, 1) 100%); /* IE10+ */
+    background: linear-gradient(top, rgba(67, 67, 67, 1) 0%, rgba(7, 7, 7, 1) 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr = '#434343', endColorstr = '#070707', GradientType = 0); /* IE6-9 */
+}
+
+.ui-header{
+    z-index: 9999;
+}
+
+#dropdown{
+    position: absolute;
+    top: 4px;
+    right: 15px;
+    margin: 0;
+    padding: 0;
+}
+
+
+
+X3D, #x3dViewport{
+	height: 100%;
+	width: 100%;
+    margin: 0;
+    padding: 0;
+	border: none;
+}
+#x3dViewport{
+	margin-top: -45px;
+}
+
+
+
+#x3dom_logdiv{
+	position: absolute;
+	z-index: 5;
+	left: 0;
+	right: 0;
+	bottom: 0;
+}
+
+
