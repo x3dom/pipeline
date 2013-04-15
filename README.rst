@@ -193,6 +193,11 @@ recent `nightly build`_ and install with:
     
     $ sudo dpkg -i <downloaded-file.deb>
 
+You get a fresh nightly here: http://www.instantreality.org/downloads/dailybuild/
+
+NB: at the moment, the Ubuntu 12.04 builds have temporary upload problems.
+Meanwhile you can grab the builds from here: http://www.x3dom.org/temp/IR/
+
 The modelconvert service is currently tested on Ubuntu Lucid32, and 
 Mac OS X 10.6. We are only using the aopt tool from the Instant Reality 
 package. This tool can be found in the ``bin`` directory of the Linux build and
@@ -203,9 +208,9 @@ Unless it's not already in the PATH (you can check this by issuing
 need it later.
 
 
--------------
-Meshlabserver
--------------
+--------------
+Meshlab Server
+--------------
 
 The Meshlab Server version used inside the CIF pipeline is a special version of the Meshlab Server released
 with Meshlab. Binaries or installers are not released for this version, hence you need to compile it 
