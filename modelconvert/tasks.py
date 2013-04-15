@@ -468,8 +468,8 @@ def convert_model(input_file, options=None):
                 mehlab_filter_filename,
                 "-om",
                 "vc" if model['input_format'] != "obj" else "",
-                #"vt",
-                #"wt",
+                "vt",
+                "wt",
                 "ff"
                 ],
                 env=env, 

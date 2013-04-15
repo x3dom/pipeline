@@ -11,6 +11,7 @@ jQuery.jQTouch({
 jQuery.fx.speeds._default = 1000;
 
 jQuery(document).ready(function () {
+    // not used, remove metadata stuff from js file!
     jQuery.get(MYAPP.jsonFilePath, init, "json");
 
     jQuery( "#help" ).dialog({
@@ -19,17 +20,15 @@ jQuery(document).ready(function () {
         hide: "drop",
         resizable: false
     });
-
-
-
 });
+
 function init(jsonData) {
     MYAPP.data = jsonData;
     jQuery("#metaData").height(jQuery("body").height());
     createDataList();
 
     if (MYAPP.data.length > 0) {
-        switchX3DomModel("x3DomLinkID_5");  // hier muss normalerweise das erste modell hin!!!!!!!!!!!!!!!!!! also id0
+        switchX3DomModel("x3DomLinkID_5");
     }
 }
 
@@ -59,7 +58,6 @@ function createDataList() {
 
         linkCnt++;
     }
-
 }
 
 function createMetaElement(lable, data) {
@@ -97,7 +95,6 @@ function switchX3DomModel(idStr) {
     MYAPP.cam = "inline__cam_" + model;
 
     switchMetaData();
-
 }
 
 function switchMetaData() {
@@ -115,9 +112,19 @@ function showHelp() {
     //jQuery("#help").fadeIn();
 }
 
-
-function setCamera(){
-    //alert(MYAPP.cam);
-    document.getElementById( MYAPP.cam ).setAttribute('set_bind','true');
+function fixSpecular() {
+    var mts = document.getElementsByTagName("Material");
+    for (var i=0; i<mts.length; i++) {
+        mts[i].setAttribute("specularColor", "0.5 0.5 0.5");
+        mts[i].setAttribute("shininess", "0.2");
+    }
 }
 
+// called in onload of inline
+function setCamera() {
+    // workaround for meshlab output with specular 1 1 1
+    fixSpecular();
+    
+    // this one probably won't work, but don't care for now
+    document.getElementById( MYAPP.cam ).setAttribute('set_bind','true');
+}

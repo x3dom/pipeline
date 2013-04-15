@@ -15,18 +15,8 @@
         MYAPP.data = {};
         MYAPP.curID = -1;
 
-        // note this only uses the last metadata element
-        // this template does not handle more than one metadata file
-        // {% if model.metadata %}
-        //     {% for meta in model.metadata %}
-        //         MYAPP.jsonFilePath[{{loop.index}}] = '{{ meta.file }}'
-        //     {% endfor %}
-        // {% else %}
-        //         MYAPP.jsonFilePath = 'some_kind_of_default.json'
-        // {% endif %}
-
-        MYAPP.jsonFilePath = '{{ model.metadata[0].file }}'
-
+        MYAPP.jsonFilePath = '';
+        
         MYAPP.cam = "";
         MYAPP.metaStatus = 2;
 

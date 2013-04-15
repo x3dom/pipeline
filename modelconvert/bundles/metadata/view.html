@@ -61,7 +61,7 @@
 				<Scene id='scene'>
 				    
 					<Group id="mainModel" render="true">	
-					   <Inline nameSpaceName="inline" mapDEFToID="true" url="{{ model.inline }}"></Inline>
+					   <Inline nameSpaceName="inline" mapDEFToID="true" url="{{ model.inline }}" onload="fixSpecular();"></Inline>
 					</Group>
 					
 					<!--Group id="annotationMarker" render="true">		
