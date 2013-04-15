@@ -457,7 +457,7 @@ def convert_model(input_file, options=None):
             
             meshalb_input_file = os.path.join(model['input_path'], model['input'])
 
-            # options to account for many different attributes: -om vc fc vn wt
+            # options to account for many different attributes: -om vc fc vn vt wt
             proc = subprocess.Popen([
                 current_app.config['MESHLAB_BINARY'], 
                 "-i", 
@@ -468,6 +468,8 @@ def convert_model(input_file, options=None):
                 mehlab_filter_filename,
                 "-om",
                 "vc" if model['input_format'] != "obj" else "",
+                #"vt",
+                #"wt",
                 "ff"
                 ],
                 env=env, 

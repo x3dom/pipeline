@@ -1,6 +1,4 @@
 var MYAPP = {};
-MYAPP.mouseX;  	        // experimental
-MYAPP.mouseY;
 MYAPP.toggleDebug = false;
 
 MYAPP.path        = {};
@@ -20,12 +18,44 @@ jQuery(document).ready(function () {
     mod_Menu.init();
 });
 
-
 function initInline(){
-    //MYAPP.path.shader = getRelativeShaderPath();
+   //MYAPP.path.shader = getRelativeShaderPath();
 
-    modifyX3DModel();
-    createMenu();
+   setUpLightAndCam();
+   modifyX3DModel();
+   createMenu();
+}
+
+function setUpLightAndCam(){
+
+   // set inline Cam
+   var inlineVP = document.getElementById("inline__" + getCamDEF());
+   var oldVP = document.getElementById("vp");
+
+   oldVP.setAttribute("position", inlineVP.getAttribute("position"));
+   oldVP.setAttribute("centerOfRotation", inlineVP.getAttribute("centerOfRotation"));
+   oldVP.setAttribute("fieldOfView", inlineVP.getAttribute("fieldOfView"));
+   oldVP.setAttribute("orientation", inlineVP.getAttribute("orientation"));
+
+   // position Light
+   var runtime = document.getElementById("x3dMain").runtime;
+   var bBox = runtime.getSceneBBox();
+   var center = (bBox.min.add(bBox.max)).multiply(0.5);
+   var bBoxSize = bBox.max.subtract(bBox.min);
+   var m = runtime.viewMatrix();
+   var up = m.e1();
+   var forw = m.e2().multiply(-1.0);
+   var cross = up.cross(forw).multiply(-1.0);
+   var lightOffset = up.add(cross).normalize().multComponents(bBoxSize);
+   var newLightPos = center.add(lightOffset);
+
+   var bBoxMaxLength = (bBoxSize.x < bBoxSize.y ? bBoxSize.y : bBoxSize.x);
+   bBoxMaxLength = (bBoxMaxLength < bBoxSize.z ? bBoxSize.z : bBoxMaxLength);
+   var newSunSize = bBoxMaxLength * 0.05;
+
+   document.getElementById("sunLight").setAttribute("location", newLightPos.x + " " + newLightPos.y + " " + newLightPos.z);
+   document.getElementById("sun").setAttribute("translation", newLightPos.x + " " + newLightPos.y + " " + newLightPos.z);
+   document.getElementById("sun").setAttribute("scale", newSunSize + " " + newSunSize + " " + newSunSize);
 }
 
 
