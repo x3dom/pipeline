@@ -5,8 +5,8 @@ $(document).ready(function(){
     $('#input_group_url').hide();
 
 
-    $('#radio-fullsize, #radio-meta').click(function() {
-        //$('#meta-upload').slideDown();
+    $('#radio-meta').click(function() {
+        $('#meta-upload').slideDown();
     });
     $('#radio-basic, #radio-none').click(function() {
         $('#meta-upload').slideUp();
