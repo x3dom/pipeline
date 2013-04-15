@@ -106,7 +106,7 @@ my_models.zip:
 
         <div id="optimization_help" class="help">
             <h4>Meshlab optimization</h4>
-            <p>Optimization is performed by <a href="http://meshlab.sourceforge.net/">Meshalb</a> and optional. If you don’t want to optimize meshes, just don’t select anything here.</p>
+            <p>Optimization is performed by <a href="http://meshlab.sourceforge.net/">Meshlab</a> and optional. If you don’t want to optimize meshes, just don’t select anything here.</p>
         </div>
 
         <label class="checkbox">
@@ -137,7 +137,7 @@ my_models.zip:
             <input type="radio" name="template" value="basic" id="radio-basic" checked> Basic Viewer
         </label>
         <label class="radio">
-            <input type="radio" name="template" value="fullsize" id="radio-fullsize"> Fullsize Viewer <small>(json metadata)</small>
+            <input type="radio" name="template" value="fullsize" id="radio-fullsize"> Fullsize Viewer
         </label>
         <label class="radio">
             <input type="radio" name="template" value="metadata" id="radio-meta"> Metadata Browser <small>(xml metadata)</small>
@@ -145,11 +145,14 @@ my_models.zip:
         <label class="radio">
             <input type="radio" name="template" value="radianceScaling" id="radio-radiance"> Radiance Scaling
         </label>
+        <label class="radio">
+            <input type="radio" name="template" value="walkthrough" id="radio-walkthrough"> Walk Through
+        </label>
     </fieldset>
 
     <fieldset id="meta-upload">
         <legend>Upload a metadata file</legend>
-        <p>If you choose the "Fullsize Viewer" or "Viewer with Metadata Browser" template, you can attach metatdata to your model. Supported formats are JSON (<code>file.json</code>) for "Fullsize Viewer" and XML (<code>file.xml</code>) for "Metadata Browser"</small></p>
+        <p>If you choose the "Fullsize Viewer" or "Viewer with Metadata Browser" template, you can attach metadata to your model. Supported formats are JSON (<code>file.json</code>) and XML (<code>file.xml</code>) for "Metadata Browser".</p>
         <p><span class="label label-info">Heads up!</span> In case you upload a ZIP archive, you need to provide the metadata within your archive. See help above for more info. I you are using a URI to download a model, the metadata attachment is ignored.</p>
         <input type="file" name="metadata">
     </fieldset>  

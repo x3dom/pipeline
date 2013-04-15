@@ -5,16 +5,14 @@
 #}
 <html> 
 <head> 
-	<title>3D Model</title>
+	<title>3D Model in different Navigation Modes</title>
     <meta http-equiv="X-UA-Compatible" content="chrome=1,IE=edge" />
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     
     <link rel='stylesheet' type='text/css' href='static/x3dom.css' />
-    <script type='text/javascript' src='static/x3dom-full.js'></script>
+    <script type='text/javascript' src='static/x3dom.js'></script>
     
-	<script src="static/jquery-1.7.1.min.js"></script>
-	
 	<link rel="stylesheet" href="static/style.css" />
 	<script src="static/main.js"></script>
 </head>
@@ -24,7 +22,7 @@
 <div id="mainpage">
     <X3D id='x3dElement' swfpath="static/x3dom.swf" showStat='false' showLog='false'>
         <Scene id='scene'>
-            <Inline nameSpaceName="inline" mapDEFToID="true" url="{{ model.inline }}" onload="fixSpecular();"></Inline>
+            <Inline nameSpaceName="inline" mapDEFToID="true" url="{{ model.inline }}"></Inline>
         </Scene>
     </X3D>
 </div>

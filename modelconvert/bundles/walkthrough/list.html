@@ -1,0 +1,46 @@
+<h1>List template</h1>
+
+<p>This generates the overview in case more than models are uploaded</p>
+
+<h3>The following models have been uploaded and converted.</h3>
+
+<style>
+table, td { border:1px solid #ccc; padding:1em;}
+</style>
+<table>
+   <thead>
+    <tr>
+        <th>#</th>
+        <th>Input name</th>
+        <th>Input format</th>
+        <th>Preview Link</th>
+        <th>Generated Inline file</th>
+        <th>Metadata</th>
+    </tr>
+    </thead>
+
+<tbody>
+
+{% for model in models %}
+    <tr>
+    <td>{{ loop.index }}</td>
+    <td>{{ model.input }}</td>
+    <td>{{ model.input_format }}</td>
+    <td><a href="{{ model.preview }}">{{ model.preview }}</a></td>
+    <td>{{ model.inline }}</td>
+    <td>
+        {% if model.metadata %}
+            {{ model.metadata }}
+        {% else %}
+            No metadata
+        {% endif %}
+    </td>
+    </tr>
+{% endfor %}
+
+</tbody>
+
+</table>
+
+<p><a href="{{ job.archive_uri }}">Download the whole package</a> here.</p>
+
