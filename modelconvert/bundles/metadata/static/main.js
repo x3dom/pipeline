@@ -1,25 +1,140 @@
 var MYAPP = {}; // always put global Variables into some object like this or use better technics. This avoids errors.
 
-MYAPP.pattern = null;
+MYAPP.xmlPattern = null;
 MYAPP.xml = null;
+MYAPP.pattern = {};
 
 /***
- * callback for the pattern json file.
+ * callback for the pattern xml file.
  * @param pattern
  */
-function readPattern(pattern){
-    MYAPP.pattern = pattern;
+
+function readPattern(xmlData){
+    MYAPP.xmlPattern = xmlData;
+    processPattern(xmlData);
+    //printPattern();
+
     if(MYAPP.xml !== null){
         createMetaDataList();
     }
 }
+
+function printPattern(){
+    for(var i = 0; i < MYAPP.pattern.length; i++){
+        console.log(MYAPP.pattern[i].title + " : " + MYAPP.pattern[i].path + " : " + MYAPP.pattern[i].position);
+    }
+    var json_text = JSON.stringify(MYAPP.pattern, null, 4);
+    console.log(json_text);
+}
+
+function processPattern(xmlNode){
+    var children = $(xmlNode).children();
+    if(children.length > 0 ){
+        $(xmlNode).children().each(function () {
+            //console.log(this.tagName);
+            processPattern($(this));
+        });
+    }
+    else{
+        processLeaf($(xmlNode));
+    }
+}
+
+function processLeaf(node){
+    var print = node.attr("print");
+    if(!print || print == undefined || print.toLowerCase() != "true"){
+        return;
+    }
+
+    var printSection = node.attr("printSection");
+    if(!printSection){
+        printSection = "Default";
+    }
+
+    var printTitle = node.attr("printTitle");
+    if(printTitle == undefined){
+        printTitle = node.prop("tagName");
+    }
+    //console.log(title);
+
+    var parents = node.getParentPathIndices();
+    //console.log(parents);
+
+    console.log(node.getParentPath());
+
+    var entry = {title: printTitle, path: parents};
+
+    if(!MYAPP.pattern[printSection]){
+        //var section = {section: printSection, items: new Array()};
+        MYAPP.pattern[printSection] = new Array();
+    }
+    MYAPP.pattern[printSection].push(entry);
+    //console.log(printSection + " - " + MYAPP.pattern[printSection])
+
+}
+
+/***
+ * add a function to jquery that return the path from the parent to the node itself
+ * this path just contains the indices of the elements in the tree (not the names)
+ * source: http://stackoverflow.com/questions/2068272/getting-a-jquery-selector-for-an-element
+ * @return {*}
+ */
+jQuery.fn.getParentPathIndices = function () {
+    if (this.length != 1) throw 'Requires one element.';
+
+    var path = "", node = this, index;
+    while (node.length) {
+        var realNode = node[0];
+        if (!realNode.localName) break;     // avoid that the first element (document) dose stupid stuff
+
+        var parent = node.parent();
+
+        var siblings = parent.children();
+        index = siblings.index(realNode);
+
+        path = (path !== "" ? index + ' ' : index) + path;
+        node = parent;
+    }
+
+    return path;
+};
+
+
+/***
+ * add a function to jquery that return the path from the parent to the node itself
+ * source: http://stackoverflow.com/questions/2068272/getting-a-jquery-selector-for-an-element
+ * @return {*}
+ */
+jQuery.fn.getParentPath = function () {
+    if (this.length != 1) throw 'Requires one element.';
+
+    var path, node = this;
+    while (node.length) {
+        var realNode = node[0], name = realNode.localName;
+        if (!name) break;
+        //name = name.toLowerCase();
+
+        var parent = node.parent();
+
+        var siblings = parent.children(name);
+        if (siblings.length > 1) {
+            name += ':::eq(' + siblings.index(realNode) + ')';
+        }
+
+        path = name + (path ? ' ' + path : '');
+        node = parent;
+    }
+
+    return path;
+};
+
 /***
  * callback for the xml meta data file
  * @param xml
  */
 function readXML(xml){
     MYAPP.xml = xml;
-    if(MYAPP.pattern !== null){
+    if(MYAPP.xmlPattern !== null){
         createMetaDataList();
     }
 }

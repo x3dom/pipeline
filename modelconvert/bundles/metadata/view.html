@@ -21,7 +21,6 @@
 	jQuery(document).ready(function () {
 		// just to show how this function works
 		//jQuery.get("data/metaData.xml", function (jsonData){ console.log(jsonData.toString());}, "html");
-	
 		
         // note this only uses the last metadata element
         // this template does not handle more than one metadata file
@@ -32,9 +31,11 @@
         // {% else %}
         //         MYAPP.jsonFilePath = 'some_kind_of_default.json'
         // {% endif %}
-
+		
 		jQuery.get("{{ model.metadata[0].file }}", readXML, "{{ model.metadata[0].type }}");
-		jQuery.get("static/pattern_metadata.json", readPattern, "json");
+		//jQuery.get("static/pattern_metadata.json", readPattern, "json");
+		jQuery.get("static/pattern.xml", readPattern, "xml");
+		//jQuery.get("static/patternAlternative.xml", readPattern, "xml");
 
 		//jQuery(".popUp").click(function() {
 		//	jQuery(".popUp").fadeOut();
@@ -69,8 +70,8 @@
 							<shape id="annotation_Marker_1" onclick="popup();" ispickable="true" bboxcenter="0,0,0" bboxsize="-1,-1,-1">
 								<sphere solid="true" ccw="true" radius="0.3" subdivision="24,24"></sphere>
 								<appearance sorttype="auto" sortkey="0">
-									<material diffusecolor="0 1 0" transparency="0.3" ambientintensity="0.2" emissivecolor="0,0,0" shininess="0.2" specularcolor="0,0,0"></material>
-									<depthmode readonly="true" enabledepthtest="true" depthfunc="none" znearrange="-1" zfarrange="-1"></depthmode>
+									<material diffusecolor="0 1 0" transparency="0.3" ambientintensity="0.2" shininess="0.2"</material>
+									<depthmode readonly="true" enabledepthtest="true" depthfunc="none"></depthmode>
 								</appearance>
 							</shape>
 						</transform>
@@ -81,13 +82,12 @@
 	</div>
 </div><!-- /page -->
 
-
 <!--div class="popUp ui-overlay-shadow ui-body-a ui-corner-all">
 	<h3>custom title</h3>
 	<p>	
-		some costom annotations. some costom  costom annotations. some costom  costom annotations. <br>
-		some costom annotations. some costom  costom annotations. <br>
-		some costom annotations. some costom  costom annotations. <br>
+		some custom annotations. some custom  custom annotations. some custom  custom annotations. <br>
+		some custom annotations. some custom  custom annotations. <br>
+		some custom annotations. some custom  custom annotations. <br>
 		<a target="_blank" href="http://en.wikipedia.org/">http://en.wikipedia.org/</a>
 	</p>
 </div-->
