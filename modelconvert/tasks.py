@@ -431,14 +431,11 @@ def convert_model(input_file, options=None):
             # fixme, parameterization could be dynamic, not hardcoded
             if item == "Remove Isolated pieces (wrt Face Num.)":
                 mehlab_filter += '<filter name="' + item + '">'
-                mehlab_filter += '<Param type="RichInt" value="50" name="MinComponentSize"/>'
+                mehlab_filter += '<Param type="RichInt" value="2500" name="MinComponentSize"/>'
                 mehlab_filter += '</filter>'
+                mehlab_filter += '<filter name="Remove Unreferenced Vertex"/>'
             else:
                 mehlab_filter += '<filter name="' + item + '"/>' 
-
-        # hack, order should be given
-        if "Remove Unreferenced Vertex" in meshlab:
-            mehlab_filter += '<filter name="Remove Unreferenced Vertex"/>' 
 
         mehlab_filter += "</FilterScript>"
 
