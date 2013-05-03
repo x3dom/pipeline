@@ -1,0 +1,298 @@
+html, body, #view, canvas, X3D, x3d, #x3dViewport {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+/***********************************************
+ * header
+***********************************************/
+#view #header {
+    position: absolute;
+    z-index: 9;
+    height: 45px;
+
+    -webkit-box-shadow: 0px 0px 40px rgba(0,0,0,0.7); /* webkit browser*/
+    -moz-box-shadow: 0px 0px 40px rgba(0,0,0,0.7); /* firefox */
+    box-shadow: 0px 0px 40px rgba(0,0,0,0.7);
+
+
+    background: #e0f3fa; /* Old browsers */
+    background: -moz-linear-gradient(top, #e0f3fa 0%, #d8f0fc 50%, #b8e2f6 51%, #b6dffd 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#e0f3fa), color-stop(50%,#d8f0fc), color-stop(51%,#b8e2f6), color-stop(100%,#b6dffd)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top, #e0f3fa 0%,#d8f0fc 50%,#b8e2f6 51%,#b6dffd 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top, #e0f3fa 0%,#d8f0fc 50%,#b8e2f6 51%,#b6dffd 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top, #e0f3fa 0%,#d8f0fc 50%,#b8e2f6 51%,#b6dffd 100%); /* IE10+ */
+    background: linear-gradient(to bottom, #e0f3fa 0%,#d8f0fc 50%,#b8e2f6 51%,#b6dffd 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e0f3fa', endColorstr='#b6dffd',GradientType=0 ); /* IE6-9 */
+}
+
+.buttonGroup{
+    margin: 6px;
+}
+#view #header #buttonGroupLeft{
+    float: left;
+}
+#view #header #buttonGroupMid{
+    position: absolute;
+    bottom: 6px;
+    width: 266px;
+    margin: 0px 0px 0px -133px; /* to the left: half of width*/
+    left: 50%;
+
+}
+#view #header #buttonGroupRight{
+    float: right;
+}
+
+#view #header .center-wrapper{
+    text-align: center;
+    float:left;
+    margin-right:15px;
+}
+#view #header .center-wrapper *:not( .ui-icon, .ui-grid ) {
+    margin: 0 auto;
+}
+
+#headerMenuQuickLinks img {
+    height: 18px;
+    width: 20px;
+}
+
+
+
+
+
+/***********************************************
+ * content
+***********************************************/
+#view{
+    -moz-box-sizing: border-box;
+    -ms-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+#x3dViewport {
+    -moz-box-sizing: border-box;
+    -ms-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+
+    background: #f2f6f8; /* Old browsers */
+    background: -moz-linear-gradient(top,  #f2f6f8 0%, #d8e1e7 49%, #b5c6d0 100%, #b5c6d0 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f2f6f8), color-stop(49%,#d8e1e7), color-stop(100%,#b5c6d0), color-stop(100%,#b5c6d0)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  #f2f6f8 0%,#d8e1e7 49%,#b5c6d0 100%,#b5c6d0 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  #f2f6f8 0%,#d8e1e7 49%,#b5c6d0 100%,#b5c6d0 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  #f2f6f8 0%,#d8e1e7 49%,#b5c6d0 100%,#b5c6d0 100%); /* IE10+ */
+    background: linear-gradient(to bottom,  #f2f6f8 0%,#d8e1e7 49%,#b5c6d0 100%,#b5c6d0 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f2f6f8', endColorstr='#b5c6d0',GradientType=0 ); /* IE6-9 */
+
+
+}
+
+X3D, x3d, canvas {
+    display: block;
+    border: none;
+}
+
+
+
+/* to avoid wrong shaddows in toggle buttons */
+div.ui-slider-switch.ui-slider-mini a.ui-slider-handle .ui-btn-inner {
+    border: none;
+}
+
+
+/***********************************************
+ * menu for settings
+***********************************************/
+
+.pos_dropdown {
+    position: absolute;
+    width: 200px;
+    top: 47px;
+    right: 0px;
+}
+
+#menuContainer {
+    margin: 0;
+    padding: 0;
+    z-index: 5;
+}
+
+#menuContainer .ui-collapsible-set,
+#menuContainer .ui-collapsible,
+#menuContainer .ui-collapsible-content,
+#menuContainer  .ui-collapsible-heading {
+    margin: 0;
+}
+
+/* avoid rounded corners for headings */
+#menuContainer h3.ui-collapsible-heading a {
+    webkit-border-radius: 0px !important;
+    -moz-border-radius: 0px !important;
+    border-radius: 0px !important;
+}
+
+#menuContainer .ui-corner-bottom {
+    border-bottom-left-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+}
+#menuContainer .ui-corner-top {
+    border-top-left-radius: 0 !important;
+    border-top-right-radius: 0 !important;
+}
+#menuContainer img {
+    height: 18px;
+    margin: 0 10px -7px 0;
+    padding: 3px;
+    width: 20px;
+    background-color: rgba(255, 255, 255, 0.4);
+}
+
+#menuContainer .ui-collapsible-content {
+    padding: 0;
+}
+
+#menuContainer .menuGroupHide {
+    display: none;
+}
+
+#menuContainer .ui-li-has-arrow .ui-btn-inner a.ui-link-inherit {
+    padding-right: 10px;
+}
+
+#menuContainer .menu_type_toggleSlider {
+    padding: 0;
+}
+
+#menuContainer .menu_type_toggleSlider .sliderText {
+    padding-top: 8.75px;
+    padding-bottom: 8.75px;
+    display: inline-block;
+}
+
+#menuContainer .menuGroupShow{
+    -webkit-box-shadow: 0px 0px 40px rgba(0,0,0,0.7); /* webkit browser*/
+    -moz-box-shadow: 0px 0px 40px rgba(0,0,0,0.7); /* firefox */
+    box-shadow: 0px 0px 40px rgba(0,0,0,0.7);
+
+}
+
+
+/***********************************************
+ * debug info
+***********************************************/
+.x3dom-canvas{
+    border: none;
+}
+
+.x3dom-logContainer {
+    clear: both;
+    display: block;
+    background-color: black;
+    border: 2px solid olivedrab;
+    color: #00FF00;
+    font-family: sans-serif;
+    font-size: x-small;
+    overflow: auto;
+    white-space: pre-wrap;
+
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+
+    margin: 0px;
+    padding: 14px;
+
+    position: absolute;
+    z-index: 9999;
+    height: 200px;
+    width: 100%;
+    bottom: 0px;
+}
+
+#x3dom-state-viewer {
+    display: block;
+    background-color: #323232;
+    color: #C8C8C8;
+    cursor: help;
+    font-family: Arial,sans-serif;
+    font-weight: bold;
+    margin: 0px 2px 2px 2px;
+    opacity: 1;
+    padding: 5px;
+    position: absolute;
+    right: 199px;
+    text-transform: uppercase;
+    border: #000 1px solid;
+    top: 0px;
+    width: 135px;
+    z-index: 999;
+
+    -webkit-box-shadow: 0px 1px 55px rgba(0,0,0,0.7); /* webkit browser*/
+    -moz-box-shadow: 0px 1px 55px rgba(0,0,0,0.7); /* firefox */
+    box-shadow: 0px 1px 55px rgba(0,0,0,0.7);
+
+}
+
+.x3dom-states-head {
+    display: block;
+    font-size: 26px;
+}
+.x3dom-states-list {
+    border-top: 1px solid #C8C8C8;
+    float: left;
+    font-size: 9px;
+    line-height: 16px;
+    list-style: none outside none;
+    margin: 0;
+    padding: 2px 0 0;
+    width: 100%;
+}
+
+
+
+/***********************************************
+ * PopUp
+***********************************************/
+.popUp {
+    padding: 10px;
+    margin: 0;
+    opacity: 0.96;
+    display: block;
+    left: 0;
+    top: 47px;
+    width: 450px;
+    min-height: 100px;
+
+
+    border: 1px solid 		#bbb /*{d-body-border}*/;
+    color: 					#333333 /*{d-body-color}*/;
+    text-shadow: 0 /*{d-body-shadow-x}*/ 1px /*{d-body-shadow-y}*/ 0 /*{d-body-shadow-radius}*/ 	#fff /*{d-body-shadow-color}*/;
+
+    background: 			#ffffff /*{d-body-background-color}*/;
+
+    /***** the background can be changed here *******/
+    background: #feffff; /* Old browsers */
+    background: -moz-linear-gradient(top,  #feffff 0%, #d2ebf9 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#feffff), color-stop(100%,#d2ebf9)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  #feffff 0%,#d2ebf9 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  #feffff 0%,#d2ebf9 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  #feffff 0%,#d2ebf9 100%); /* IE10+ */
+    background: linear-gradient(to bottom,  #feffff 0%,#d2ebf9 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#feffff', endColorstr='#d2ebf9',GradientType=0 ); /* IE6-9 */
+
+
+
+
+    -webkit-box-shadow: 0px 0px 40px rgba(0,0,0,0.7); /* webkit browser*/
+    -moz-box-shadow: 0px 0px 40px rgba(0,0,0,0.7); /* firefox */
+    box-shadow: 0px 0px 40px rgba(0,0,0,0.7);
+}
+
+.popUp h3, .popUp p {
+    padding: 0;
+    margin: 0;
+}

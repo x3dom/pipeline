@@ -1,0 +1,73 @@
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1,IE=edge" />
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Standard Viewer</title>
+
+    <link rel='stylesheet' type='text/css' href='static/x3dom.css'/>
+    <link rel="stylesheet" type="text/css" href="static/css/style.css"/>
+    <link rel="stylesheet" type="text/css" href="static/libs/jquery.mobile-1.1.0.css"/>
+
+    <script type='text/javascript' src='static/x3dom-full.js'></script>
+    <script type="text/javascript" src="static/libs/jquery-1.7.1.js"></script>
+    <script type="text/javascript" src="static/libs/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="static/libs/jquery.mobile-1.1.0.js"></script>
+</head>
+
+<body>
+<div data-role="page" id="view" data-theme="c">
+
+
+    <div id="header" data-title="Viewer" data-role="header" data-position="fixed" data-theme="c">
+        <div id="buttonGroupLeft" class="buttonGroup">
+            <a id="btnInfo" href="#" data-role="button" data-mini="true" data-theme="b" data-icon="info">info</a>
+        </div><!-- end of left Group -->
+
+        <div id="buttonGroupMid" class="buttonGroup">
+            <div class="center-wrapper">
+                <a id="btnFullscreen" href="#" data-role="button" data-mini="true" data-icon="grid">Fullscreen</a>
+            </div>
+
+            <div id="dropdown" class="center-wrapper">
+                <select id="select-choice-1" name="select-choice-1" data-mini="true" data-iconshadow="true">
+                    <option value="examine" >Examine</option>
+                    <option value="walk" >Walk</option>
+                    <option value="fly">Fly</option>
+                    <option value="lookat">LookAt</option>
+                    <option value="helicopter">Helicopter</option>
+                    <option value="none">None</option>
+                </select>
+            </div>
+        </div><!-- end of mid Group -->
+
+        <div id="buttonGroupRight" class="buttonGroup">
+            <div id="headerMenuQuickLinks" data-role="controlgroup" data-type="horizontal"></div>
+        </div><!-- end of rigth Group -->
+    </div><!-- /footer -->
+
+
+    <div id="x3dViewport" data-role="content">
+        <X3D id="x3dElement">
+            <div class="x3dom-statdiv" style="display: inline;"></div>
+            <Scene id='scene'>
+                <Viewpoint id="ViewpointMain" description="Camera Main"></Viewpoint>
+
+                <Inline id="modelRoot" nameSpaceName="inline" mapDEFToID="true" url="{{ model.inline }}" onload="mainInit();"></Inline>
+            </Scene>
+        </X3D>
+    </div>
+
+
+    <div id="menuContainer" data-role="controlgroup" data-mini="true" style="display: none;">
+        <div id="searchMenu" class="search" style="display: none;">
+            <!--<input type="search" name="search" id="searchFieldMenu" value="search Menu" data-theme="b" data-mini="true" />-->
+            <input id="searchFieldMenu" type="search" />
+        </div>
+    </div>
+
+    <div id="modelInformation"></div>
+</div>
+
+</body>
+</html>
