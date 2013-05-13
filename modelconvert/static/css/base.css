@@ -5,6 +5,39 @@ fieldset {
   margin-top:2em;
 }
 
+legend .toggler {
+  font-size:50%;
+  float:right;
+}
+.help {
+  border: 1px solid #e5e5e5;
+  border-top:none;
+  padding:1em 2em 2em 2em;
+  background-color: #ffffee;
+  box-shadow: 2px 2px 5px #ccc;
+}
+
+.grouping {
+  padding-top:1em;
+}
+fieldset {
+  margin-bottom:2em;
+}
+
+fieldset legend {
+  margin-bottom:1em;
+}
+
+/*fix for chome/webkit which does not render legend margin*/
+fieldset > label:first-of-type,
+fieldset > input:first-of-type,
+fieldset > p:first-of-type
+{
+  -webkit-margin-top-collapse: separate;
+  margin-top: 1em;
+}
+
+
 /*body {
   padding: 2em;
   max-width:48em;
