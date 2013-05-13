@@ -2,10 +2,11 @@
 
 from flask import Flask, render_template
 
+import jinja2
+
 from modelconvert.extensions import celery
 from modelconvert.frontend import frontend
 from modelconvert.api import api
-
 
 from modelconvert import settings
 
@@ -14,12 +15,25 @@ from modelconvert import settings
 def create_app():
     """Create the Flask app."""
 
-    app = Flask("modelconvert", 
-        template_folder=settings.TEMPLATE_PATH, 
-        static_folder=settings.STATIC_PATH)
+    app = Flask("modelconvert", static_folder=None)
     
     app.config.from_object('modelconvert.settings')
     app.config.from_envvar('MODELCONVERT_SETTINGS', silent=True)
+
+    # configure custom static path for serving files during
+    # development
+    app.static_folder = app.config['STATIC_PATH']
+    app.add_url_rule('/static/<path:filename>',
+                      endpoint='static',
+                      view_func=app.send_static_file)
+
+    # custom template path, fall back to default
+    jinja_loader = jinja2.ChoiceLoader([
+        jinja2.FileSystemLoader(app.config['TEMPLATE_PATH']),
+        app.jinja_loader,
+    ])
+    app.jinja_loader = jinja_loader
+
 
     configure_logging(app)
 
