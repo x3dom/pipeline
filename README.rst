@@ -734,6 +734,7 @@ The described work was carried out in the project v-must, which has received
 funding from the European Community's Seventh Framework Programme (FP7 2007/2013) 
 under grant agreement 270404.
 
+Icons by `Glyphish`_
 
 
 .. _Flask: http://flask.pocoo.org
@@ -758,4 +759,5 @@ under grant agreement 270404.
 .. _nginx: http://nginx.org/
 .. _uwsgi: http://wiki.nginx.org/HttpUwsgiModule
 .. _Puppet: https://puppetlabs.com/
+.. _Glyphish: http://glyphish.com
 .. _settings.py: https://github.com/x3dom/pipeline/blob/master/modelconvert/settings.py

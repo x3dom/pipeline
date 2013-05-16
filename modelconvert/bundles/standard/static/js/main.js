@@ -13,7 +13,7 @@ MYAPP.menuContainerID = "menuContainer";
 
 MYAPP.isFlyToOnSelect = false;
 
-MYAPP.menuIconPath = "static/img/GlyphishIcons-Free/icons/";
+MYAPP.menuIconPath = "static/img/icons/";
 MYAPP.renderOptionLast = "Face";
 
 MYAPP.infoPopupOpen = null;
