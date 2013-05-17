@@ -29,7 +29,7 @@ html, body, #view, canvas, X3D, x3d, #x3dViewport {
 }
 
 .buttonGroup{
-    margin: 6px;
+    margin: 0 6px 0 0;
 }
 #view #header #buttonGroupLeft{
     float: left;
@@ -220,15 +220,15 @@ div.ui-slider-switch.ui-slider-mini a.ui-slider-handle .ui-btn-inner {
     cursor: help;
     font-family: Arial,sans-serif;
     font-weight: bold;
-    margin: 0px 2px 2px 2px;
+    margin: 0 0 2px;
     opacity: 1;
     padding: 5px;
     position: absolute;
-    right: 199px;
+    right: 0px;
     text-transform: uppercase;
     border: #000 1px solid;
-    top: 0px;
-    width: 135px;
+    top: 160px;
+    width: 186px;
     z-index: 999;
 
     -webkit-box-shadow: 0px 1px 55px rgba(0,0,0,0.7); /* webkit browser*/
@@ -244,7 +244,7 @@ div.ui-slider-switch.ui-slider-mini a.ui-slider-handle .ui-btn-inner {
 .x3dom-states-list {
     border-top: 1px solid #C8C8C8;
     float: left;
-    font-size: 9px;
+    font-size: 12px;
     line-height: 16px;
     list-style: none outside none;
     margin: 0;
