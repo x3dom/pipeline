@@ -35,26 +35,26 @@ jQuery(document).ready(function () {
 });
 
 
+
 // is executed when the model is compleatly loaded -> onload in index.html
 function mainInit(){
-	mod_sceneGraph.initSceneGraph();
+    mod_sceneGraph.initSceneGraph();
 
-	//jQuery.mobile.changePage( "#objBrowser", { transition: "slideup"} );
-	//jQuery.mobile.changePage( "#objBrowser" );
+    //jQuery.mobile.changePage( "#objBrowser", { transition: "slideup"} );
+    //jQuery.mobile.changePage( "#objBrowser" );
 
-	// set the top padding of the content container to the height of the header
-	jQuery("#contentContainer").css("padding-top", jQuery(".ui-header").height() + "px");
+    // set the top padding of the content container to the height of the header
+    jQuery("#contentContainer").css("padding-top", jQuery(".ui-header").height() + "px");
 
-	// module registration
-	mod_TabManager = modules("tabManager");
-	mod_menu = modules("menu");
+    // module registration
+    mod_menu = modules("menu");
+    mod_TabManager = modules("tabManager");
 
-	// module initialisation
-	registerEventListenerMenu(mod_menu);
-	mod_TabManager.init();
-
-	jQuery.get("static/data/menu.txt", mod_menu.init, "json");
-
+    // module initialisation
+    console.log("test")
+    jQuery.get("static/data/menu.txt", mod_menu.init, "json");
+    registerEventListenerMenu(mod_menu);
+    mod_TabManager.init();
 };
 
 /****
@@ -82,6 +82,7 @@ function modules(type) {
  * register event listener for menu *************************
  ************************************************************/
 function registerEventListenerMenu(mod_menu) {
+    console.log("test ")
 	/***** Buttons Debug ***********************************/
 	mod_menu.pushEventListener("debug_switchPosition", function () {
 		//mod_menu.switchPosition();
@@ -174,6 +175,17 @@ function registerEventListenerMenu(mod_menu) {
 			MYAPP.isFlyToOnSelect = false;
 		}
 	});
+
+    mod_menu.pushEventListener("toggleStat", function () {
+        var showStat = document.getElementById('x3dElement').runtime.statistics();
+        //document.getElementById('x3dElement').runtime.statistics(!showStat);
+
+        $("#x3dom-state-viewer").fadeToggle();
+    });
+    mod_menu.pushEventListener("toggleLog", function () {
+        //document.getElementById('x3dElement').runtime.debug();
+        $("#x3dom_logdiv").slideToggle();
+    });
 
 
 	/***** Buttons Navigation Modes *******************/

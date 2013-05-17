@@ -122,7 +122,17 @@
 				"val": ["false", "true"],
 				"id":   "showObjOnSelect",
 				"icon":	""
-			}
+			},
+            {
+                "text": "Toggle Statistic",
+                "id":   "toggleStat",
+                "icon":	""
+            },
+            {
+                "text": "Toggle Log",
+                "id":   "toggleLog",
+                "icon":	""
+            }
         ]
 	}
 ]

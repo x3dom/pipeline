@@ -1,7 +1,7 @@
 /*global MYAPP, jQuery */  /* for jsLint */
 
 /*********************************************************************
- **** modifikation of the X3DOM tree *********************************
+ **** modification of the X3DOM tree *********************************
  *********************************************************************
  *********************************************************************
  ********************************************************************/
@@ -127,10 +127,10 @@ var mod_sceneGraph = (function () {
 		// make sure that every node has an id
 		setIdForX3d(jQuery("#" + MYAPP.modelRootId), 0);
 
-		MYAPP.x3dModelRoot = document.getElementById(MYAPP.modelRootId);                      // node to start the scene graph
+		MYAPP.x3dModelRoot = document.getElementById(MYAPP.modelRootId);    // node to start the scene graph
 
 		// delegate rotation of the viewpoint to the coordinate axis
-		document.getElementById('ViewpointMain').addEventListener('viewpointChanged', viewFunc, false);
+		//document.getElementById('ViewpointMain').addEventListener('viewpointChanged', viewFunc, false);
 
 		mod_tree.initTree();
 
@@ -341,17 +341,3 @@ var mod_sceneGraph = (function () {
 
 	return publicRet;
 })();
-
-
-/* DEBUGGING
- function alertFullNodeInfo(x3dNodeJQ) {
- alert(
- mod_sceneGraph.isx3dNodeGoodForTree(x3dNodeJQ[0]) +
- "\n" + x3dNodeJQ.children().size() +
- "\n id - " + x3dNodeJQ[0]._x3domNode._xmlNode.getAttribute("id") +
- "\n" + x3dNodeJQ[0] +
- "\n node - " + x3dNodeJQ[0].nodeName +
- "\n Type - " + x3dNodeJQ[0].nodeType
- );
- }
- */

@@ -33,6 +33,7 @@ html, body, #view, canvas, X3D, x3d, #x3dViewport {
 }
 #view #header #buttonGroupLeft{
     float: left;
+    margin: 6px;
 }
 #view #header #buttonGroupMid{
     position: absolute;
@@ -198,6 +199,7 @@ div.ui-slider-switch.ui-slider-mini a.ui-slider-handle .ui-btn-inner {
     font-size: x-small;
     overflow: auto;
     white-space: pre-wrap;
+    text-shadow: 0 0 0 #fff;
 
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
@@ -230,7 +232,7 @@ div.ui-slider-switch.ui-slider-mini a.ui-slider-handle .ui-btn-inner {
     top: 160px;
     width: 186px;
     z-index: 999;
-
+    text-shadow: 0 0 0 #fff;
     -webkit-box-shadow: 0px 1px 55px rgba(0,0,0,0.7); /* webkit browser*/
     -moz-box-shadow: 0px 1px 55px rgba(0,0,0,0.7); /* firefox */
     box-shadow: 0px 1px 55px rgba(0,0,0,0.7);

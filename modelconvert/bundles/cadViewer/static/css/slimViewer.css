@@ -483,6 +483,10 @@ div.ui-slider-switch.ui-slider-mini a.ui-slider-handle .ui-btn-inner {
     display: inline-block;
 }
 
+#headerMenuQuickLinks {
+    margin: 0 !important;
+}
+
 /***********************************************
  * bread crumbs tree
 ***********************************************/
@@ -542,15 +546,21 @@ div.ui-slider-switch.ui-slider-mini a.ui-slider-handle .ui-btn-inner {
     cursor: help;
     font-family: Arial,sans-serif;
     font-weight: bold;
-    margin: 45px 2px 2px 2px;
-    opacity: 0.9;
+    margin: 0 0 2px;
+    opacity: 1;
     padding: 5px;
     position: absolute;
-    right: 0;
+    right: 0px;
     text-transform: uppercase;
-    top: 0;
-    width: 135px;
-    z-index: 1000;
+    border: #000 1px solid;
+    top: 250px;
+    width: 187px;
+    z-index: 999;
+
+    -webkit-box-shadow: 0px 1px 55px rgba(0,0,0,0.7); /* webkit browser*/
+    -moz-box-shadow: 0px 1px 55px rgba(0,0,0,0.7); /* firefox */
+    box-shadow: 0px 1px 55px rgba(0,0,0,0.7);
+
 }
 
 .x3dom-states-head {
@@ -560,7 +570,7 @@ div.ui-slider-switch.ui-slider-mini a.ui-slider-handle .ui-btn-inner {
 .x3dom-states-list {
     border-top: 1px solid #C8C8C8;
     float: left;
-    font-size: 9px;
+    font-size: 12px;
     line-height: 16px;
     list-style: none outside none;
     margin: 0;
