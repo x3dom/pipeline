@@ -3,17 +3,14 @@ var MYAPP = {};
 /****
  * global configuration
  */
-MYAPP.model = "conrod";                        // for the folder ind data containing the model and all its data
-MYAPP.modelRootId = "modelRoot";                            // for the inline element
-MYAPP.centerOfRotation = "1.2828279 152.4117 27.60026";     // set center of rotation
 
 // target id's to insert the content of different modules
 MYAPP.menuContainerID = "menuContainer";
-
+MYAPP.modelInput = "";
 
 MYAPP.isFlyToOnSelect = false;
 
-MYAPP.menuIconPath = "static/img/icons/";
+MYAPP.menuIconPath = "static/img/GlyphishIcons-Free/icons/";
 MYAPP.renderOptionLast = "Face";
 
 MYAPP.infoPopupOpen = null;
@@ -26,9 +23,6 @@ var mod_menu;
  * is done here after the resources are loaded
  ***************************************************************************/
 jQuery(document).ready(function () {
-	document.getElementById(MYAPP.modelRootId).setAttribute("url", '"{{ model.inline }}"');
-	document.getElementById("ViewpointMain").setAttribute("centerOfRotation", MYAPP.centerOfRotation);
-
     $("#dropdown").bind("change", function (event, ui) {
         switchNavigationMode(event.target.value);
         switchTitle(event.target.value);
@@ -83,7 +77,7 @@ function popUpShowObjInfo() {
     var content = [];
     content.push({
         "type" : "html",
-        "html" : '<h1>Model: {{ model.input }}</h1>'
+        "html" : '<h1>Model: ' + MYAPP.modelInput + '</h1>'
     });
     /*
     <div class='group'>

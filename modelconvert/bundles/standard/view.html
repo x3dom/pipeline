@@ -6,13 +6,32 @@
     <title>Standard Viewer</title>
 
     <link rel='stylesheet' type='text/css' href='static/x3dom.css'/>
-    <link rel="stylesheet" type="text/css" href="static/css/style.css"/>
-    <link rel="stylesheet" type="text/css" href="static/libs/jquery.mobile-1.1.0.css"/>
 
-    <script type='text/javascript' src='static/x3dom-full.js'></script>
-    <script type="text/javascript" src="static/libs/jquery-1.7.1.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="static/libs/jquery.mobile-1.1.1.min.css"/>
+    <link rel="stylesheet" type="text/css" href="static/libs/jquery.mobile.structure-1.1.1.min.css"/>
+    <link rel="stylesheet" type="text/css" href="static/libs/jquery.mobile.theme-1.1.1.min.css"/>
+    <link rel="stylesheet" type="text/css" href="static/css/style.css"/>
+
+    <script type='text/javascript' src='static/x3dom.js'></script>
+
+    <script type="text/javascript" src="static/libs/jquery-1.7.1.js"></script>
     <script type="text/javascript" src="static/libs/jquery-ui.min.js"></script>
-    <script type="text/javascript" src="static/libs/jquery.mobile-1.1.0.js"></script>
+    <script type="text/javascript" src="static/libs/jquery.mobile-1.1.1.min.js"></script>
+    <!-- http://www.ailis.de/~k/archives/66-jQuery-Fullscreen-Plugin.html -->
+    <script type='text/javascript' src='static/libs/jquery.fullscreen-min.js'></script>
+
+
+    <script type="text/javascript" src="static/js/main.js"></script>
+    <script type="text/javascript" src="static/js/modules/modulePopUpV1.2.js"></script>
+    <script type="text/javascript" src="static/js/modules/moduleMenu.js"></script>
+    <script type="text/javascript" src="static/js/modules/moduleSearch.js"></script>
+
+    <script>
+        /***************************************************************************
+         * set a variable to use the model in the javascript files
+         ***************************************************************************/
+        MYAPP.modelInput = "{{ model.input }}";
+    </script>
 
 </head>
 
@@ -44,7 +63,7 @@
 
         <div id="buttonGroupRight" class="buttonGroup">
             <div id="headerMenuQuickLinks" data-role="controlgroup" data-type="horizontal"></div>
-        </div><!-- end of rigth Group -->
+        </div><!-- end of right Group -->
     </div><!-- /footer -->
 
 
@@ -52,8 +71,6 @@
         <X3D id="x3dElement">
             <div class="x3dom-statdiv" style="display: inline;"></div>
             <Scene id='scene'>
-                <Viewpoint id="ViewpointMain" description="Camera Main"></Viewpoint>
-
                 <Inline id="modelRoot" nameSpaceName="inline" mapDEFToID="true" url="{{ model.inline }}" onload="mainInit();"></Inline>
             </Scene>
         </X3D>
