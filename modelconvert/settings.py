@@ -230,12 +230,22 @@ if env_var('SERVER_NAME'):
 # TRAP_HTTP_EXCEPTIONS = True
 # TRAP_BAD_REQUEST_ERRORS = True
 
+# Tasks which are being executed in order they appear here
+# TODO create a app.register_task method (custom app object)
+# to configure tasks dynamically
+TASKS = [
+    'modelconvert.tasks.convert_model',
+]
+
 
 # -- CELERY -----------------------------------------------------------------
 CELERY_RESULT_BACKEND = 'redis'
 CELERY_BROKER_URL = env_var('CELERY_BROKER_URL', 'redis://localhost:6379/0')
 BROKER_URL = CELERY_BROKER_URL
+
+# FIXME: make this work with TASKS variable
 CELERY_IMPORTS = ("modelconvert.tasks", )
+
 #CELERY_TASK_RESULT_EXPIRES = 300 # default is one day
 CELERY_HIJACK_ROOT_LOGGER = False
 CELERYD_LOG_COLOR=False
