@@ -158,7 +158,8 @@ def convert_model(input_file, options=None):
     # config_parser.get+boolean('task:path.to.this_task', 'aopt.option', default_value)
     import ConfigParser
 
-    bundle_config = ConfigParser.SafeConfigParser(allow_no_value=True)
+    bundle_config = ConfigParser.SafeConfigParser()
+#    bundle_config = ConfigParser.SafeConfigParser(allow_no_value=True)  2.7
 
     # read the defaults and template config
     bundle_config.read([
@@ -166,12 +167,10 @@ def convert_model(input_file, options=None):
         os.path.join(bundles_path, template, 'settings.ini')
     ])
     
-    # the config parser restursn None vor settings without values, and
-    # NoOptionError for not present options. we want to disable meshlab
-    # if the setting is present
+    # convert this to no_value with 2.7 requirement
     try:
-        bundle_config.get(TASK_CONFIG_SECTION, 'meshlab.disabled')
-        meshlab = None
+        if bundle_config.getboolean(TASK_CONFIG_SECTION, 'meshlab.disabled'):
+            meshlab = None
     except ConfigParser.NoOptionError:
         pass
 
