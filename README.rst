@@ -402,7 +402,7 @@ Configuration
 This app is using the `Flask`_ microframework with Blueprints. Program entry
 point is ``modelconvert/core.py`` which configures the application. You will 
 find almost all relevant code in ``modelconvert/frontend/views.py`` and 
-``modelconvert/tasks.py``.
+``modelconvert/tasks/``.
 
 The modelconvert application must be configured in order to run properly. It
 ships with sensible defaults for development, but you need to configure it for
@@ -601,7 +601,7 @@ press ``Ctrl-C``.
 
 
 .. note:: Usually you do not need to restart honcho when you make changes in 
-   DEBUG mode. However you need to restart if you make changes to ``tasks.py``.
+   DEBUG mode. However you need to restart if you make changes to ``tasks/*.py``.
 
 
 
