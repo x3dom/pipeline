@@ -20,6 +20,14 @@ content template bundels.
   * basic
   * metadata
   * fullsize
+  * etc.
+
+-----------
+Customizing
+-----------
+
+The basic template can be used to create your own template. It also
+contains all settings and comments you can use. 
 
 
 -------------

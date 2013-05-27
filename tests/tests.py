@@ -26,5 +26,22 @@ class ModelconvertTestCase(unittest.TestCase):
         assert '<!DOCTYPE html>' in rv.data
 
 
+class TaskConfigParserTestCase(unittest.TestCase):
+
+
+    def setUp(self):
+        import ConfigParser
+        self.config = ConfigParser.SafeConfigParser()
+        self.config.read(os.path.join(PROJECT_ROOT, 'tests/fixtures/bundle_example.ini'))
+
+    def test_config_file(self):
+
+        assert 'task:modelconvert.tasks.convert_model' in self.config.sections()
+        assert 'global' in self.config.sections()
+        assert 'templates' in self.config.sections()
+        assert self.config.get('global', 'name') == 'basic'
+        assert self.config.get('global', 'display_name') == 'Basic template'
+
+
 if __name__ == '__main__':
     unittest.main()

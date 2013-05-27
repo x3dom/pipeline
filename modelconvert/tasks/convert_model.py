@@ -15,6 +15,10 @@ context manager to run celery. For example:
     with app.app_context():
         celery.worker_main(['worker', '-E', '-l', 'INFO'])
 
+
+FIXME: Needs major refactoring. Use Task class, the output bundling
+can be factored out, also status updates and configuration handling,
+and so on...
 """
 import os
 import shutil
@@ -48,8 +52,6 @@ class ConversionError(Exception):
 #         pass
 
 
-
-
 def update_progress(msg):
     """
     Updates custom PROGRESS state of task. Also sends a message to the subpub
@@ -60,13 +62,6 @@ def update_progress(msg):
     current_task.update_state(state='PROGRESS', meta={'message': msg})
     #now = datetime.datetime.now().replace(microsecond=0).time()
     red.publish(current_task.request.id, '{0}'.format(msg))
-
-
-
-@celery.task
-def ping():
-    """ Just for testing """
-    logger.info("+++++++++ PING +++++++++")
 
 
 @celery.task
@@ -85,6 +80,10 @@ def convert_model(input_file, options=None):
 
     This task is currently a spaghetti monster mess from hell.
     """
+
+    # used for configuration handling
+    TASK_CONFIG_SECTION = 'task:modelconvert.tasks.convert_model'
+
 
     update_progress("Warming up...")
 
@@ -145,6 +144,39 @@ def convert_model(input_file, options=None):
     # first create where everything is stored
     output_directory = os.path.join(download_path, hash)
     os.mkdir(output_directory)
+
+
+    # {{{ Per bundle configuration
+    update_progress("Reading output template configuration")
+
+    # TODO FIXME
+    # this whole config stuff is a very naive implementation anbelongs in a 
+    # task superclass / or coposite object which then scopes for configuration relevant for the 
+    # related task. i.g. self.config.get_boolean('aopt.option', default) should actually be
+    # task_config_parser.get_boolean('aopt.option', default_value)
+    # task_config_arser is a subclass of config farser and actually performs this:
+    # config_parser.get+boolean('task:path.to.this_task', 'aopt.option', default_value)
+    import ConfigParser
+
+    bundle_config = ConfigParser.SafeConfigParser(allow_no_value=True)
+
+    # read the defaults and template config
+    bundle_config.read([
+        os.path.abspath(os.path.join(os.path.dirname(__file__), 'convert_model.defaults')),
+        os.path.join(bundles_path, template, 'settings.ini')
+    ])
+    
+    # the config parser restursn None vor settings without values, and
+    # NoOptionError for not present options. we want to disable meshlab
+    # if the setting is present
+    try:
+        bundle_config.get(TASK_CONFIG_SECTION, 'meshlab.disabled')
+        meshlab = None
+    except ConfigParser.NoOptionError:
+        pass
+
+    meshlab_log = bundle_config.getboolean(TASK_CONFIG_SECTION, 'meshlab.log')
+    aopt_log = bundle_config.getboolean(TASK_CONFIG_SECTION, 'aopt.log')
 
 
     # {{{ ZIPFILES
@@ -318,7 +350,8 @@ def convert_model(input_file, options=None):
     # The following steop only generates templates, for the uploaded
     # data. This can be refactored out. The reason this runs before aopt
     # is in order to allow live preview of partially optimized models later
-    # on. 
+    # on as well as reading configuration for aopt/meshlab
+
 
     # first copy static assets
     output_directory_static = os.path.join(output_directory, 'static')
@@ -424,27 +457,27 @@ def convert_model(input_file, options=None):
         env['DISPLAY'] = current_app.config['MESHLAB_DISPLAY']
 
                 
-        mehlab_filter = ""
-        mehlab_filter += "<!DOCTYPE FilterScript><FilterScript>"
+        meshlab_filter = ""
+        meshlab_filter += "<!DOCTYPE FilterScript><FilterScript>"
 
         for item in meshlab:
             # fixme, parameterization could be dynamic, not hardcoded
             if item == "Remove Isolated pieces (wrt Face Num.)":
-                mehlab_filter += '<filter name="' + item + '">'
-                mehlab_filter += '<Param type="RichInt" value="2500" name="MinComponentSize"/>'
-                mehlab_filter += '</filter>'
-                mehlab_filter += '<filter name="Remove Unreferenced Vertex"/>'
+                meshlab_filter += '<filter name="' + item + '">'
+                meshlab_filter += '<Param type="RichInt" value="2500" name="MinComponentSize"/>'
+                meshlab_filter += '</filter>'
+                meshlab_filter += '<filter name="Remove Unreferenced Vertex"/>'
             else:
-                mehlab_filter += '<filter name="' + item + '"/>' 
+                meshlab_filter += '<filter name="' + item + '"/>' 
 
-        mehlab_filter += "</FilterScript>"
+        meshlab_filter += "</FilterScript>"
 
 
 
         # todo-> name this after model
-        mehlab_filter_filename = os.path.join(output_directory, hash + '.mlx')
-        with open(mehlab_filter_filename, 'w+') as f:
-            f.write(mehlab_filter)
+        meshlab_filter_filename = os.path.join(output_directory, hash + '.mlx')
+        with open(meshlab_filter_filename, 'w+') as f:
+            f.write(meshlab_filter)
         
         # Subprocess in combination with PIPE/STDOUT could deadlock
         # be careful with this. Prefer the Python 2.7 version below or
@@ -452,17 +485,17 @@ def convert_model(input_file, options=None):
         for model in models_to_convert:
             update_progress("Meshlab optimization: {0}".format(model['input']))
             
-            meshalb_input_file = os.path.join(model['input_path'], model['input'])
+            meshlab_input_file = os.path.join(model['input_path'], model['input'])
 
             # options to account for many different attributes: -om vc fc vn vt wt
             proc = subprocess.Popen([
                 current_app.config['MESHLAB_BINARY'], 
                 "-i", 
-                meshalb_input_file, 
+                meshlab_input_file, 
                 "-o",
-                meshalb_input_file, 
+                meshlab_input_file, 
                 "-s",
-                mehlab_filter_filename,
+                meshlab_filter_filename,
                 "-om",
                 "vc" if model['input_format'] != "obj" else "",
                 "vt",
@@ -477,19 +510,19 @@ def convert_model(input_file, options=None):
             returncode = proc.wait()
 
             # create a aopt log in debug mode
-            if current_app.config['DEBUG']:
+            if current_app.config['DEBUG'] or meshlab_log:
                 with open(os.path.join(output_directory, 'meshlab.log'), 'a+') as f:
                     f.write(output)
 
 
-            logger.info("Meshlab optimization model: {0} return: {1}".format(meshalb_input_file, returncode))
+            logger.info("Meshlab optimization model: {0} return: {1}".format(meshlab_input_file, returncode))
             logger.info(output)
 
             if returncode == 0:
                 update_progress("Meshlab successfull")
             else:
                 update_progress("Meshlab failed!")
-                logger.error("Meshlab problem: {0} return: {1}".format(meshalb_input_file, returncode))
+                logger.error("Meshlab problem: {0} return: {1}".format(meshlab_input_file, returncode))
 
         
 
@@ -502,7 +535,7 @@ def convert_model(input_file, options=None):
         #         "-o",
         #         input_file, 
         #         "-s",
-        #         mehlab_filter_filename,
+        #         meshlab_filter_filename,
         #         "-om",
         #         "ff"
         #         ], env=env)
@@ -542,22 +575,61 @@ def convert_model(input_file, options=None):
         infile  = os.path.join(model['input_path'], model['input'])
         outfile = os.path.join(output_directory, model['output'])
 
+        ## Config aopt call {{{
+
+        ### FIXME: naive impl for the config stuff        
+        ### build a custom config parser, set defaults on init
+        ### maybe useing argparse to reconstruct arguments
+        ### http://stackoverflow.com/questions/14823363/is-it-possible-to-reconstruct-a-command-line-with-pythons-argparse
+        ### however, probably would make it less straight forward
+        aopt_bingeo_param = bundle_config.get(TASK_CONFIG_SECTION, 'aopt.binGeoParams')
+        aopt_bingeo_valid = ['sa', 'sacp']
+        if not aopt_bingeo_param in aopt_bingeo_valid:
+            logger.warning("AOPT binGeo param {0} invalid, useing default 'sa'".format(aopt_bingeo_param))
+            aopt_bingeo_param = 'sa'   
+
+        aopt_gencam = bundle_config.getboolean(TASK_CONFIG_SECTION, 'aopt.genCam')
+        aopt_flatten_graph =  bundle_config.getboolean(TASK_CONFIG_SECTION, 'aopt.flattenGraph')        
+
+
         aopt_cmd = [
             current_app.config['AOPT_BINARY'], 
             '-i', 
             infile, 
-            '-F',
-            'Scene:"cacheopt(true)"',
             '-f',
             'PrimitiveSet:creaseAngle:4',              
             '-f',
             'PrimitiveSet:normalPerVertex:TRUE',
-            '-V',
             '-G',
-            aopt_bingeo + '/:sa',
+            aopt_bingeo + '/:' + aopt_bingeo_param,
             '-x', 
             outfile
         ]
+
+        if aopt_gencam:
+            aopt_cmd.append('-V')
+        if aopt_flatten_graph:
+            aopt_cmd.append('-F')
+            aopt_cmd.append('Scene:"cacheopt(true)"')
+
+        # }}} end config aopt call
+
+        # aopt_cmd = [
+        #     current_app.config['AOPT_BINARY'], 
+        #     '-i', 
+        #     infile, 
+        #     '-F',
+        #     'Scene:"cacheopt(true)"',
+        #     '-f',
+        #     'PrimitiveSet:creaseAngle:4',              
+        #     '-f',
+        #     'PrimitiveSet:normalPerVertex:TRUE',
+        #     '-V',
+        #     '-G',
+        #     aopt_bingeo + '/:sacp',
+        #     '-x', 
+        #     outfile
+        # ]
 
         try:
         
@@ -575,7 +647,7 @@ def convert_model(input_file, options=None):
             # create a aopt log in debug mode
             # this is a secuirty concern as long as aopt does include
             # full path names in the log output
-            if current_app.config['DEBUG']:
+            if current_app.config['DEBUG'] or aopt_log:
                 with open(os.path.join(output_directory, 'aopt.log'), 'a+') as f:
                     f.write(output)
 

@@ -1,0 +1,7 @@
+# defaults for convert_model task
+[task:modelconvert.tasks.convert_model]
+aopt.binGeoParams=sacp
+aopt.genCam=true
+aopt.flattenGraph=true
+aopt.log=false
+meshlab.log=false
