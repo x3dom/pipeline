@@ -1,28 +1,28 @@
 TODOs
 =====
 
-- Multi files
-- metarefresh->ajax poll
-- hub/vmust split
 - 12.04 ir download for aopt?
+- setup testing with http://pytest.org/latest/
+- maybe rename package to "pipeline"
+- externalize bundles (except basic)
+  also the _shared -> copyover thing is kind of in the wrong place.
+  and might be very confusing once the bundles are seperate. the resoures
+  should be managed by the bundle authors not the pipeline task.
 
-- overrideable  tempaltes, not only static file (bundles/_shared)
-
+- make tasks more granular and side-effect free
 - switch to dir for each upload: done, but needs cleanup (task should get
   a directory or a ZIP and discover everything else)
-- zip upload 
 - Uploader (nginx/progress/chunked upload)
 - better basic viewer
 
-- cleanup & unit tests
-- convert deployment to virtualenv on server
+- cleanup arch
+- it's time for docs
+- convert deployment to virtualenv and circus on x3dom server
 - error handing and status updates in tasks
 - use WTforms to simplify form/error handling
-- multiple file uploads - redesign of upload/result workflow
 - sessions
+- redesign of upload/result workflow (personalized, with state, rdbms)
 - uploadable user templates
-- package all resources for default templates in zipfile instead of hotlinking
-- queue list with status info of conversion process
 - API
 - scaling
 
@@ -33,10 +33,11 @@ More tossing around of those ideas
 - Maybe also put possible meshlab options with the template bundles
   This associates the UI for meshlab options to the template and can
   simply be customized.
-- Maybe also put customs tasks to the template bundles. this way users
-  can run additional tasks before and after aopt.
+- Maybe also put customs tasks to the template bundles. or better yet singal 
+  handlers (celery already emitts signals)
 - maybe this should not be templates bundels at all anymore but deployable
   python modules. this way it's entirely seperated from the application and
   can be hooked in dynamically. also instead of only output templates, 
   much more can be provided by the user, if so desired
-- probably switch to Pyramid for this as underlying layer above wsgi (no falsk)
+- probably switch to Pyramid  as underlying layer (outgrowing flask, py3 
+  support, resource strings, speed, composabiliyt, flexiblity, etc.)

@@ -3,7 +3,8 @@ from __future__ import with_statement
 
 import os
 
-from fabric.api import *
+from fabric.api import run, execute, task, sudo, local, env
+
 
 # Note, this file is specific for the modelconvert.x3dom server
 # Don't change this. If you want to deploy elsewhere you need
@@ -60,10 +61,3 @@ def bootstrap():
 def clean():
     local("rm -rf modelconvert.egg-info")
 
-
-@task
-def mkvm():
-    """
-    Try to provision a VM (req. VirtualBox, Vagrant)
-    """
-    print "Nothing here yet, move along"

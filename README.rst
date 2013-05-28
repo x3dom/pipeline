@@ -367,11 +367,11 @@ Launching
 
 You can use a `Procfile`_ to manage services during development. This is an easy
 way to start all required services at once on your local machine. In order
-to use this mechanism, copy the file ``Procfile.example`` into ``Procfile`` and
-adapt to match your system. For example, if your Redis server is not already 
-running you need to uncomment and/or adapt the respective line in 
-your ``Procfile``. The Procfile is not checked into the repository, since each
-development environment is a little bit different.
+to use this mechanism, copy the file ``<project>/share/Procfile.example`` 
+into ``<project>/Procfile`` and adapt to match your system. For example, 
+if your Redis server is not already running you need to uncomment and/or 
+adapt the respective line in your ``Procfile``. The Procfile is not checked 
+into the repository, since each development environment is different.
 
 When done, use `Honcho`_ (which has been installed with the requirements) to 
 launch the Procfile.

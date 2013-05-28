@@ -64,7 +64,7 @@ def update_progress(msg):
     red.publish(current_task.request.id, '{0}'.format(msg))
 
 
-@celery.task
+@celery.task(name='modelconvert.tasks.convert_model')
 def convert_model(input_file, options=None):
     """
     Task to run the model convestion. This task is written in a manner

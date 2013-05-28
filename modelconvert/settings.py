@@ -230,12 +230,23 @@ if env_var('SERVER_NAME'):
 # TRAP_HTTP_EXCEPTIONS = True
 # TRAP_BAD_REQUEST_ERRORS = True
 
-# Tasks which are being executed in order they appear here
-# TODO create a app.register_task method (custom app object)
-# to configure tasks dynamically
-TASKS = [
+
+# these tasks are executed in parallel by the pipeline when conversion
+# is triggered. note that those tasks run in PARALLEL if you specify
+# multiple tasks and one tasks depends on the data of another task
+# you need to implement this on your own. If you need a certain set of 
+# tasks running in series, you need to create a controller task which
+# orchestrates your sub tasks. This is exactly what we do by default.
+TASKS = (
     'modelconvert.tasks.convert_model',
-]
+)
+
+# application bundles provide output template for the render pipeline
+# as well as custom python code. they are full fledged python modules
+INSTALLED_BUNDELS = (
+    'modelconvert.bundles.basic',
+    'modelconvert.bundles.standard',
+)
 
 
 # -- CELERY -----------------------------------------------------------------
