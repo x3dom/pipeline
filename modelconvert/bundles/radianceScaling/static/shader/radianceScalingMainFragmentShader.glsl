@@ -37,7 +37,9 @@ void main() {
 	vec4 phongCol = blinnPhong(normal, lightDir, eye);	
 	vec4 color = fragColor * (phongCol +  scaled(length(phongCol.xyz), curvature(proj)));
 	float scale = scaled(length(phongCol.xyz), curvature(proj));
+
 	gl_FragColor = color;
+	//gl_FragColor = vec4(normal, 1.0);
 }
 
 // **** PHONG ****

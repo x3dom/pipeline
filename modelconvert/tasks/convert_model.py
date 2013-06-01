@@ -595,22 +595,28 @@ def convert_model(input_file, options=None):
         aopt_cmd = [
             current_app.config['AOPT_BINARY'], 
             '-i', 
-            infile, 
-            '-f',
-            'PrimitiveSet:creaseAngle:4',              
-            '-f',
-            'PrimitiveSet:normalPerVertex:TRUE',
-            '-G',
-            aopt_bingeo + '/:' + aopt_bingeo_param,
-            '-x', 
-            outfile
+            infile
         ]
-
-        if aopt_gencam:
-            aopt_cmd.append('-V')
+        
+        
         if aopt_flatten_graph:
             aopt_cmd.append('-F')
             aopt_cmd.append('Scene:"cacheopt(true)"')
+        
+        aopt_cmd.append('-f')
+        aopt_cmd.append('PrimitiveSet:creaseAngle:4')
+        aopt_cmd.append('-f')
+        aopt_cmd.append('PrimitiveSet:normalPerVertex:TRUE')
+        
+        if aopt_gencam:
+            aopt_cmd.append('-V')
+        
+        aopt_cmd.append('-G')
+        aopt_cmd.append(aopt_bingeo + '/:' + aopt_bingeo_param)
+        
+        aopt_cmd.append('-x')
+        aopt_cmd.append(outfile)
+        
 
         # }}} end config aopt call
 

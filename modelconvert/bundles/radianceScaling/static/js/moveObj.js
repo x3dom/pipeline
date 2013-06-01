@@ -47,8 +47,8 @@ function calcViewPlane(origin)
 function det(mat)
 {
     return 	mat[0][0]*mat[1][1]*mat[2][2] + mat[0][1]*mat[1][2]*mat[2][0] +
-        mat[0][2]*mat[2][1]*mat[1][0] - mat[2][0]*mat[1][1]*mat[0][2] -
-        mat[0][0]*mat[2][1]*mat[1][2] - mat[1][0]*mat[0][1]*mat[2][2] ;
+            mat[0][2]*mat[2][1]*mat[1][0] - mat[2][0]*mat[1][1]*mat[0][2] -
+            mat[0][0]*mat[2][1]*mat[1][2] - mat[1][0]*mat[0][1]*mat[2][2] ;
 }
 
 // translation along plane parallel to viewing plane E:x=p+t*u+s*v
@@ -160,7 +160,7 @@ function move(event)
         if (track){
             sunSphere.setAttribute("translation", track.x + " " + track.y + " " + track.z);
             sunLight.setAttribute("location", track.x + " " + track.y + " " + track.z);
-            console.log("sphere: " + sunSphere.getAttribute("translation") + "\n Licht: " + sunLight.getAttribute("translation"));
+            //console.log("Sphere: " + sunSphere.getAttribute("translation") + "\n Light: " + sunLight.getAttribute("location"));
         }
 
         lastX = pos[0];
@@ -199,4 +199,4 @@ document.onload = function()
     sunSphere.addEventListener('mousedown', start, false);
     sunSphere.addEventListener('mouseover', over, false);
     sunSphere.addEventListener('mouseout', out, false);
-}
+};

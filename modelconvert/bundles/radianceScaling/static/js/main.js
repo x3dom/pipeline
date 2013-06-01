@@ -1,14 +1,18 @@
 var MYAPP = {};
 MYAPP.toggleDebug = false;
-
+MYAPP.runtime     = null;
 MYAPP.path        = {};
 MYAPP.path.shader = "static/shader/";
-
 
 
 var mod_ColorPicker;
 var mod_Menu;
 var mod_MoveObj;
+
+MYAPP.lastW = 1024;
+MYAPP.lastH = 1024;
+MYAPP.inlineLoaded = false;
+
 
 jQuery(document).ready(function () {
     mod_ColorPicker = mod_colorPicker();
@@ -16,18 +20,40 @@ jQuery(document).ready(function () {
 
     mod_Menu = mod_menu();
     mod_Menu.init();
+
+
 });
 
-function initInline(){
-   //MYAPP.path.shader = getRelativeShaderPath();
+function initInline() {
+    //MYAPP.path.shader = getRelativeShaderPath();
+    MYAPP.runtime = document.getElementById("x3dMain").runtime;
 
-   setUpLightAndCam();
-   modifyX3DModel();
-   createMenu();
+    MYAPP.runtime.exitFrame = function()
+    {
+        if (!MYAPP.inlineLoaded)
+        {
+            setUpLightAndCam();
+            modifyX3DModel();
+            createMenu();
+
+            MYAPP.inlineLoaded = true;
+        }
+
+        var w = +MYAPP.runtime.getWidth();
+        var h = +MYAPP.runtime.getHeight();
+
+        if (w != MYAPP.lastW || h != MYAPP.lastH)
+        {
+            var rt = document.getElementById('test');
+            rt.setAttribute('dimensions',  w + ' ' + h + ' 4');
+
+            MYAPP.lastW = w;
+            MYAPP.lastH = h;
+        }
+    };
 }
 
-function setUpLightAndCam(){
-
+function setUpLightAndCam() {
    // set inline Cam
    var inlineVP = document.getElementById("inline__" + getCamDEF());
    var oldVP = document.getElementById("vp");
@@ -38,11 +64,10 @@ function setUpLightAndCam(){
    oldVP.setAttribute("orientation", inlineVP.getAttribute("orientation"));
 
    // position Light
-   var runtime = document.getElementById("x3dMain").runtime;
-   var bBox = runtime.getSceneBBox();
+   var bBox = MYAPP.runtime.getSceneBBox();
    var center = (bBox.min.add(bBox.max)).multiply(0.5);
    var bBoxSize = bBox.max.subtract(bBox.min);
-   var m = runtime.viewMatrix();
+   var m = MYAPP.runtime.viewMatrix();
    var up = m.e1();
    var forw = m.e2().multiply(-1.0);
    var cross = up.cross(forw).multiply(-1.0);
@@ -81,7 +106,8 @@ function modifyX3DModel() {
 function renewAppRadianceScaling(app){
     var rt = jQuery('                                                                                                   \
         <RenderedTexture id="test" DEF="fieldRenderedTex" update="ALWAYS" dimensions="1024 1024 4" repeatS="false" repeatT="false" showNormals="true">    \
-            <Viewpoint USE="vp" containerField="viewpoint"></Viewpoint>                                                 \
+            <Viewpoint USE="scene__vp" containerField="viewpoint"></Viewpoint>                                          \
+            <Transform USE="scene__sunGeo" containerField="excludeNodes"></Transform>                                   \
         </RenderedTexture>                                                                                              \
     ');
 
@@ -90,7 +116,7 @@ function renewAppRadianceScaling(app){
          <field id="fieldSpecularPower" name="fieldSpecularPower" type="SFFloat" value="1.0"></field>                   \
          <field id="fieldAlpha" name="fieldAlpha" type="SFFloat" value="0"></field>                                     \
          <field id="fieldGamma" name="fieldGamma" type="SFFloat" value="0"></field>                                     \
-         <field name="fieldRenderedTex" type="SFInt32" value="0"></field>                                               \
+         <field name="tex" type="SFInt32" value="0"></field>                                               \
                                                                                                                         \
          <ShaderPart type="VERTEX" url="' + MYAPP.path.shader + 'radianceScalingMainVertexShader.glsl"> </ShaderPart>   \
          <ShaderPart type="FRAGMENT" url="' + MYAPP.path.shader +'radianceScalingMainFragmentShader.glsl"> </ShaderPart>\
