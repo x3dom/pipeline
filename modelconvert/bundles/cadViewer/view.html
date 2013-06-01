@@ -80,7 +80,7 @@
     <div id="x3dViewport" data-role="content">
         <X3D id="x3dElement">
             <div class="x3dom-statdiv" style="display: inline;"></div>
-            <Scene id='scene'>
+            <Scene id='scene' frustumCulling="true" smallFeatureCulling="true" scaleRenderedIdsOnMove="0.4" doPickPass="false">
                 <Inline id="modelRoot" nameSpaceName="inline" mapDEFToID="true" url="{{ model.inline }}" onload="mainInit();"></Inline>
             </Scene>
         </X3D>

@@ -582,7 +582,8 @@ def convert_model(input_file, options=None):
         ### http://stackoverflow.com/questions/14823363/is-it-possible-to-reconstruct-a-command-line-with-pythons-argparse
         ### however, probably would make it less straight forward
         aopt_bingeo_param = bundle_config.get(TASK_CONFIG_SECTION, 'aopt.binGeoParams')
-        aopt_bingeo_valid = ['sa', 'sacp']
+        # validation check not really necessary, since all combinations are possible and invalid ones are just ignored...
+        aopt_bingeo_valid = ['sa', 'sac', 'sacp']
         if not aopt_bingeo_param in aopt_bingeo_valid:
             logger.warning("AOPT binGeo param {0} invalid, useing default 'sa'".format(aopt_bingeo_param))
             aopt_bingeo_param = 'sa'   

@@ -51,7 +51,6 @@ function mainInit(){
     mod_TabManager = modules("tabManager");
 
     // module initialisation
-    console.log("test")
     jQuery.get("static/data/menu.txt", mod_menu.init, "json");
     registerEventListenerMenu(mod_menu);
     mod_TabManager.init();
@@ -82,7 +81,6 @@ function modules(type) {
  * register event listener for menu *************************
  ************************************************************/
 function registerEventListenerMenu(mod_menu) {
-    console.log("test ")
 	/***** Buttons Debug ***********************************/
 	mod_menu.pushEventListener("debug_switchPosition", function () {
 		//mod_menu.switchPosition();
