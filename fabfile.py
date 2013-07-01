@@ -3,7 +3,7 @@ from __future__ import with_statement
 
 import os
 
-from fabric.api import run, execute, task, sudo, local, env
+from fabric.api import run, cd, execute, task, sudo, local, env
 
 
 # Note, this file is specific for the modelconvert.x3dom server
