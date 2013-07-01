@@ -301,7 +301,7 @@ function _mod_menu() {
 		var tag;
 		var a;
 		// init search module
-		var mod_search = modules("search");
+		var mod_search = _mod_search();
 		mod_search.initSearch("menuContainer", inputSearchId);
 
 		// find content to set up the module
@@ -371,6 +371,7 @@ function _mod_menu() {
 		 * @return {Boolean} not really needed
 		 */
 		init : function (jsonData) {
+            console.log("sdf")
 			var i;
 			var html;
 
@@ -396,7 +397,6 @@ function _mod_menu() {
 			jQuery("#" + htmlTargetId).hide();
 
 			isInit = true;
-
 			return true;
 		},
 		/****

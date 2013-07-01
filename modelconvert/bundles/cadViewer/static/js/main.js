@@ -3,8 +3,10 @@ var MYAPP = {};
 /****
  * global configuration
  */
-MYAPP.model = "conrod"; //"engine3" "conrod" "test"         // for the folder ind data containing the model and all its data
+MYAPP.model = "conrod"; // "conrod"         // for the folder ind data containing the model and all its data
 MYAPP.modelRootId = "modelRoot";                            // for the inline element
+MYAPP.centerOfRotation = "1.2828279 152.4117 27.60026";     // set center of rotation
+MYAPP.scaleAnnotMarker = 10;                             // set the size of annotation markers
 
 MYAPP.sortTree = false;                                 // should the tre to be sorted alphabetically??
 
@@ -12,69 +14,99 @@ MYAPP.sortTree = false;                                 // should the tre to be 
 MYAPP.menuContainerID = "menuContainer";
 
 
-MYAPP.isFlyToOnSelect = false;
+MYAPP.isFlyToOnSelect = false;                         //
+MYAPP.isHighlightOn = true;
 MYAPP.x3dNodeHighlightColor = "#ffff55";
 
 MYAPP.menuIconPath = "static/img/GlyphishIcons-Free/icons/";
+
+
+// turn off ALL jQuery effects -> more efficient
+//jQuery.fx.off = true;
+
 
 /****
  * END configuration
  */
 
-// modules to be used
+// modules to be used (global scope)
 var mod_TabManager;
 var mod_menu;
+var mod_search;
+var mod_breadcrumbs;
+var mod_coordinateSystem;
+var mod_HTMLTreeFromX3dTree;
 
 
 /***************************************************************************
  * all the initialisation that dose not directly correspond to the model
  * is done here after the resources are loaded
  ***************************************************************************/
+
+//!!!!!!!!!!!!!!!!!! not needed since the model is insert hardcoded !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+/*
 jQuery(document).ready(function () {
-
+	document.getElementById(MYAPP.modelRootId).setAttribute("url", '"static/data/' + MYAPP.model + '/model.x3d"');
+	document.getElementById("ViewpointMain").setAttribute("centerOfRotation", MYAPP.centerOfRotation);
 });
-
-
+*/
 
 // is executed when the model is compleatly loaded -> onload in index.html
 function mainInit(){
-    mod_sceneGraph.initSceneGraph();
 
-    //jQuery.mobile.changePage( "#objBrowser", { transition: "slideup"} );
-    //jQuery.mobile.changePage( "#objBrowser" );
+    // get module instances
 
-    // set the top padding of the content container to the height of the header
-    jQuery("#contentContainer").css("padding-top", jQuery(".ui-header").height() + "px");
+    mod_search              = _mod_search();
+    mod_breadcrumbs         = _mod_breadcrumbs();
+    mod_HTMLTreeFromX3dTree = _mod_HTMLTreeFromX3dTree();
+    mod_TabManager          = _mod_TabManager();
+    mod_menu                = _mod_menu();
+    mod_coordinateSystem    = _mod_coordinateSystem();
 
-    // module registration
-    mod_menu = modules("menu");
-    mod_TabManager = modules("tabManager");
+    mod_coordinateSystem.init("CoordinateAxes__CoordinateAxes", "ViewpointMain");
 
-    // module initialisation
-    jQuery.get("static/data/menu.txt", mod_menu.init, "json");
-    registerEventListenerMenu(mod_menu);
-    mod_TabManager.init();
+
+
+    // set all the functions that need to be executed when an x3d element is clicked
+    x3dTree.prepareX3dTree( [ htmlTree.highlightTree ] );
+
+    // create HTML List that is used to create the jsTree
+    mod_HTMLTreeFromX3dTree.createHTML_ListFromX3d(jQuery("#" + MYAPP.modelRootId), jQuery("#treeList"));
+
+    //htmlTree.destroyTree();
+    htmlTree.initTree();
+
+
+
+
+	// set the top padding of the content container to the height of the header
+	jQuery("#contentContainer").css("padding-top", jQuery(".ui-header").height() + "px");
+
+
+	// module initialisation
+	registerEventListenerMenu(mod_menu);
+	mod_TabManager.init();
+
+    console.log("vorher")
+	jQuery.get("static/data/menu.txt", mod_menu.init, "json");
+
+    console.log("fertig")
+
+
+    /****************** set up Autocompleat searchfield *******************/
+    mod_search.initSearch("tree_" + MYAPP.modelRootId, "searchFieldGraph");
+
+    jQuery("#tree").find("li").each(function () {
+        mod_search.pushTag(jQuery(this).attr("id"), htmlTree.getX3dIdFromTreeId(jQuery(this)).toLowerCase());
+    });
+
+
 };
 
-/****
- * get module instances
- * tree and sceneGraph are processed separately
- *
- * @param type string that specifies what kind of module is loaded
- * @return {*} a pointer to the module
- */
-function modules(type) {
-	if (type && type === "search") {
-		return _mod_search();
-	}
-	if (type && type === "tabManager") {
-		return _mod_TabManager();
-	}
-	if (type && type === "menu") {
-		return _mod_menu();
-	}
-	return null;
-}
+
+
+
+
 
 
 /************************************************************
@@ -151,12 +183,11 @@ function registerEventListenerMenu(mod_menu) {
 		MYAPP.tree.uncheck_node(jQuery("#tree_" + MYAPP.modelRootId));
 	});
 	mod_menu.pushEventListener("visib_faces", function () {
-		mod_sceneGraph.renderVisibility('Point');
+		x3dTree.renderVisibility('Point');
 	});
 	mod_menu.pushEventListener("visib_points", function () {
-		mod_sceneGraph.renderVisibility('Face');
+		x3dTree.renderVisibility('Face');
 	});
-
 
 
 	/***** Buttons Setting **************************/
@@ -164,15 +195,7 @@ function registerEventListenerMenu(mod_menu) {
 		//alert(event)
 		mod_menu.setMenuKeepOpen(jQuery(this).val());
 	});
-	mod_menu.pushEventListener("showObjOnSelect", function (event, ui) {
-		var val = jQuery(this).val();
-		if (val === true || val === "true") {
-			MYAPP.isFlyToOnSelect = true;
-		}
-		else {
-			MYAPP.isFlyToOnSelect = false;
-		}
-	});
+
 
     mod_menu.pushEventListener("toggleStat", function () {
         var showStat = document.getElementById('x3dElement').runtime.statistics();
@@ -185,8 +208,22 @@ function registerEventListenerMenu(mod_menu) {
         $("#x3dom_logdiv").slideToggle();
     });
 
+    /*
+	mod_menu.pushEventListener("showObjOnSelect", function (event, ui) {
+		var val = jQuery(this).val();
+		if (val === true || val === "true") {
+			MYAPP.isFlyToOnSelect = true;
+		}
+		else {
+			MYAPP.isFlyToOnSelect = false;
+		}
+	});
+	*/
 
-	/***** Buttons Navigation Modes *******************/
+
+
+
+	/***** Buttons Navigation Modes ******************* /
 	 jQuery("#btn_examineMode").click(function(){
 	 document.getElementById('x3dElement').runtime.examine() ;
 	 return false;
@@ -208,78 +245,41 @@ function registerEventListenerMenu(mod_menu) {
 	 return false;
 	 });
 
+	 /***** Annotation Debug ***************************/
+
+
+
+    /**** toggle buttons in header **********************/
+
+    jQuery("#checkboxFlyTo").bind( "change", function(event, ui) {
+        var val = $(this).is(':checked');
+        if (val === "on" || val === true || val === "true") {
+            MYAPP.isFlyToOnSelect = true;
+        }
+        else {
+            MYAPP.isFlyToOnSelect = false;
+        }
+    });
+    jQuery("#checkboxHighlight").bind( "change", function(event, ui) {
+        var val = $(this).is(':checked');
+        if (val === "on" || val === true || val === "true") {
+            MYAPP.isHighlightOn = true;
+        }
+        else {
+            MYAPP.isHighlightOn = false;
+        }
+    });
 }
 
 
-/*****************************************
- * JQuery plugin
- *
- * makes it possible to just select the text of an element but
- * no child elements content
- *
- * http://viralpatel.net/blogs/2011/02/jquery-get-text-element-without-child-element.html
- **************************************/
-jQuery.fn.justtext = function () {
-	return $(this).clone()
-		.children()
-		.remove()
-		.end()
-		.text();
-};
 
-/*
- * it provides functions that are described in the book "JavaScript the Good Parts"
- * This functions and techniques are very helpful to write good and clean code!!!
- *
- * Module that hides all its variables in closures (private variables)
- */
-var jsGoodParts = (function () {
-	"use strict";
-	return {
-		init : function () {
-			Function.prototype.method = function (name, func) {
-				if (!this.prototype[name]) {
-					this.prototype[name] = func;
-					return this;
-				}
-			};
-			Number.method("integer", function () {
-				return Math[this < 0 ? 'ceil' : 'floor'](this);
-			});
-			String.method("trim", function () {
-				return this.replace(/^\s+|\s+$/g, '');
-			});
-		},
 
-		/*
-		 * checks if the argument is an Object
-		 * Objects can be real Objects or Arrays
-		 */
-		isObject : function (obj) {
-			if (obj && typeof obj === 'object') {
-				return true;
-			}
-			return false;
-		},
-		/*
-		 * checks if the argument is an Object
-		 * This function excludes Arrays!
-		 */
-		isRealObject : function (obj) {
-			if (obj && typeof obj === 'object' && !this.isArray(obj)) {
-				return true;
-			}
-			return false;
-		},
-		/*
-		 * checks if the argument is an Array
-		 * This function excludes Objects!
-		 */
-		isArray : function (obj) {
-			if (obj && typeof obj === 'object' && typeof obj.length === 'number' && !(obj.propertyIsEnumerable('length'))) {
-				return true;
-			}
-			return false;
-		}
-	};
-}());
+
+
+
+
+
+
+
+
+

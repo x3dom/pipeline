@@ -5,8 +5,6 @@ html, body, #view, canvas, X3D, x3d, #x3dViewport {
     padding: 0;
 }
 
-#view {
-}
 
 #view .ui-header {
     position: absolute;
@@ -21,7 +19,7 @@ html, body, #view, canvas, X3D, x3d, #x3dViewport {
 
 #view #breadCrumbs{
     width: 100%;
-    padding-right: 210px;
+    padding-right: 420px;
 
     -moz-box-sizing: border-box;
     -ms-box-sizing: border-box;
@@ -212,6 +210,10 @@ ul.edgetoedge li:first-child {
     width: 20px;
 }
 
+#headerMenuToggleButtons{
+    padding-right: 20px;
+    margin-right: 20px;
+}
 #tabs .ui-btn-inner {
     padding: 0;
 }
@@ -244,8 +246,8 @@ div.ui-slider-switch.ui-slider-mini a.ui-slider-handle .ui-btn-inner {
     margin: 0;
     padding: 0;
     position: fixed;
-    bottom: 40px;
-    left: 220px;
+    bottom: 70px;
+    left: 10px;
 }
 #switchViewTreeSliderContainer div.ui-slider-switch.ui-slider-mini{
     width: 8.5em;
@@ -253,7 +255,7 @@ div.ui-slider-switch.ui-slider-mini a.ui-slider-handle .ui-btn-inner {
 
 #tree {
     background-color: transparent;
-    padding-bottom: 50px;
+    padding-bottom: 60px;
 }
 
 #tree ul:first-child {
@@ -266,7 +268,16 @@ div.ui-slider-switch.ui-slider-mini a.ui-slider-handle .ui-btn-inner {
 }
 
 #tree.jstree li a {
-    width: 100%;
+    /* Firefox */
+    width: -moz-calc(100% - 22px);
+    /* WebKit */
+    width: -webkit-calc(100% - 22px);
+    /* Opera */
+    width: -o-calc(100% - 22px);
+    /* Standard */
+    width: calc(100% - 22px);
+
+
     display: inline-block !important;
     color: #fff;
 }
@@ -390,7 +401,7 @@ div.ui-slider-switch.ui-slider-mini a.ui-slider-handle .ui-btn-inner {
     height: 100%;
 
     padding-top: 0px;
-    padding-bottom: 110px;
+    padding-bottom: 145px;
 
 
     box-sizing: border-box !important;
@@ -505,6 +516,72 @@ div.ui-slider-switch.ui-slider-mini a.ui-slider-handle .ui-btn-inner {
     margin-bottom: -3px;
 }
 
+/***********************************************
+ * metadata and annotations
+***********************************************/
+#metaDataContainer .ui-collapsible,
+#annotationsContainer .ui-collapsible,
+#metaDataContainer .ui-collapsible-heading,
+#annotationsContainer .ui-collapsible-heading,
+#metaDataContainer .ui-collapsible-content,
+#annotationsContainer .ui-collapsible-content {
+    margin: 0;
+}
+
+#metaDataContainer p, #annotationsContainer p {
+    padding: 0;
+    margin: 0;
+    background-color: rgba(50, 50, 50, 0.9);
+    -moz-box-shadow: 0px 0px 10px rgba(50, 50, 50, 1);
+    -webkit-box-shadow: 0px 0px 10px rgba(50, 50, 50, 1);
+    box-shadow: 0px 0px 10px rgba(50, 50, 50, 1);
+
+}
+
+#pickAnnotationLocation{
+    -moz-box-sizing: border-box;
+    -ms-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 300px;
+    height: 44px;
+    padding: 5px;
+    z-index: 9999999;
+    background-color: gray;
+}
+
+/***********************************************
+ * PopUp
+***********************************************/
+.popUp {
+    padding: 10px;
+    margin: 0;
+    opacity: 0.96;
+    display: block;
+    top: 44px;
+    right: 200px;
+    left: 350px;
+}
+
+.popUp h3, .popUp p {
+    padding: 0;
+    margin: 0;
+}
+
+.popUp a {
+    color: #5393c5;
+}
+
+
+
+
+
+
+
 
 /***********************************************
  * debug info
@@ -557,6 +634,8 @@ div.ui-slider-switch.ui-slider-mini a.ui-slider-handle .ui-btn-inner {
     width: 187px;
     z-index: 999;
 
+    text-shadow: 0 !important;
+
     -webkit-box-shadow: 0px 1px 55px rgba(0,0,0,0.7); /* webkit browser*/
     -moz-box-shadow: 0px 1px 55px rgba(0,0,0,0.7); /* firefox */
     box-shadow: 0px 1px 55px rgba(0,0,0,0.7);
@@ -577,3 +656,48 @@ div.ui-slider-switch.ui-slider-mini a.ui-slider-handle .ui-btn-inner {
     padding: 2px 0 0;
     width: 100%;
 }
+.x3dom-states-list-item-titel {
+    float: left;
+}
+.x3dom-states-list-item-value {
+    float: right;
+}
+
+
+
+
+/**********************************************
+ *test
+ *********************************************/
+/*
+.activeNode {
+    background-color: #2489CE;
+}
+
+.checkbox{
+    display: inline-block;
+    width: 15px;
+    height: 15px;
+    float: left;
+
+    background-color: blue;
+}
+.statusMixed .checkbox{
+    background-color: yellow;
+}
+.statusMixed .statusChecked .checkbox{
+    background-color: green;
+}
+.statusMixed .statusUnchecked .checkbox{
+    background-color: red;
+}
+
+
+
+#treeContainer.drilldown ul,
+#treeContainer.drilldown ol,
+#treeContainer.drilldown li{
+    padding-left: 8px;
+}
+
+*/

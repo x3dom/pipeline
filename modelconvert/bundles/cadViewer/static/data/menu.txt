@@ -100,29 +100,20 @@
 			}
         ]
 	},
-    {
-        "header":     "Settings",
-        "headerIconPath": "19-gear.png",
-        "sectionId":   "settings",
-		"entries": [
-			{
-				"stateCnt": "2",
-				"stateCurrent": "0",
-				"text": "keep menu",
-				"lable": [ "on", "off"],
-				"val": ["true", "false"],
-				"id":   "toggleLockMenu",
-				"icon":	""
-			},
-			{
-				"stateCnt": "2",
-				"stateCurrent": "0",
-				"text": "fly to",
-				"lable": ["off", "on"],
-				"val": ["false", "true"],
-				"id":   "showObjOnSelect",
-				"icon":	""
-			},
+     {
+         "header":     "Settings",
+         "headerIconPath": "19-gear.png",
+         "sectionId":   "settings",
+         "entries": [
+            {
+                "stateCnt": "2",
+                "stateCurrent": "0",
+                "text": "keep menu",
+                "lable": ["on", "off"],
+                "val": ["true", "false"],
+                "id":   "toggleLockMenu",
+                "icon":	""
+            },
             {
                 "text": "Toggle Statistic",
                 "id":   "toggleStat",
@@ -133,6 +124,6 @@
                 "id":   "toggleLog",
                 "icon":	""
             }
-        ]
-	}
+         ]
+    }
 ]

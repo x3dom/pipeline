@@ -10,15 +10,11 @@ function _mod_TabManager() {
 		"buttonId" : [
 			"leftPane_tab_blank",
 			"leftPane_tab_sceneGraph",
-			"leftPane_tab_metaData",
-			"leftPane_tab_annotation",
 			"leftPane_tab_menu"
 		],
 		"containerId" : [
 			"blank",
 			"sceneGraphContainer",
-			"metaDataContainer",
-			"annotationsContainer",
 			"menuContainer"
 		]
 	};
@@ -71,16 +67,6 @@ function _mod_TabManager() {
 			return false;
 		});
 		jQuery("#leftPane_tab_sceneGraph").click(function () {
-			var id = getContainerId(jQuery(this).attr("id"));
-			mod_TabManager.switchTab(id);
-			return false;
-		});
-		jQuery("#leftPane_tab_metaData").click(function () {
-			var id = getContainerId(jQuery(this).attr("id"));
-			mod_TabManager.switchTab(id);
-			return false;
-		});
-		jQuery("#leftPane_tab_annotation").click(function () {
 			var id = getContainerId(jQuery(this).attr("id"));
 			mod_TabManager.switchTab(id);
 			return false;

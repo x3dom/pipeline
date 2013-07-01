@@ -31,11 +31,8 @@ jQuery(document).ready(function () {
         popUpShowObjInfo();
     });
     $("#btnFullscreen").bind("click", function (event, ui) {
-        //$(document).fullScreen(true);
-        $(document).toggleFullScreen();
+        x3dom.toggleFullScreen();
     });
-
-
 });
 
 

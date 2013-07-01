@@ -6,28 +6,37 @@
     <title>Slim CAD Data Viewer</title>
 
     <link rel="stylesheet" type="text/css" href="static/libs/jQuery-ui/themes/smoothness/jquery-ui-1.8.18.custom.css" />
-    <link rel="stylesheet" type="text/css" href="static/libs/jquery.mobile-1.1.1.min.css"/>
-    <link rel="stylesheet" type="text/css" href="static/libs/jquery.mobile.structure-1.1.1.min.css"/>
-    <link rel="stylesheet" type="text/css" href="static/libs/jquery.mobile.theme-1.1.1.min.css"/>
-    
-    <link rel='stylesheet' type='text/css' href='static/x3dom.css'/>
+    <link rel="stylesheet" type="text/css" href="static/libs/jquery.mobile-1.1.0.css"/>
+
+    <!--link href="static/libs/jquery-drill-down-menu-plugin/css/dcdrilldown.css" rel="stylesheet" type="text/css" />
+    <link href="static/libs/jquery-drill-down-menu-plugin/css/skins/graphite.css" rel="stylesheet" type="text/css" /-->
+
+    <link rel="stylesheet" type="text/css" href="static/x3dom.css" />
     <link rel="stylesheet" type="text/css" href="static/css/slimViewer.css"/>
 
     <script type='text/javascript' src='static/x3dom.js'></script>
 
     <script type="text/javascript" src="static/libs/jquery-1.7.1.js"></script>
     <script type="text/javascript" src="static/libs/jquery-ui.min.js"></script>
-    <script type="text/javascript" src="static/libs/jquery.mobile-1.1.1.min.js"></script>
+    <script type="text/javascript" src="static/libs/jquery.mobile-1.1.0.js"></script>
+
     <script type="text/javascript" src="static/libs/jsTree/jquery.jstree.js"></script>
 
-    <script type="text/javascript" src="static/js/main.js"></script>
-    <script type="text/javascript" src="static/js/tree.js"></script>
-    <script type="text/javascript" src="static/js/SceneGraph.js"></script>
-
+    <script type="text/javascript" src="static/js/modules/moduleBreadcrumbs.js"></script>
+    <script type="text/javascript" src="static/js/modules/modulePopUp.js"></script>
     <script type="text/javascript" src="static/js/modules/moduleMenu.js"></script>
     <script type="text/javascript" src="static/js/modules/moduleSearch.js"></script>
     <script type="text/javascript" src="static/js/modules/moduleTabManager.js"></script>
+    <script type="text/javascript" src="static/js/modules/moduleCoordinateSystem.js"></script>
 
+    <script type="text/javascript" src="static/js/helperFunctions.js"></script>
+    <script type="text/javascript" src="static/js/x3dTree.js"></script>
+    <script type="text/javascript" src="static/js/modules/moduleHTMLTreeFromX3dTree.js"></script>
+    <script type="text/javascript" src="static/js/htmlTree.js"></script>
+    <script type="text/javascript" src="static/js/main.js"></script>
+
+    <!--script type="text/javascript" src="static/libs/jquery-drill-down-menu-plugin/js/jquery.cookie.js"></script>
+    <script type="text/javascript" src="static/libs/jquery-drill-down-menu-plugin/js/jquery.dcdrilldown.1.2.min.js"></script-->
     <!-- just for debugging
     <script src="https://raw.github.com/padolsey/jQuery-Lint/master/jquery.lint.js"></script>
     -->
@@ -38,18 +47,26 @@
 
     <div data-role="header" data-title="Viewer">
         <h3 data-inline="true" id="breadCrumbs">Viewer</h3>
+        <div id="headerMenuToggleButtons" data-type="horizontal" >
+        </div>
         <div id="headerMenuQuickLinks" data-role="controlgroup" data-type="horizontal" class="ui-btn-right">
+            <span id="headerMenuToggleButtons">
+                <label><input id="checkboxHighlight" type="checkbox" name="checkboxHighlight" data-mini="true" checked="checked" /> Highlight </label>
+                <label><input id="checkboxFlyTo"     type="checkbox" name="checkboxFlyTo"     data-mini="true" /> Fly to </label>
+            </span>
+            <!--a href="#objBrowser" data-role="button"> objBrowser </a-->
         </div>
     </div>
 
     <!--http://jquerymobile.com/test/docs/lists/lists-search-filtertext.html-->
     <div id="sceneGraphContainer" class="pos_leftPane">
         <div class="search">
+            <!--input type="search" name="search" id="searchFieldGraph" value="search Scene Graph" data-theme="b" data-mini="true" > </input-->
             <input id="searchFieldGraph" type="search" > </input>
         </div>
         <div id="treeOuterContainer" >
-            <div id="treeContainer" class="ui-corner-all">
-                <div id="tree">
+            <div id="treeContainer" class="drilldown ui-corner-all">
+                <div id="tree" class="graphite">
                     <ul id="treeList">
                     </ul>
                 </div>
@@ -57,8 +74,8 @@
         </div>
         <div id="switchViewTreeSliderContainer">
             <select id="switchViewTreeSlider" name="slider" data-role="slider" data-mini="true">
-                <option value="accordion">-accordion</option>
                 <option value="tree">tree</option>
+                <option value="accordion">accordion</option>
             </select>
         </div>
     </div>
@@ -69,6 +86,7 @@
             <input id="searchFieldMenu" type="search" />
         </div>
     </div>
+
 
     <div id="tabs" data-role="navbar">
         <ul>
@@ -81,11 +99,22 @@
         <X3D id="x3dElement">
             <div class="x3dom-statdiv" style="display: inline;"></div>
             <Scene id='scene' frustumCulling="true" smallFeatureCulling="true" scaleRenderedIdsOnMove="0.4" doPickPass="false">
+                <Viewpoint id="ViewpointMain" description="Camera Main"></Viewpoint>
+
                 <Inline id="modelRoot" nameSpaceName="inline" mapDEFToID="true" url="{{ model.inline }}" onload="mainInit();"></Inline>
+
+                <Group id="annotationMarker" render="true"></Group>
             </Scene>
         </X3D>
-    </div>
-</div>
 
+        <X3D id='CoordinateAxes' showStat='false' showLog='false'>
+            <scene id="helper_scene">
+                <viewpoint id="coordinateAxesViewpoint" centerOfRotation='0 0 0' position='0 0 3'></viewpoint>
+                <Inline mapDEFToID="true" nameSpaceName="CoordinateAxes" url="static/data/CoordinateAxes.x3d"></Inline>
+            </scene>
+        </X3D>
+    </div>
+
+</div>
 </body>
 </html>

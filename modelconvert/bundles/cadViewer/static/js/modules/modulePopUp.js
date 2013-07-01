@@ -64,15 +64,10 @@
 		new : function (options) {
 			// Create some defaults, extending them with any options that were provided
 			var settings = jQuery.extend({
-				'isCloseOnClick' : true,
-				//top : $(window).scrollTop() + 100;
-				'top' : "2.6em",
-				'right' : "200px",
-				'left' : "350px"
+				'isCloseOnClick' : true
 			}, options);
 			var popUp = jQuery("<div class='ui-loader ui-overlay-shadow ui-body-a ui-corner-all'></div>")
 				.addClass("popUp")
-				.css({ "top" : settings.top, "right" : settings.right, "bottom" : settings.bottom, "left" : settings.left })
 				.fadeIn(400);
 			var i;
 
