@@ -57,6 +57,17 @@ def bootstrap():
     # create a settings-dev.py and print instruction of how to use it
     # export MODELCONVERT_SETTINGS='/path/to/settings-dev.py'   
 
+
+# this is probalby better suited in manage.py, however since
+# app templates are going to be outsourced, i put it here
+@task
+def update_x3dom():
+    local("curl http://www.x3dom.org/download/dev/x3dom-full.js -o modelconvert/bundles/_shared/static/x3dom-full.js")
+    local("curl http://www.x3dom.org/download/dev/x3dom.css -o modelconvert/bundles/_shared/static/x3dom.css")
+    local("curl http://www.x3dom.org/download/dev/x3dom.js -o modelconvert/bundles/_shared/static/x3dom.js")
+    local("curl http://www.x3dom.org/download/dev/x3dom.swf -o modelconvert/bundles/_shared/static/x3dom.swf")
+
+
 @task
 def clean():
     local("rm -rf modelconvert.egg-info")
