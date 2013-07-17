@@ -568,8 +568,8 @@ def convert_model(input_file, options=None):
 
         update_progress("Converting: {0}".format(model['input']))
 
-        aopt_bingeo = "{0}_bin".format(model['name'])
-        os.mkdir(os.path.join(output_directory, aopt_bingeo))
+        aopt_geo_prefix = "{0}_bin".format(model['name'])
+        os.mkdir(os.path.join(output_directory, aopt_geo_prefix))
 
         infile  = os.path.join(model['input_path'], model['input'])
         outfile = os.path.join(output_directory, model['output'])
@@ -581,12 +581,24 @@ def convert_model(input_file, options=None):
         ### maybe useing argparse to reconstruct arguments
         ### http://stackoverflow.com/questions/14823363/is-it-possible-to-reconstruct-a-command-line-with-pythons-argparse
         ### however, probably would make it less straight forward
-        aopt_bingeo_param = bundle_config.get(TASK_CONFIG_SECTION, 'aopt.binGeoParams')
+
+        aopt_geo_output = bundle_config.get(TASK_CONFIG_SECTION, 'aopt.geoOutput')
+        
+        aopt_geo_param = bundle_config.get(TASK_CONFIG_SECTION, 'aopt.geoParams')
         # validation check not really necessary, since all combinations are possible and invalid ones are just ignored...
-        aopt_bingeo_valid = ['sa', 'sac', 'sacp']
-        if not aopt_bingeo_param in aopt_bingeo_valid:
-            logger.warning("AOPT binGeo param {0} invalid, useing default 'sa'".format(aopt_bingeo_param))
-            aopt_bingeo_param = 'sa'   
+        aopt_geo_valid = ['sa', 'sac', 'sacp']
+        if not aopt_geo_param in aopt_geo_valid:
+            logger.warning("AOPT binGeo param {0} invalid, useing default 'sa'".format(aopt_geo_param))
+            aopt_geo_param = 'sa'   
+
+        # set output mode
+        if aopt_geo_output == 'pop':
+            aopt_geo_switch = '-K' # POP
+        if aopt_geo_output == 'lod':
+            aopt_geo_switch = '-L' # BitLOD
+        else:  # assume binary
+            aopt_geo_switch = '-G' # binary
+
 
         aopt_gencam = bundle_config.getboolean(TASK_CONFIG_SECTION, 'aopt.genCam')
         aopt_flatten_graph =  bundle_config.getboolean(TASK_CONFIG_SECTION, 'aopt.flattenGraph')        
@@ -611,8 +623,8 @@ def convert_model(input_file, options=None):
         if aopt_gencam:
             aopt_cmd.append('-V')
         
-        aopt_cmd.append('-G')
-        aopt_cmd.append(aopt_bingeo + '/:' + aopt_bingeo_param)
+        aopt_cmd.append(aopt_geo_switch)
+        aopt_cmd.append(aopt_geo_prefix + '/:' + aopt_geo_param)
         
         aopt_cmd.append('-x')
         aopt_cmd.append(outfile)
