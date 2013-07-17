@@ -594,8 +594,6 @@ def convert_model(input_file, options=None):
         # set output mode
         if aopt_geo_output == 'pop':
             aopt_geo_switch = '-K' # POP
-        if aopt_geo_output == 'lod':
-            aopt_geo_switch = '-L' # BitLOD
         else:  # assume binary
             aopt_geo_switch = '-G' # binary
 
