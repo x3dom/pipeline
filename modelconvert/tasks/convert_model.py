@@ -586,10 +586,10 @@ def convert_model(input_file, options=None):
         
         aopt_geo_param = bundle_config.get(TASK_CONFIG_SECTION, 'aopt.geoParams')
         # validation check not really necessary, since all combinations are possible and invalid ones are just ignored...
-        aopt_geo_valid = ['sa', 'sac', 'sacp']
+        aopt_geo_valid = ['sa', 'sac', 'sacp', 'i']
         if not aopt_geo_param in aopt_geo_valid:
             logger.warning("AOPT binGeo param {0} invalid, useing default 'sa'".format(aopt_geo_param))
-            aopt_geo_param = 'sa'   
+            #aopt_geo_param = 'sa'   
 
         # set output mode
         if aopt_geo_output == 'pop':

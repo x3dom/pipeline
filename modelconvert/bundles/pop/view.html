@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% block title %}Model: {{ model.name }} {% endblock %}
+{% block content %}
+
+
+    <div class="uiTransparent" id="statsWidget" style="right:4px; top:4px;">
+        <form class="uiHalfTransparent section" >
+
+            <!-- Statistics-->
+            <div class="uiTransparent" title="Statistics">Statistics</div>
+            <div id="statistics" class="uiTransparent" >
+
+                <!-- FPS -->
+                <div class="setting" id="fpsSetting" title="Frames per Second">
+                    <div id="FPS" style="font-size: 1.5em; ">
+                    </div>
+                </div>
+
+                <!-- rendered triangles -->
+                <div class="setting" id="renderedTriangles" title="Amount of triangles currently rendered and total">
+                    <div class="settingName">Rendered Triangles</div>
+                    <div class="settingControlFullSize">
+                        <div id="renderedTrianglesPB" class="progress triangles" ><span></span></div>
+                    </div>
+                </div>
+                
+            </div>
+        </form>
+
+        <form class="uiHalfTransparent section">
+            <!-- interaction -->
+            <div class="uiTransparent" title="Interaction">Interaction</div>
+            <div id="interaction" class="uiTransparent" >
+               
+               <!-- Error Bound-->                
+                <div class="setting" id="errorBoundSetting" >
+                    <div class="settingName" id="ebTitle">Error Bound (Pixels): 1</div>
+                    <div class="settingControlFullSize">
+                        <div id="errorBoundSlider"></div>
+                    </div>
+                </div>
+                
+                <!-- Interaction Factor-->
+                <div class="setting" id="interactionFactorSetting" >
+                    <div class="settingName" id="ifTitle">Interaction Factor: 1</div>
+                    <div class="settingControlFullSize">
+                        <div id="interactionFactorSlider"></div>
+                    </div>
+                </div>
+                
+                <!-- Render Mode-->
+                <div class="setting" id="renderMode" title="Render mode settings">
+                    <div class="settingName" id="renderModeRadio">Render Mode</div>
+                    <div class="settingControlFullSize">
+                        <input type="radio" name="rendermode" id="renderPointsButton"><label for="renderPointsButton" class="roundBorders">Points</label></input>
+                        <input type="radio" name="rendermode" id="renderTrianglesButton" checked><label for="renderTrianglesButton" class="roundBorders">Faces</label></input>
+                        <input type="radio" name="rendermode" id="renderLODButton"><label for="renderLODButton" class="roundBorders">LOD</label></input>
+                    </div>
+                </div>
+             
+                <div class="setting">
+                    <!-- reset View -->
+                    <button id="rvButton" title="reset camera to initial position">Reset View</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div id='HUDs_Div'> 
+      <div id='X3DOM_AOPT_Links' class='group' style='margin:2px; margin-top:26px; padding:4px; background-color:rgba(199,202,204,.7); position:absolute; float:center; z-index:1000;'> 
+        <a href='http://www.x3dom.org'>X3DOM </a> output created with <a href='http://www.instantreality.org'>InstantReality </a> aopt tool using <a href="http://github.org/x3dom/pipeline/">pipeline</a>. 
+      </div>      
+    </div>    
+    <x3d id='x3dElement' swfpath="static/x3dom.swf" showStat='false' showLog='false' style='width:100%; height:100%; border:0; margin:0; padding:0;'>
+      <scene>
+        <navigationInfo headlight='false'></navigationInfo>
+        <background skyColor="0 0 0"></background>
+        <viewpoint position='-690.69000 195.58000 2285.00557' centerOfRotation='-661.14 176.21 -74.67'></viewpoint>
+        <directionalLight DEF='KEY_LIGHT'  color='0.9 0.9 1.0' direction='-0.7 -0.7 -0.3' intensity='1.0'></directionalLight>
+        <directionalLight DEF='FILL_LIGHT' color='0.9 0.7 0.4' direction='0.7   0.7 -0.3' intensity='0.9'></directionalLight>
+        <directionalLight DEF='BACK_LIGHT' color='1.0 0.9 0.0' direction='0.0   0.7  0.7' intensity='0.4'></directionalLight>
+        <transform translation='-750 -600 -150' rotation='1 0 0 1.57'>
+            <shape>
+                <appearance>
+                    <material diffuseColor="0 0 0"  specularColor="0.1 0.1 0.1" emissiveColor='.25 .25 .25'></material>
+                    <imageTexture url='static/img/disc_text80.png' ></imageTexture>
+                </appearance>
+                <plane solid="false" size='1200 1200' subdivision='10 10'></plane>
+            </shape>
+        </transform>
+        <inline DEF='LUCY' url='{{ model.inline }}' mapDEFToID='true' nameSpaceName='model'></inline>
+      </scene>
+    </x3d>
+
+
+{% endblock %}

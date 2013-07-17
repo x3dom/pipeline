@@ -1,6 +1,6 @@
 # defaults for convert_model task
 [task:modelconvert.tasks.convert_model]
-# output can be pop,lod,default is bin
+# output can be pop or bin
 aopt.geoOutput=bin
 aopt.geoParams=sacp
 aopt.genCam=true

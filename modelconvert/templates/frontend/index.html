@@ -8,6 +8,7 @@
     <h4>Convert your 3D model into X3DOM compatible HTML5 <br>and share it over the web.</h4>
 </div>
 
+
 <form action="{{ url_for('frontend.upload') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
     {% with messages = get_flashed_messages(with_categories=True) %}
         {% if messages %}
@@ -19,6 +20,35 @@
             {% endfor %}
           {% endif %}
     {% endwith %}
+
+    <fieldset>
+        <legend>Select a template</legend>
+        <label class="radio">
+            <input type="radio" name="template" value="basic" id="radio-basic" checked> Basic Viewer
+        </label>
+        <label class="radio">
+            <input type="radio" name="template" value="standard" id="radio-standard"> Standard Viewer
+        </label>
+        <label class="radio">
+            <input type="radio" name="template" value="fullsize" id="radio-fullsize"> Fullsize Viewer
+        </label>
+        <label class="radio">
+            <input type="radio" name="template" value="metadata" id="radio-meta"> Metadata Browser <small>(xml metadata)</small>
+        </label>
+        <label class="radio">
+            <input type="radio" name="template" value="radianceScaling" id="radio-radiance"> Radiance Scaling
+        </label>
+        <label class="radio">
+            <input type="radio" name="template" value="cadViewer" id="radio-cad"> CAD Viewer
+        </label>
+        <label class="radio">
+            <input type="radio" name="template" value="walkthrough" id="radio-walkthrough"> Walk Through
+        </label>
+        <label class="radio">
+            <input type="radio" name="template" value="pop" id="radio-pop"> POP Geometry
+        </label>
+    </fieldset>
+
 
     <fieldset>
         <legend>Upload your 3D model <a class="toggler" data-toggle-on="Hide help" data-toggle-off="Show help" href="#file_help">Show help</a></legend>
@@ -130,31 +160,6 @@ my_models.zip:
         </label>
 
     </fieldset> 
-
-    <fieldset>
-        <legend>Select a template</legend>
-        <label class="radio">
-            <input type="radio" name="template" value="basic" id="radio-basic" checked> Basic Viewer
-        </label>
-        <label class="radio">
-            <input type="radio" name="template" value="standard" id="radio-standard"> Standard Viewer
-        </label>
-        <label class="radio">
-            <input type="radio" name="template" value="fullsize" id="radio-fullsize"> Fullsize Viewer
-        </label>
-        <label class="radio">
-            <input type="radio" name="template" value="metadata" id="radio-meta"> Metadata Browser <small>(xml metadata)</small>
-        </label>
-        <label class="radio">
-            <input type="radio" name="template" value="radianceScaling" id="radio-radiance"> Radiance Scaling
-        </label>
-        <label class="radio">
-            <input type="radio" name="template" value="cadViewer" id="radio-cad"> CAD Viewer
-        </label>
-        <label class="radio">
-            <input type="radio" name="template" value="walkthrough" id="radio-walkthrough"> Walk Through
-        </label>
-    </fieldset>
 
     <fieldset id="meta-upload">
         <legend>Upload a metadata file</legend>
