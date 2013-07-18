@@ -220,30 +220,10 @@ createGui = function()
     
     // render mode
     $("#renderMode").buttonset();
-    $("#renderMode").change(function()
-        {
-            //console.log("toggle render");            
-            if ($("#renderMode :radio:checked")[0].id === "renderLODButton") {
-                used_tf_texture = document.createElement('ImageTexture');
-                used_tf_texture.setAttribute('id', 'model__TF_TEX');
-                used_tf_texture.setAttribute('DEF', 'TF_TEX');
-                //used_tf_texture.setAttribute('USE', 'TF_TEX');
-                used_tf_texture.setAttribute('url', 'static/img/transferFunc_Levels.png');
-                $("#model__LUCY_APP")[0].appendChild(used_tf_texture);
-            }
-            else {
-                //@todo: make it work ...
-                
-                //remove transfer function texture, if used
-                var used_tf_texture = $("#USED_TF_TEX")[0];
-                if (typeof used_tf_texture != 'undefined') {
-                    $("#model__LUCY_APP")[0].removeChild(used_tf_texture);
-//x3dom.debug.usePrecisionLevelAsTexCoord = false;
-                }
-                
-                x3dElement.runtime.togglePoints();
-            }
-        });
+    $("#renderMode").change(function() {
+            x3dElement.runtime.togglePoints();
+        }
+    );
 
     //show all Button
     //$( "#saButton" )

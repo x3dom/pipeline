@@ -9,6 +9,7 @@
     <meta name="keywords" content="">
     <meta name="index" content="follow">
     <meta name="revisit-after" content="2 days">
+
     <title>{% block title %}Pipeline - POP Geometry template{% endblock %}</title>
     
     <link rel='stylesheet' href='static/x3dom.css' type='text/css' charset="utf-8"></link>
@@ -26,17 +27,14 @@
     <script type="text/javascript" src="static/js/settings.js"></script>
     <script type="text/javascript" src="static/js/ui.js"></script>
     <script>
-        x3dom.nodeTypes.PopGeometry.ErrorToleranceFactor = 4;
-    </script>
-    <script>
         // LOD LUT HACK
         //x3dom.debug.usePrecisionLevelAsTexCoord = true;
     </script>
 
     {% block extrahead %} {% endblock %}
 </head>
-<body>
-<div class="container">
+<body style="width:100%; height:100%">
+<div class="container" style="width:100%; height:100%">
 {% block content %}
 {% endblock %}
 </div>

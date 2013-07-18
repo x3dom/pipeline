@@ -115,16 +115,16 @@ label.ui-button.ui-corner-left.roundBorders
 {
     -moz-border-radius-topleft: 8px; -webkit-border-top-left-radius: 8px; -khtml-border-top-left-radius: 8px; border-top-left-radius: 8px;
     -moz-border-radius-bottomleft: 8px; -webkit-border-bottom-left-radius: 8px; -khtml-border-bottom-left-radius: 8px; border-bottom-left-radius: 8px;
-    margin-right: -7px;
-    width: 60px;
+    margin-right: -5px;
+    width: 90px;
 }
 /*button rechts abgerundet*/
 label.ui-button.ui-corner-right.roundBorders
 {
     -moz-border-radius-topright: 8px; -webkit-border-top-right-radius: 8px; -khtml-border-top-right-radius: 8px; border-top-right-radius: 8px;
     -moz-border-radius-bottomright: 8px; -webkit-border-bottom-right-radius: 8px; -khtml-border-bottom-right-radius: 8px; border-bottom-right-radius: 8px;
-    margin-left: -7px;
-    width: 60px;
+    margin-left: 0px;
+    width: 90px;
 }
 
 /*slider handle*/
