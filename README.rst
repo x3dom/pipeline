@@ -7,7 +7,7 @@ sharing service. It allows optimization and conversion
 of 3D models for Web presentation and sharing these
 models on the web.
 
-.. image:: https://github.com/x3dom/pipeline/raw/master/design/modelconvert.jpg
+.. image:: https://github.com/x3dom/pipeline/raw/master/docs/_images/modelconvert.jpg
     :alt: Modelconvert Screenshots
 
 
