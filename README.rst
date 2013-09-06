@@ -726,6 +726,16 @@ to drop, re-arrange, merge, and reword commits, e.g.:
     git rebase -i upstream/master
 
 
+
+============
+Publications
+============
+The following publications describe this system further:
+
+
+K. Wilkosinska, A. Aderhold, H. Graf, and Y. Jung, *“Towards a common implementa- tion framework for online virtual museums” in *Proceedings HCI International 2013:* DUXU, Part II, ser. LNCS, A. Marcus, Ed., vol. 8013. Heidelberg: Springer, 2013, pp. 321–330. `Online. <http://link.springer.com/chapter/10.1007%2F978-3-642-39241-2_36>`_
+
+
 ================
 Acknowledgements
 ================
