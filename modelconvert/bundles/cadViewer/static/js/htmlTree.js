@@ -338,8 +338,6 @@ var htmlTree = function () {
             // show a node in the x3d scene graph by setting its render flag to true
             var id = getX3dIdFromTreeId(data.rslt.obj);
             x3dTree.setX3dRenderShow(document.getElementById(id));
-
-            //document.getElementById(id).setVisibility(true);
 		});
 
 		tree.bind("uncheck_node.jstree", function (event, data) {
@@ -349,9 +347,6 @@ var htmlTree = function () {
             var id = getX3dIdFromTreeId(data.rslt.obj);
             //x3dTree.setX3dRender(false, id);
             x3dTree.setX3dRenderHide(document.getElementById(id));
-
-            //document.getElementById(id).setVisibility(false);
-
 		});
 
 		jQuery("#switchViewTreeSlider").bind("change", function () {
@@ -363,7 +358,6 @@ var htmlTree = function () {
 			jQuery('#tree ul:first').attr("id", "treeList");
 			MYAPP.tree.check_all();
 			jstreeJqmInit();
-
 		});
 
 	};
