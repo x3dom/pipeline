@@ -8,6 +8,10 @@ PYTHONWARNINGS="d"
 DOWNLOAD_PATH=/vagrant/tmp/downloads
 UPLOAD_PATH=/vagrant/tmp/uploads
 
+# this acticates email sending feature
+DEFAULT_MAIL_SENDER="test@localhost"
+MAIL_PORT="1025"
+
 # 256MB POST/PUT limit for dev box, for big models
 # note loading from URI does not have this limitation
 # chunked upload is preferred

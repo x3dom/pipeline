@@ -127,6 +127,9 @@ cd $_CWD
 # ----------------------------------------------------------------------
 pip install -r https://raw.github.com/x3dom/pipeline/master/requirements.txt
 
+# honcho's nasty jinija pinning: need to downgrade jinja
+pip install honcho --upgrade
+
 cat >/home/vagrant/develop <<EOM
 #!/bin/bash
 HOME=`pwd`
@@ -137,8 +140,8 @@ exec honcho -d /vagrant -e /vagrant/share/provisioning/development/Env -f /vagra
 # I don't know why but it does not terminate all celery workers
 # on Ubuntu. So we kill em all.
 
-kill -9 $(pidof python)
-cd $HOME
+kill -9 \$(pidof python)
+cd \$HOME
 EOM
 
 chmod a+x /home/vagrant/develop

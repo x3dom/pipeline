@@ -14,5 +14,8 @@
 celery: python manage.py celeryworker 
 web: python manage.py runserver --threaded 
 
+# uncomment this line to use SMTP dummy server
+#smtp: sudo python -m smtpd -n -c DebuggingServer localhost:25
+
 # use this line istead, to allow outside access to your dev box
 #web: python manage.py runserver --threaded --host=0.0.0.0
