@@ -1,15 +1,16 @@
-Flask==0.9
-Flask-Script==0.5.3
+Flask==0.10.1
+Flask-Script==0.6.2
+Flask-Mail==0.9.0
 redis==2.7.2
 
 celery==3.0.17
 #.23/.24 is broken
 billiard==2.7.3.25
 
-requests==1.2
+requests==2.0.0
 
 # wgsi server used with circus deployment
-chaussette==0.8
+chaussette==1.0
 gevent==0.13.8
 
 # optional to manage celery queues
@@ -18,8 +19,9 @@ Flower
 # 
 # Used on dev box only
 #
-Fabric
-honcho
+Fabric==1.8.0
+honcho==0.4.2
+
 
 # future
 #Flask-WTF==0.8

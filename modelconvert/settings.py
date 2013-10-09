@@ -66,6 +66,21 @@ The following variables can currentluy be configured via environment:
                         with an application context.
                         default: none
     
+    DEFAULT_MAIL_SENDER Email address From field for outgoing emails. This 
+                        setting also controls wether the mail features is active
+                        or not. You need to change the default to another value
+                        in order to acticate it. This is a temporary security measure.
+                        default: noreply@localhost
+
+    MAIL_SERVER         The SMTP server, default: localhost
+    MAIL_PORT           The STMP port, default: 25
+    MAIL_USE_TLS        Use TLS auth, default: False
+    MAIL_USE_SSL        Use SSL auth, default: False
+    MAIL_USERNAME       Mailserver username, default: ""
+    MAIL_PASSWORD       Mailserver password, default: ""
+
+
+
     MAX_CONTENT_LENGTH  File upload limit in bytes. Caution: the default is very
                         loose. If a POST or PUT request exeeds this limit
                         a http 413 is returned. Tweak this to your needs but 
@@ -145,6 +160,15 @@ SECRET_KEY = env_var('SECRET_KEY', '\xa9!\xea\xe9(\xd4\xae\x1c\xfb!8\x0c\xa4\xf1
 # as env var and converts it to a frozen set
 ADMINS = env_var('ADMINS', 'root@localhost', 
                  lambda x: frozenset(x.replace(' ', '').split(',')))
+
+
+MAIL_SERVER = env_var("MAIL_SERVER", "localhost")
+MAIL_PORT = env_var('MAIL_PORT', "25")
+MAIL_USE_TLS = env_var('MAIL_USE_TLS', False)
+MAIL_USE_SSL = env_var('MAIL_USE_SSL', False)
+MAIL_USERNAME = env_var('MAIL_USERNAME', "")
+MAIL_PASSWORD = env_var('MAIL_PASSWORD', "")
+DEFAULT_MAIL_SENDER = env_var('DEFAULT_MAIL_SENDER', "noreply@localhost")
 
 MAX_CONTENT_LENGTH = int(env_var('MAX_CONTENT_LENGTH', 128 * 1024 * 1024)) # 16Meg upload limit
 

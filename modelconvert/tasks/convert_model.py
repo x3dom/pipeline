@@ -26,7 +26,11 @@ import subprocess
 import zipfile
 import datetime
 
+import flask
 from flask import current_app
+
+from flask.ext.mail import Mail, Message
+
 from celery import current_task
 from celery.utils.log import get_task_logger
 
@@ -37,6 +41,7 @@ from jinja2 import Environment, FileSystemLoader, TemplateNotFound
 from modelconvert import security
 from modelconvert.extensions import celery, red
 from modelconvert.utils import compression, fs
+
 
 class ConversionError(Exception):
     pass
@@ -119,9 +124,10 @@ def convert_model(input_file, options=None):
     # alternative template
     template = options.get('template', 'basic')
 
+    email_to = options.get('email_to', None)
+    
     # copy metadata to output dir if present
     meta_filename = options.get('meta_filename', None)
-
 
     # get the filename without extension 
     # i.e. /path/tp/foo.obj     -> foo
@@ -715,15 +721,41 @@ def convert_model(input_file, options=None):
         if os.path.exists(upload_directory):
             shutil.rmtree(upload_directory)
 
-    update_progress("Done")
     
+
+
+
     # import time
     # time.sleep(10)
+
+    # hah: hackish as hell
 
     if len(models_to_convert) > 1:
         preview = 'list.html'
     else:
         preview = models_to_convert[0]['preview']
+
+
+    # send mail if any
+    # email address nees to be trusted, no checks are made
+    if email_to:
+        update_progress("Sending email")
+        mail = Mail(current_app)
+        msg = Message(
+            subject="Your models are ready",
+            recipients=[email_to],
+            sender=current_app.config['DEFAULT_MAIL_SENDER']
+        )
+        msg.body = "Preview: {0}\nDownload:{1}".format(
+            flask.url_for('frontend.preview', _external=True, hash=hash, filename=preview),
+            flask.url_for('frontend.download', _external=True, hash=hash, filename='%s.zip' % hash)
+        )
+        mail.send(msg)
+
+    update_progress("Done")
+
+
+
 
     result_set = dict(
         hash = hash,

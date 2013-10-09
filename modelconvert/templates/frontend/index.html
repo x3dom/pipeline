@@ -169,15 +169,16 @@ my_models.zip:
     </fieldset>  
     
 
+    {% if not config['DEFAULT_MAIL_SENDER'] == 'noreply@localhost' %}
     <fieldset>
         <legend>Notification</legend>
         <div class="grouping">
             <p>Enter your email address here and we will notify you when the conversion is complete.</p>
-            <input type="text" name="notification_email" maxlength="254" placeholder="your@email.com">
+            <input type="text" name="email_to" maxlength="254" placeholder="your@email.com">
             <span class="help-block">Leave as is if you don't want an email.</span>
         </div>
     </fieldset>
-
+    {% endif %}
 
     <fieldset>
         <legend>Start sharing</legend>

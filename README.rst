@@ -67,9 +67,9 @@ System requirements:
  * On Unix/Linux a xvfb framebuffer or a running X11 instance
 
 
------------------------
-The quick and easy path
------------------------
+--------------------------------------------------------
+The quick and easy path (if everything works as planned)
+--------------------------------------------------------
 We provide a method of boostrapping a complete development environment in a
 virtual machine. This is done using four different open source tools you need 
 to install first on your system:
@@ -535,6 +535,20 @@ SERVER_NAME             The name and port number of the server.
                         URL generation without a request context but 
                         with an application context.
                         default: none
+
+DEFAULT_MAIL_SENDER     Email address From field for outgoing emails. This 
+                        setting also controls wether the mail features is active
+                        or not. You need to change the default to another value
+                        in order to acticate it. This is a temporary security measure.
+                        default: noreply@localhost
+
+MAIL_SERVER             The SMTP server, default: localhost
+MAIL_PORT               The STMP port, default: 25
+MAIL_USE_TLS            Use TLS auth, default: False
+MAIL_USE_SSL            Use SSL auth, default: False
+MAIL_USERNAME           Mailserver username, default: "" (empty)
+MAIL_PASSWORD           Mailserver password, default: "" (empty)
+
 
 MAX_CONTENT_LENGTH      File upload limit in bytes. Caution: the default is very
                         loose. If a POST or PUT request exeeds this limit
