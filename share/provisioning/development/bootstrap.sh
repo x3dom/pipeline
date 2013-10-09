@@ -61,6 +61,7 @@ apt-get -y install nginx
 apt-get -y install nodejs
 apt-get -y install python-setuptools
 apt-get -y install python-dev
+apt-get -y install libevent-dev
 easy_install pip
 
 # ----------------------------------------------------------------------
