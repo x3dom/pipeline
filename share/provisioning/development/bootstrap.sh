@@ -96,16 +96,16 @@ mkdir -p /opt/build
 # get meshlab from svn
 if [ -d "/opt/build/meshlab/.svn" ] ; then
     cd /opt/build/meshlab/src
-    svn update
+    svn update -r 4880 
 else
-    svn co https://svn.code.sf.net/p/meshlab/code/trunk/meshlab/ /opt/build/meshlab
+    svn co -r 6131 https://svn.code.sf.net/p/meshlab/code/trunk/meshlab/ /opt/build/meshlab
 fi
 
 if [ -d "/opt/build/vcglib/.svn" ] ; then
     cd /opt/build/vcglib
-    svn update
+    svn update -r 4880 
 else
-    svn co https://svn.code.sf.net/p/vcg/code/trunk/vcglib/ /opt/build/vcglib
+    svn co -r 4880 https://svn.code.sf.net/p/vcg/code/trunk/vcglib/ /opt/build/vcglib
 fi
 
 
