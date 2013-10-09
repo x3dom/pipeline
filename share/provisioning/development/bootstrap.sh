@@ -69,10 +69,10 @@ easy_install pip
 
 # instant
 # TODO: ftp list and get latest file > 30MB
-IR_BUILD="InstantReality-Ubuntu-12.04-x86-2.2.0.24948.deb"
+IR_BUILD="InstantReality-Ubuntu-12.04-x86-2.2.0.24979.deb"
 #IR_BUILD="InstantReality-Ubuntu-12.04-x64-2.2.0.24953.deb"
 
-wget --directory=/tmp http://x3dom.org/temp/$IR_BUILD
+wget --directory=/tmp http://x3dom.org/temp/IR/$IR_BUILD
 #wget --directory=/tmp ftp://ftp.igd.fraunhofer.de/irbuild/Ubuntu-i686/InstantReality-Ubuntu-10.04-x86-2.2.0.24944.deb
 dpkg -i /tmp/$IR_BUILD
 rm /tmp/$IR_BUILD
@@ -97,14 +97,14 @@ if [ -d "/opt/build/meshlab/.svn" ] ; then
     cd /opt/build/meshlab/src
     svn update
 else
-    svn co https://meshlab.svn.sourceforge.net/svnroot/meshlab/trunk/meshlab /opt/build/meshlab
+    svn co https://svn.code.sf.net/p/meshlab/code/trunk/meshlab/ /opt/build/meshlab
 fi
 
 if [ -d "/opt/build/vcglib/.svn" ] ; then
     cd /opt/build/vcglib
     svn update
 else
-    svn co https://vcg.svn.sourceforge.net/svnroot/vcg/trunk/vcglib /opt/build/vcglib
+    svn co https://svn.code.sf.net/p/vcg/code/trunk/vcglib/ /opt/build/vcglib
 fi
 
 
