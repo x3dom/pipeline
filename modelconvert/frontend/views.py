@@ -147,14 +147,14 @@ def upload():
                 return render_template('frontend/index.html')
 
 
- #       if email_to:
+        if email_to:
             # we need to add at least captcha system to protect from 
             # spammers, for now setting the sender env var enables the
             # email system, use with care behind pw protected 
- #           if current_app.config['DEFAULT_MAIL_SENDER'] == 'noreply@localhost':
- #               options.update(email_to=None)
- #           else:
- #               options.update(email_to=email_to)
+            if current_app.config['DEFAULT_MAIL_SENDER'] == 'noreply@localhost':
+                options.update(email_to=None)
+            else:
+                options.update(email_to=email_to)
 
        
         if meshlab:

@@ -71,6 +71,8 @@ easy_install pip
 # instant
 # TODO: ftp list and get latest file > 30MB
 IR_BUILD="InstantReality-Ubuntu-12.04-x86-2.2.0.24979.deb"
+
+#IR_BUILD="InstantReality-Ubuntu-12.04-x86-2.3.0.25550.deb"
 #IR_BUILD="InstantReality-Ubuntu-12.04-x64-2.2.0.24953.deb"
 
 wget --directory=/tmp http://x3dom.org/temp/IR/$IR_BUILD

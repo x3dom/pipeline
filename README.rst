@@ -746,6 +746,11 @@ Publications
 ============
 The following publications describe this system further:
 
+* A. Aderhold, Y. Jung, K. Wilkosinska, D. Fellner, "Distributed 3D model 
+  optimization for the Web with the Common Implementation Framework for 
+  Online Virutal Museums" in *Proceedings Digital Hertiage 
+  Conference 2013*, t.b.p.
+
 * K. Wilkosinska, A. Aderhold, H. Graf, and Y. Jung, "Towards a common 
   implementation framework for online virtual museums" in *Proceedings HCI 
   International 2013:* DUXU, Part II, ser. LNCS, A. Marcus, Ed., 
@@ -757,7 +762,7 @@ The following publications describe this system further:
 Acknowledgements
 ================
 
-The described work was carried out in the project v-must, which has received 
+Portions of the this work was carried out in the project v-must, which has received 
 funding from the European Community's Seventh Framework Programme (FP7 2007/2013) 
 under grant agreement 270404.
 
