@@ -98,7 +98,7 @@ mkdir -p /opt/build
 # get meshlab from svn
 if [ -d "/opt/build/meshlab/.svn" ] ; then
     cd /opt/build/meshlab/src
-    svn update -r 4880 
+    svn update -r 6131 
 else
     svn co -r 6131 https://svn.code.sf.net/p/meshlab/code/trunk/meshlab/ /opt/build/meshlab
 fi
