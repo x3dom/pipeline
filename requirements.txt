@@ -9,8 +9,14 @@ billiard==2.7.3.25
 
 requests==2.0.0
 
+jinja2==2.7
+
 # wgsi server used with circus deployment
 chaussette==1.0
+
+# if gevent doesn't build due to missing deps to libevent call this on OSX:
+# sudo port install libevent
+# CFLAGS="-I /opt/local/include -L /opt/local/lib" pip install gevent
 gevent==0.13.8
 
 # optional to manage celery queues
