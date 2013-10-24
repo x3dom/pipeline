@@ -5,20 +5,17 @@ import os
 
 from fabric.api import run, cd, execute, task, sudo, local, env
 
-
 # Note, this file is specific for the modelconvert.x3dom server
 # Don't change this. If you want to deploy elsewhere you need
 # to create your own fabfile, specific to your environment
 
 # the user to use for the remote commands
-env.user = 'local'
-
+env.user = 'localadmin'
 
 # the servers where the commands are executed
-env.hosts = ['x3dom.org']
+env.hosts = ['pipeline.v-must.net']
 
-env.APP_ROOT = '/var/www/modelconvert/modelconvert'
-
+env.APP_ROOT = '/home/localadmin/app/pipeline'
 
 
 # expects the app to be cloned once there manually
@@ -26,16 +23,14 @@ env.APP_ROOT = '/var/www/modelconvert/modelconvert'
 @task
 def deploy():
     """
-    Deploys the code on the production server (x3dom.org)
+    Deploys the code on the production server
     """
 #    local('git push')
     with cd(env.APP_ROOT):
         run('git fetch origin; git reset --hard origin/master')
 #        run('python -c "import compileall; compileall.compile_dir(\'.\')"')
         run('touch modelconvert/wsgi.py')
-        sudo('/etc/init.d/apache2 restart', pty=False)
-        sudo('supervisorctl restart celery', pty=False)
-#        sudo('circusctl restart webapp')
+        run('circusctl restart webapp')
 
 @task
 def bootstrap():
