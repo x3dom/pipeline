@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from flask import Flask, render_template
+from flask import (Flask, render_template, request, jsonify)
 
 import jinja2
 
@@ -47,9 +47,19 @@ def create_app():
     def forbidden_page(error):
         return render_template("403.html"), 403
 
+    # FIXME adapt this for json requests http://flask.pocoo.org/snippets/83/
     @app.errorhandler(404)
     def page_not_found(error):
-        return render_template("404.html"), 404
+        if request.headers['Content-Type'] == 'application/json':
+            message = {
+                'status': 404,
+                'detail': 'Not Found: ' + request.url,
+            }
+            resp = jsonify(message)
+            resp.status_code = 404
+            return resp       
+        else:
+            return render_template("404.html"), 404
 
     @app.errorhandler(500)
     def server_error_page(error):
