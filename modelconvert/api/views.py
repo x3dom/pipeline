@@ -54,12 +54,12 @@ def list_bundles():
     #     return Response('', status=415, mimetype='application/json')
 
 
-@api.route('/v1/job', methods=['POST'])
+@api.route('/v1/jobs', methods=['POST'])
 def process():
     pass
 
 
-@api.route('/v1/job/<task_id>', methods=['GET'])
+@api.route('/v1/jobs/<task_id>', methods=['GET'])
 def task_status(task_id):
     """ 
     Check status of a specific job.
