@@ -43,14 +43,15 @@ def list_bundles():
             'description': 'POP geometry template',
         }
     ])
-    
-    if request.headers['Content-Type'] == 'application/json':
-        resp = jsonify(data)
-        resp.status_code = 200
-        return resp
-    else:
-        return Response('', status=415, mimetype='application/json')
 
+    resp = jsonify(data)
+    return resp
+    
+    # only used for put/post
+    # if request.json:
+    #     pass
+    # else:
+    #     return Response('', status=415, mimetype='application/json')
 
 
 @api.route('/v1/job', methods=['POST'])
