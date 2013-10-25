@@ -40,12 +40,13 @@ uniform float bgPrecisionColMax;
 void main() {
 	vec3 pos = bgCenter + bgSize * position / bgPrecisionMax;
 	fragNormal = normal / bgPrecisionNorMax;
+	// doesn't work if no vertex colors are given
 	fragColor = vec4(color / bgPrecisionColMax, 1.0);
 
 	fragLightAmbient    = light0_Color * light0_AmbientIntensity;
 	fragLightIntensity  = light0_Color * light0_Intensity;
-	fragMatDiffuse      = vec3(1.0);	// need to be read from the material but is not supplied in this model
-	fragMatSpecular     = vec3(1.0);	// need to be read from the material but is not supplied in this model
+	fragMatDiffuse      = vec3(0.9);	// need to be read from the material but is not supplied in this model
+	fragMatSpecular     = vec3(0.7);	// need to be read from the material but is not supplied in this model
 
 	vec3 posEC = (modelViewMatrix * vec4(pos, 1.0)).xyz;
 	fragEyeVec = -posEC;
