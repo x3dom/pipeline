@@ -23,7 +23,7 @@ def stream(channel):
 
 
 
-@api.route('/v1/bundles/', methods= ['GET'])
+@api.route('/v1/bundles', methods= ['GET'])
 def list_bundles():
 
     # just for testing, replace with dynamic lookup    
@@ -31,7 +31,7 @@ def list_bundles():
         count=2,
         next=None,
         prev=None,
-        results=[
+        bundles=[
         {
             'name': 'standard',
             'display_name': 'Standard',
@@ -53,12 +53,12 @@ def list_bundles():
 
 
 
-@api.route('/v1/job/', methods=['POST'])
+@api.route('/v1/job', methods=['POST'])
 def process():
     pass
 
 
-@api.route('/v1/job/<task_id>/', methods=['GET'])
+@api.route('/v1/job/<task_id>', methods=['GET'])
 def task_status(task_id):
     """ 
     Check status of a specific job.
