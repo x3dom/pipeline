@@ -1,6 +1,4 @@
-#ifdef GL_ES
-	precision highp float;
-#endif
+precision highp float;
 
 varying vec3 fragEyeVec;
 varying vec3 fragLightVec;

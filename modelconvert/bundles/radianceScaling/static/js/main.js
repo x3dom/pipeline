@@ -103,20 +103,23 @@ function modifyX3DModel() {
  * @param app: Appearance to be replaced
  * @param shapes: Shapes that are necessary for the Rendered Texture of the new Radiance Scaling Appearance
  */
-function renewAppRadianceScaling(app){
+function renewAppRadianceScaling(app) {
     var rt = jQuery('                                                                                                   \
         <RenderedTexture id="test" DEF="fieldRenderedTex" update="ALWAYS" dimensions="1024 1024 4" repeatS="false" repeatT="false" showNormals="true">    \
             <Viewpoint USE="scene__vp" containerField="viewpoint"></Viewpoint>                                          \
             <Transform USE="scene__sunGeo" containerField="excludeNodes"></Transform>                                   \
         </RenderedTexture>                                                                                              \
     ');
+    
+    var vertexColor = hasVertexColor() ? "1.0" : "0.0";
 
     var cs = jQuery('<ComposedShader DEF="ComposedShader"> </ComposedShader> ');
     cs.append(jQuery('                                                                                                  \
+         <field id="fieldUseColors" name="fieldUseColors" type="SFFloat" value="' + vertexColor + '"></field>           \
          <field id="fieldSpecularPower" name="fieldSpecularPower" type="SFFloat" value="1.0"></field>                   \
          <field id="fieldAlpha" name="fieldAlpha" type="SFFloat" value="0"></field>                                     \
          <field id="fieldGamma" name="fieldGamma" type="SFFloat" value="0"></field>                                     \
-         <field name="tex" type="SFInt32" value="0"></field>                                               \
+         <field name="tex" type="SFInt32" value="0"></field>                                                            \
                                                                                                                         \
          <ShaderPart type="VERTEX" url="' + MYAPP.path.shader + 'radianceScalingMainVertexShader.glsl"> </ShaderPart>   \
          <ShaderPart type="FRAGMENT" url="' + MYAPP.path.shader +'radianceScalingMainFragmentShader.glsl"> </ShaderPart>\
@@ -137,6 +140,19 @@ function getFirstAppearance() {
     var inline = $("#x3DomInline");
     var shapes = inline.find('Shape');
     return shapes.first().find("Appearance");
+}
+
+// assumes that geo is BinaryGeometry
+function hasVertexColor() {
+    var inline = $("#x3DomInline");
+    var shapes = inline.find('Shape');
+    var bg = shapes.first().find("BinaryGeometry");
+    if (bg) {
+        var color = bg.attr("color");
+        if (color && color.length > 0)
+            return true;
+    }
+    return false;
 }
 
 

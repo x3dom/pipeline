@@ -37,11 +37,17 @@ uniform float bgPrecisionMax;
 uniform float bgPrecisionNorMax;
 uniform float bgPrecisionColMax;
 
+uniform float fieldUseColors;
+
 void main() {
 	vec3 pos = bgCenter + bgSize * position / bgPrecisionMax;
 	fragNormal = normal / bgPrecisionNorMax;
-	// doesn't work if no vertex colors are given
-	fragColor = vec4(color / bgPrecisionColMax, 1.0);
+	if (fieldUseColors == 1.0) {
+	  fragColor = vec4(color / bgPrecisionColMax, 1.0);
+  }
+  else {
+	  fragColor = vec4(0.7, 0.7, 0.7, 1.0);
+  }
 
 	fragLightAmbient    = light0_Color * light0_AmbientIntensity;
 	fragLightIntensity  = light0_Color * light0_Intensity;
