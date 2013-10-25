@@ -24,3 +24,4 @@ logs/
 uploads/
 tmp/
 Procfile
+docs/_build
