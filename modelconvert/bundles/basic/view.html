@@ -14,19 +14,13 @@
               <td>Navigation Mode:
               </td> 
               <td align='right'> 
-                <select style='float:right;' onchange='if (this.selectedIndex !== undefined) { var e = document.getElementById(&apos;x3d_main&apos;); if (this.options[this.selectedIndex].value === &apos;examine&apos;) { e.runtime.examine(); } else if (this.options[this.selectedIndex].value === &apos;lookat&apos;) { e.runtime.lookAt(); } else if (this.options[this.selectedIndex].value === &apos;walk&apos;) { e.runtime.walk(); } else if (this.options[this.selectedIndex].value === &apos;fly&apos;) { e.runtime.fly(); } else if (this.options[this.selectedIndex].value === &apos;helicopter&apos;) { e.runtime.helicopter(); } else if (this.options[this.selectedIndex].value === &apos;none&apos;) { e.runtime.noNav(); } }'> 
-                  <option value='examine'>Examine
-                  </option> 
-                  <option value='lookat'>LookAt
-                  </option> 
-                  <option value='walk'>Walk
-                  </option> 
-                  <option value='fly'>Fly
-                  </option> 
-                  <option value='helicopter'>Helicopter
-                  </option> 
-                  <option value='none'>None
-                  </option> 
+                <select style='float:right;' onchange="document.getElementById('x3d_main').runtime[value]();"> 
+                  <option value='examine'>Examine</option> 
+                  <option value='lookAt'>Lookat</option> 
+                  <option value='walk'>Walk</option> 
+                  <option value='fly'>Fly</option> 
+                  <option value='helicopter'>Helicopter</option> 
+                  <option value='noNav'>None</option>
                 </select> 
               </td> 
             </tr> 
@@ -34,19 +28,19 @@
               <td>Debug Display:
               </td> 
               <td align='right'> 
-                <input type='checkbox' onclick='if (this.checked) { document.getElementById(&apos;x3d_main&apos;).runtime.statistics(true); } else { document.getElementById(&apos;x3d_main&apos;).runtime.statistics(false); }'> 
+                <input type='checkbox' onclick="document.getElementById('x3d_main').runtime.statistics(this.checked);"> 
                 </input> Stats 
-                <input type='checkbox' onclick='document.getElementById(&apos;x3d_main&apos;).runtime.debug();'> 
+                <input type='checkbox' onclick="document.getElementById('x3d_main').runtime.debug();"> 
                 </input> Log 
               </td> 
             </tr> 
             <tr> 
               <td> 
-                <button class="btn" onclick='document.getElementById(&apos;x3d_main&apos;).runtime.showAll();'> Show Everything
+                <button class="btn" onclick="document.getElementById('x3d_main').runtime.showAll();"> Show Everything
                 </button> 
               </td> 
               <td> 
-                <button class="btn" onclick='document.getElementById(&apos;x3d_main&apos;).runtime.resetView();'> Reset View
+                <button class="btn" onclick="document.getElementById('x3d_main').runtime.resetView();"> Reset View
                 </button> 
               </td> 
             </tr> 
@@ -54,22 +48,20 @@
         </fieldset> 
       </div> 
       
-
       <div class='group'> 
         <h1>Model: {{ model.input }}</h1> 
-        <p>Output created with the <a href="http://github.com/x3dom/pipeline">Modelconvert</a> pipeline using <a href="http://instantreality.org">InstantReality</a> and <a href="http://meshlab.sourceforge.net/">MeshLab</a>.</p> 
+        <p>Output created with the <a href="http://github.com/x3dom/pipeline">Modelconvert</a> pipeline using 
+            <a href="http://instantreality.org">InstantReality</a> and 
+            <a href="http://meshlab.sourceforge.net/">MeshLab</a>.</p> 
          <p>See <a href="list.html">all converted models</a>.</p> 
       </div> 
 
-
     </div>
-
 
     <x3d id='x3d_main' swfpath="static/x3dom.swf" showStat='false' showLog='false' style='width:95%;height:500px;'>
       <scene id='scene'>
         <inline id="x3d_main_inline" nameSpaceName="inline" mapDEFToID="true" url="{{ model.inline }}"></inline>
       </scene>
-     </x3d>
-
+    </x3d>
 
 {% endblock %}
