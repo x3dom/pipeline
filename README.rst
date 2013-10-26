@@ -26,6 +26,7 @@ Modelconvert is written in Python, and under the hood it uses the excellent
     :depth: 2
     :backlinks: none
 
+Check out the official `docs`_ for more (still in progress).
 
 =============
 Main Features
@@ -770,6 +771,7 @@ Icons by `Glyphish`_
 
 
 .. _Flask: http://flask.pocoo.org
+.. _docs: http://pipeline.rtfd.org
 .. _Celery: http://celeryproject.org
 .. _Meshlab: http://meshlab.sourceforge.net
 .. _InstantReality: http://instantreality.org
