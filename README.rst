@@ -14,6 +14,7 @@ models on the web.
 Modelconvert is written in Python, and under the hood it uses the excellent
 `Flask`_ and `Celery`_ libraries as well as `Meshlab`_ and `InstantReality`_
 
+Check out the official `docs`_ for more (still in progress).
 
 .. image:: https://secure.travis-ci.org/x3dom/pipeline.png
     :target: https://travis-ci.org/x3dom/pipeline
@@ -26,7 +27,6 @@ Modelconvert is written in Python, and under the hood it uses the excellent
     :depth: 2
     :backlinks: none
 
-Check out the official `docs`_ for more (still in progress).
 
 =============
 Main Features
