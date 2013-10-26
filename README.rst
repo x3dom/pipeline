@@ -77,7 +77,7 @@ to install first on your system:
   * `VirtualBox`_, a virtualization software 
   * `Vagrant`_ , a virtualization software manager
   * `Git`_, a source control system to get the code
-  * a SSH client in your PATH (on Unix systems this is usually installed)
+  * a SSH client in your PATH (on Unix systems this is usually installed, Windows users: `PuTTY`_)
 
 After installing these components on your system you need to drop to the
 command line and issue the following commands. Make sure you have a 
@@ -778,6 +778,7 @@ Icons by `Glyphish`_
 .. _pip: http://pypi.python.org/pypi/pip
 .. _Python: http://python.org
 .. _Redis: http://redis.io
+.. _PuTTY: http://www.putty.org/
 .. _Virtualbox: https://www.virtualbox.org/
 .. _Vagrant: http://vagrantup.com
 .. _nightly build: http://www.instantreality.org/downloads/dailybuild/
