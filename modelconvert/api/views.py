@@ -33,15 +33,45 @@ def list_bundles():
         prev=None,
         bundles=[
         {
-            'name': 'standard',
-            'display_name': 'Standard',
-            'description': 'Basic standard output tempalte',
+            'name': 'modelconvert.bundles.basic',
+            'display_name': 'Basic',
+            'description': 'Basic viewer application',
         },
         {
-            'name': 'pop',
+            'name': 'modelconvert.bundles.standard',
+            'display_name': 'Standard',
+            'description': 'Standard viewer application',
+        },
+        {
+            'name': 'modelconvert.bundles.cadviewer',
+            'display_name': 'CAD Viewer',
+            'description': 'CAD Viewer application',
+        },
+        {
+            'name': 'modelconvert.bundles.fullsize',
+            'display_name': 'Fullsize',
+            'description': 'Fullsize viewer',
+        },
+        {
+            'name': 'modelconvert.bundles.metadata',
+            'display_name': 'Metadata',
+            'description': 'Metadata viewer',
+        },
+        {
+            'name': 'modelconvert.bundles.pop',
             'display_name': 'POP Geometry',
             'description': 'POP geometry template',
-        }
+        },
+        {
+            'name': 'modelconvert.bundles.radiancescaling',
+            'display_name': 'Radiance Scaling',
+            'description': 'Radiance Scaling viewer',
+        },
+        {
+            'name': 'modelconvert.bundles.walkthrough',
+            'display_name': 'Walkthrough',
+            'description': 'Walkthrough viewer',
+        },
     ])
 
     resp = jsonify(data)
@@ -55,12 +85,22 @@ def list_bundles():
 
 
 @api.route('/v1/jobs', methods=['POST'])
-def process():
-    pass
+def add_job():
+    
+    if not request.json:
+        return Response('', status=415, mimetype='application/json')
+
+    data = request.json
+
+    # get data, check and store upload in tempdir
+    # download if from URI
+    # kick off processing
+    # return response with taskID and status URI
+
 
 
 @api.route('/v1/jobs/<task_id>', methods=['GET'])
-def task_status(task_id):
+def job_status(task_id):
     """ 
     Check status of a specific job.
     Note that currently this maps to a Celery Task ID. Later it will
@@ -79,6 +119,8 @@ def task_status(task_id):
     resp = jsonify(status=status_code, results=result.state)
     resp.status_code = status_code
     return resp
+
+
 
 
 # @api.route("/ping")
