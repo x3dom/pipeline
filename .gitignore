@@ -25,3 +25,4 @@ uploads/
 tmp/
 Procfile
 docs/_build
+docs/build

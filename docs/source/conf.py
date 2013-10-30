@@ -48,7 +48,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'Pipeline'
-copyright = u'2013,'
+copyright = u'2011-2013,'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -71,7 +71,7 @@ release = '0.0.4'
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
-exclude_patterns = ['_build']
+exclude_patterns = []
 
 # The reST default role (used for this markup: `text`) to use for all
 # documents.
