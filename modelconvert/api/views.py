@@ -7,6 +7,18 @@ from modelconvert.extensions import red
 
 api = Blueprint('api', __name__)
 
+@api.route('/v1', methods= ['GET'])
+def api_info():
+    """
+    Get basic API meta information
+    """
+    data = dict(
+        version=1,
+        base_url=request.url,
+    )
+    resp = jsonify(data)
+    return resp
+
 
 # TODO: cleanup pubsub business (json, events, and ids)
 # FIXME: This oviously does not scale, we need to use gevent/tornado
