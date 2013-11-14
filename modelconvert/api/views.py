@@ -40,7 +40,7 @@ def list_bundles():
 
     # just for testing, replace with dynamic lookup    
     data = dict(
-        count=2,
+        count=8,
         next=None,
         prev=None,
         bundles=[
