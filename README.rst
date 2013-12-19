@@ -673,10 +673,10 @@ Publications
 ============
 The following publications describe this system further:
 
-* A. Aderhold, K. Wilkosinska, Y. Jung, D. Fellner, “Distributed 3D model 
-  optimization for the Web with the Common Implementation Framework for 
-  Online Virtual Museums” in Proceedings Digital Heritage 2013, volume 2, 
-  pages 719-726. IEEE & Eurographics.
+* Andreas Aderhold, Yvonne Jung, Katarzyna Wilkosinska, and Dieter W. Fellner. 
+  Distributed 3d model optimization for the web with the common implementation 
+  framework for online virtual museums. In Proceedings Digital Heritage 2013, 
+  volume 2, pages 719-726. IEEE & Eurographics. 
 
 * K. Wilkosinska, A. Aderhold, H. Graf, and Y. Jung, "Towards a common 
   implementation framework for online virtual museums" in *Proceedings HCI 
