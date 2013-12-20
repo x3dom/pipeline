@@ -14,7 +14,7 @@ The API follows an Restful archtictural approach and makes advanced
 use of HTTP verbs and JSON data structures.
 
 In the following documentation the resource URIs are realtive to the 
-service endpoint:
+service endpoint::
 
     http://localhost:5000/api/v1
 
@@ -79,3 +79,44 @@ GET            /stream/<task-id>/                              Live updates of p
                                                                messages. It can be used to display realtime status
                                                                messages.
 ===========   =========================    ==============     ======================================================
+
+
+----------
+POST /jobs
+----------
+
+The POST action is used to insert a new job into the pipeline.
+You need to send JSON data with specific information about the job::
+
+
+    {
+        "payload": {
+            "model": "model data",            // this is of course flawed for larger modles
+            "metadata": "metadata",           // and only for compatiblity
+            "zip": "binary zip contents"  // as long as we don't have users and persistence
+            "url": "http://someurl.to/model.zip",  // alternative to the above
+        },
+
+        // the bundle name to be used for this job
+        // in the future its also possible to override templte specific settings and options
+        "bundle": {
+            "name": "modelconvert.bundles.pop",   // this can also contain a bundle spec and related data
+            "settings": {
+                "aopt.pop": true,
+                "aopt.command": "{command} {input} {output} -what -ever={0} -is -required",
+                "meshlab.enabled": false,
+            }
+        }
+    }
+
+
+-------------------
+GET /jobs/<task-id>
+-------------------
+
+
+
+
+
+
+
