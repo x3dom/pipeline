@@ -37,8 +37,12 @@ def stream(channel):
 
 @api.route('/v1/bundles', methods= ['GET'])
 def list_bundles():
+    """
+    The bundles are still hardcoded. This needs to be rectified in a future
+    version when bundles are self contained python modules which are dynamically
+    loaded.
+    """
 
-    # just for testing, replace with dynamic lookup    
     data = dict(
         count=8,
         next=None,
@@ -98,17 +102,62 @@ def list_bundles():
 
 @api.route('/v1/jobs', methods=['POST'])
 def add_job():
+    """
+    Adding a job to the processing queue by accepting data. The json
+    payload should look like this:
+
+    {
+        "payload": {
+            "model": "model data",            // this is of course flawed for larger modles
+            "metadata": "metadata",           // and only for compatiblity
+            "zip": "binary zip contents"  // as long as we don't have users and persistence
+            "url": "http://someurl.to/model.zip",  // alternative to the above
+        },
+
+        However this is multiply flawed. There should be another resource to
+        add metadata and other resources before starting a job with a associated
+        bucket of resources. For the moment this is ok to show the basic 
+        capability.
+
+        // the bundle name to be used for this job
+        // in the future its also possible to override templte specific settings and options
+        "bundle": {
+            "name": "modelconvert.bundles.pop",   // this can also contain a bundle spec and related data
+            "settings": {
+                "aopt.pop": true,
+                "aopt.command": "{command} {input} {output} -what -ever={0} -is -required",
+                "meshlab.enabled": false,
+            }
+        }
+    }
+
+
+    In return you will get a json response with various data about
+    your request:
+
+    {
+        "status":{
+            "code": 200,
+            "message": "Job accepted with ID 123", // clear text informational message
+        },
+
+        "task_id": 123,
+        "job_url":   "full.host/v1/jobs/123",       // poll URI for checking less frequently for results
+        "progress_url": "full.host/v1/stream/123",  // push URI for status updates
+    }
+    """
     
     if not request.json:
         return Response('', status=415, mimetype='application/json')
 
     data = request.json
 
+
+
     # get data, check and store upload in tempdir
     # download if from URI
     # kick off processing
     # return response with taskID and status URI
-
 
 
 @api.route('/v1/jobs/<task_id>', methods=['GET'])
@@ -121,6 +170,18 @@ def job_status(task_id):
     Note that Celery returns PENDING if the Task ID is non existant.
     This is an optimization and could be recitified like so:
     http://stackoverflow.com/questions/9824172/find-out-whether-celery-task-exists
+
+    When results are ready we provide json data response with:
+    
+    {   
+        "status": {
+            "code": 200,
+            "message": "Conversion ready.",
+        }
+        
+        "download_url":
+        "preview_url:
+    }
     """
     result = tasks.convert_model.AsyncResult(task_id)
     if result.ready() and result.successful():
@@ -130,6 +191,7 @@ def job_status(task_id):
 
     resp = jsonify(status=status_code, results=result.state)
     resp.status_code = status_code
+
     return resp
 
 
