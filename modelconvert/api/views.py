@@ -104,7 +104,9 @@ def list_bundles():
 def add_job():
     """
     Adding a job to the processing queue by accepting data. The json
-    payload should look like this:
+    payload should look like this.
+
+    code-block::
 
     {
         "payload": {
@@ -117,6 +119,18 @@ def add_job():
         },
 
         "email_to": "some@address.com",
+
+        // array of strings representing meshlab filters
+        // or no "meshlab" entry at all if
+        // meshalb pre-processing is not desired
+        "meshlab": [
+            "Remove Duplicate Faces",
+            "Remove Duplicated Vertex",
+            "Remove Zero Area Faces",
+            "Remove Isolated pieces (wrt Face Num.)",
+            "Remove Unreferenced Vertex",
+            "Extract Information"
+        ],
 
         // one out of the list of names you get with /bundles
         "template": "basic",
@@ -132,18 +146,17 @@ def add_job():
         //   }
         // },
 
-        // any combination of those, or no "meshlab" entry at all if
-        // meshalb processing is not desired
-        "meshlab": [
-            "Remove Duplicate Faces",
-            "Remove Duplicated Vertex",
-            "Remove Zero Area Faces",
-            "Remove Isolated pieces (wrt Face Num.)",
-            "Remove Unreferenced Vertex",
-            "Extract Information"
-        ]
     }
 
+    For exmaple a simple payload to convert a single model without meshalb
+    sourced from a URL could look like this::
+
+    {
+        "payload":{ 
+            "url": "http://domain.tld/model.obj" 
+        },
+        "template": "basic",
+    }
 
     In return you will get a json response with various data about
     your request:
@@ -159,10 +172,9 @@ def add_job():
         "job_url":   "full.host/v1/jobs/123",       // poll URI for checking less frequently for results
         "progress_url": "full.host/v1/stream/123",  // push URI for status updates
     }
-    
     """
     
-   if not request.json:
+    if not request.json:
        return Response('', status=415, mimetype='application/json')
 
     options = dict() # options passted to task

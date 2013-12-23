@@ -85,30 +85,73 @@ GET            /stream/<task-id>/                              Live updates of p
 POST /jobs
 ----------
 
-The POST action is used to insert a new job into the pipeline.
-You need to send JSON data with specific information about the job::
-
+Adding a job to the processing queue by accepting data. The json
+payload should look like this::
 
     {
         "payload": {
             "model": "model data",            // this is of course flawed for larger modles
+            "model_format":"obj"
             "metadata": "metadata",           // and only for compatiblity
+            "metadata_format":"xml",
             "zip": "binary zip contents"  // as long as we don't have users and persistence
             "url": "http://someurl.to/model.zip",  // alternative to the above
         },
 
+        "email_to": "some@address.com",
+
+        // array of strings representing meshlab filters
+        // or no "meshlab" entry at all if
+        // meshalb pre-processing is not desired
+        "meshlab": [
+            "Remove Duplicate Faces",
+            "Remove Duplicated Vertex",
+            "Remove Zero Area Faces",
+            "Remove Isolated pieces (wrt Face Num.)",
+            "Remove Unreferenced Vertex",
+            "Extract Information"
+        ],
+
+        // one out of the list of names you get with /bundles
+        "template": "basic",
+
         // the bundle name to be used for this job
-        // in the future its also possible to override templte specific settings and options
-        "bundle": {
-            "name": "modelconvert.bundles.pop",   // this can also contain a bundle spec and related data
-            "settings": {
-                "aopt.pop": true,
-                "aopt.command": "{command} {input} {output} -what -ever={0} -is -required",
-                "meshlab.enabled": false,
-            }
-        }
+        // in the future its also possible to override templte specific settings and options (shown but noop)
+        //"bundle": {
+        //    "name": "modelconvert.bundles.pop",   // this can also contain a bundle spec and related data
+        //    "settings": {
+        //        "aopt.pop": true,
+        //        "aopt.command": "{command} {input} {output} -what -ever={0} -is -required",
+        //        "meshlab.enabled": false,
+        //   }
+        // },
+
     }
 
+For exmaple a simple payload to convert a single model without meshalb
+sourced from a URL could look like this::
+
+    {
+        "payload":{ 
+            "url": "http://domain.tld/model.obj" 
+        },
+        "template": "basic",
+    }
+
+In return you will get a json response with various data about
+your request::
+
+    {
+        "status":{
+            "code": 200,
+            "message": "Job accepted with ID 123", // clear text informational message
+        },
+
+        // in case of successful handling:
+        "task_id": 123,
+        "job_url":   "full.host/v1/jobs/123",       // poll URI for checking less frequently for results
+        "progress_url": "full.host/v1/stream/123",  // push URI for status updates
+    }
 
 -------------------
 GET /jobs/<task-id>
