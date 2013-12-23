@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import tempfile
+
 from flask import (Blueprint, request, redirect, abort, Response, jsonify)
 
 from modelconvert import tasks, security
@@ -143,7 +145,6 @@ def add_job():
         //        "meshlab.enabled": false,
         //   }
         // },
-
     }
 
     For exmaple a simple payload to convert a single model without meshalb
@@ -172,31 +173,68 @@ def add_job():
     }
     """
     
-    if not request.json:
-       return Response('', status=415, mimetype='application/json')
-
     options = dict() # options passted to task
     data = request.json
 
-    if not data and not data['payload'] and not data['payload']['model'] or not data['payload']['url'] or not data['payload']['zip']:
+    if not data or not 'payload' in data:
         resp = jsonify(
             status=dict(
                 code=400, 
-                message="Model data not provided. Either use a URI, data from a model file, or a ZIP package."
+                message="No payload provided.",
+                help="http://pipeline.readthedocs.org/en/latest/api.html"
             )
         )
         resp.status_code = 400 # bad resquest
         return resp
 
-    if data['payload']['url']:
+    if 'url' in data['payload']:
         # handle URL part
         pass
-    else:
-        # handle data in message part
+    if 'zip' in data['payload']:
         pass
 
+    if 'model' in data['payload']:
+            # create a temp file form model and metadata fields
 
-    if data['payload']['email_to']:
+            # copy & pasete from web view
+            # in case of file upload place the uploaded file in a folder
+            # named <uuid>
+            # if file and security.is_allowed_file(file.filename):
+            #     filename = secure_filename(file.filename)
+            #     upload_directory = os.path.join(current_app.config['UPLOAD_PATH'], hash)
+            #     os.mkdir(upload_directory)
+            #     filename = os.path.join(upload_directory, file.filename)
+            #     file.save(filename)
+
+            #     # in case the user uploaded a meta file, store this as well
+            #     # FIXME make sure only processed when valid template selection
+            #     if metadata and not compression.is_archive(filename):
+            #         meta_filename = os.path.join(upload_directory, 'metadata' + os.path.splitext(metadata.filename)[1])
+            #         metadata.save(meta_filename)
+            #         # options for task
+            #         options.update(meta_filename=meta_filename)
+            # # end copy and paste
+
+            # else:
+            #     flash("Please upload a file of the following type: %s" %
+            #         ", ".join(current_app.config['ALLOWED_EXTENSIONS']), 'error')
+            #     return render_template('frontend/index.html')
+
+        pass
+
+    else:
+        resp = jsonify(
+            status=dict(
+                code=400, 
+                message="Model data not provided. Either use a URI, data from a model file, or a ZIP package.",
+                help="http://pipeline.readthedocs.org/en/latest/api.html"
+            )
+        )
+        resp.status_code = 400 # bad resquest
+        return resp
+
+
+    if 'email_to' in data['payload']:
         # we need to add at least captcha system to protect from 
         # spammers, for now setting the sender env var enables the
         # email system, use with care behind pw protected 
@@ -205,10 +243,10 @@ def add_job():
         else:
             options.update(email_to=email_to)
 
-    if data['meshlab']:
+    if 'meshalb' in data:
         options.update(meshlab=data.meshlab)
 
-    if not data['template']:
+    if not 'template' in data:
         options.update(template='basic')
     else:
         options.update(template=data.template)
