@@ -104,9 +104,7 @@ def list_bundles():
 def add_job():
     """
     Adding a job to the processing queue by accepting data. The json
-    payload should look like this.
-
-    code-block::
+    payload should look like this::
 
     {
         "payload": {
@@ -151,12 +149,12 @@ def add_job():
     For exmaple a simple payload to convert a single model without meshalb
     sourced from a URL could look like this::
 
-    {
-        "payload":{ 
-            "url": "http://domain.tld/model.obj" 
-        },
-        "template": "basic",
-    }
+        {
+            "payload":{ 
+                "url": "http://domain.tld/model.obj" 
+            },
+            "template": "basic",
+        }
 
     In return you will get a json response with various data about
     your request:
@@ -231,17 +229,17 @@ def job_status(task_id):
     This is an optimization and could be recitified like so:
     http://stackoverflow.com/questions/9824172/find-out-whether-celery-task-exists
 
-    When results are ready we provide json data response with:
+    When results are ready we provide json data response with::
     
-    {   
-        "status": {
-            "code": 200,
-            "message": "Conversion ready.",
-        }
+        {   
+            "status": {
+                "code": 200,
+                "message": "Conversion ready.",
+            }
         
-        "download_url":
-        "preview_url:
-    }
+            "download_url":"http:/domain.tld/somplace/download.zip",
+            "preview_url": "htt://domain.tld/someplace/index.html",
+        }
     """
     result = tasks.convert_model.AsyncResult(task_id)
     if result.ready() and result.successful():

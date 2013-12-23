@@ -158,8 +158,4 @@ GET /jobs/<task-id>
 -------------------
 
 
-
-
-
-
-
+.. autofunction:: modelconvert.api.views.job_status()
