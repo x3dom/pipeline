@@ -49,42 +49,42 @@ def list_bundles():
         prev=None,
         bundles=[
         {
-            'name': 'modelconvert.bundles.basic',
+            'name': 'basic',
             'display_name': 'Basic',
             'description': 'Basic viewer application',
         },
         {
-            'name': 'modelconvert.bundles.standard',
+            'name': 'standard',
             'display_name': 'Standard',
             'description': 'Standard viewer application',
         },
         {
-            'name': 'modelconvert.bundles.cadviewer',
+            'name': 'cadViewer',
             'display_name': 'CAD Viewer',
             'description': 'CAD Viewer application',
         },
         {
-            'name': 'modelconvert.bundles.fullsize',
+            'name': 'fullsize',
             'display_name': 'Fullsize',
             'description': 'Fullsize viewer',
         },
         {
-            'name': 'modelconvert.bundles.metadata',
+            'name': 'metadata',
             'display_name': 'Metadata',
             'description': 'Metadata viewer',
         },
         {
-            'name': 'modelconvert.bundles.pop',
+            'name': 'pop',
             'display_name': 'POP Geometry',
             'description': 'POP geometry template',
         },
         {
-            'name': 'modelconvert.bundles.radiancescaling',
+            'name': 'radianceScaling',
             'display_name': 'Radiance Scaling',
             'description': 'Radiance Scaling viewer',
         },
         {
-            'name': 'modelconvert.bundles.walkthrough',
+            'name': 'walkthrough',
             'display_name': 'Walkthrough',
             'description': 'Walkthrough viewer',
         },
@@ -109,26 +109,39 @@ def add_job():
     {
         "payload": {
             "model": "model data",            // this is of course flawed for larger modles
+            "model_format":"obj"
             "metadata": "metadata",           // and only for compatiblity
+            "metadata_format":"xml",
             "zip": "binary zip contents"  // as long as we don't have users and persistence
             "url": "http://someurl.to/model.zip",  // alternative to the above
         },
 
-        However this is multiply flawed. There should be another resource to
-        add metadata and other resources before starting a job with a associated
-        bucket of resources. For the moment this is ok to show the basic 
-        capability.
+        "email_to": "some@address.com",
+
+        // one out of the list of names you get with /bundles
+        "template": "basic",
 
         // the bundle name to be used for this job
-        // in the future its also possible to override templte specific settings and options
-        "bundle": {
-            "name": "modelconvert.bundles.pop",   // this can also contain a bundle spec and related data
-            "settings": {
-                "aopt.pop": true,
-                "aopt.command": "{command} {input} {output} -what -ever={0} -is -required",
-                "meshlab.enabled": false,
-            }
-        }
+        // in the future its also possible to override templte specific settings and options (shown but noop)
+        //"bundle": {
+        //    "name": "modelconvert.bundles.pop",   // this can also contain a bundle spec and related data
+        //    "settings": {
+        //        "aopt.pop": true,
+        //        "aopt.command": "{command} {input} {output} -what -ever={0} -is -required",
+        //        "meshlab.enabled": false,
+        //   }
+        // },
+
+        // any combination of those, or no "meshlab" entry at all if
+        // meshalb processing is not desired
+        "meshlab": [
+            "Remove Duplicate Faces",
+            "Remove Duplicated Vertex",
+            "Remove Zero Area Faces",
+            "Remove Isolated pieces (wrt Face Num.)",
+            "Remove Unreferenced Vertex",
+            "Extract Information"
+        ]
     }
 
 
@@ -141,23 +154,58 @@ def add_job():
             "message": "Job accepted with ID 123", // clear text informational message
         },
 
+        // in case of successful handling:
         "task_id": 123,
         "job_url":   "full.host/v1/jobs/123",       // poll URI for checking less frequently for results
         "progress_url": "full.host/v1/stream/123",  // push URI for status updates
     }
+    
     """
     
-    if not request.json:
-        return Response('', status=415, mimetype='application/json')
+   if not request.json:
+       return Response('', status=415, mimetype='application/json')
 
+    options = dict() # options passted to task
     data = request.json
 
+    if not data and not data['payload'] and not data['payload']['model'] or not data['payload']['url'] or not data['payload']['zip']:
+        resp = jsonify(
+            status=dict(
+                code=400, 
+                message="Model data not provided. Either use a URI, data from a model file, or a ZIP package."
+            )
+        )
+        resp.status_code = 400 # bad resquest
+        return resp
+
+    if data['payload']['url']:
+        # handle URL part
+        pass
+    else:
+        # handle data in message part
+        pass
 
 
-    # get data, check and store upload in tempdir
-    # download if from URI
-    # kick off processing
-    # return response with taskID and status URI
+    if data['payload']['email_to']:
+        # we need to add at least captcha system to protect from 
+        # spammers, for now setting the sender env var enables the
+        # email system, use with care behind pw protected 
+        if current_app.config['DEFAULT_MAIL_SENDER'] == 'noreply@localhost':
+            options.update(email_to=None)
+        else:
+            options.update(email_to=email_to)
+
+    if data['meshlab']:
+        options.update(meshlab=data.meshlab)
+
+    if not data['template']:
+        options.update(template='basic')
+    else:
+        options.update(template=data.template)
+
+    #retval = tasks.convert_model.apply_async((filename, options))
+        
+    #return redirect(url_for('frontend.status', task_id=retval.task_id))
 
 
 @api.route('/v1/jobs/<task_id>', methods=['GET'])
