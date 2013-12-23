@@ -1,11 +1,11 @@
 .. _api:
 
 
-========
-REST API
-========
+===
+API
+====
 
-The pipeline can be driven using a restful API through the HTTP protocol.
+The pipeline can be driven through the HTTP protocol using a restful approach.
 It is therefore possible to use the advanced distributed queing system as well
 as the application assembling functionality through 3rd party applications or
 for batch processing.
