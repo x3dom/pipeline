@@ -3,7 +3,7 @@
 
 ===
 API
-====
+===
 
 The pipeline can be driven through the HTTP protocol using a restful approach.
 It is therefore possible to use the advanced distributed queing system as well
