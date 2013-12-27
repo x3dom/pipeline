@@ -2,3 +2,6 @@ include README.rst requirements.txt
 recursive-include modelconvert/templates *
 recursive-include modelconvert/static *
 recursive-include modelconvert/bundles *
+recursive-include modelconvert/api *
+recursive-include modelconvert/frontend *
+recursive-include modelconvert/utils *
