@@ -19,12 +19,14 @@ import os
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 
+sys.path.append(os.path.abspath('_themes'))
+
 on_rtd = os.environ.get('READTHEDOCS', None) == 'True'
 if on_rtd:
-  pass
+  sys.path.insert(0, os.path.abspath('.'))
 else:
   sys.path.insert(0, os.path.abspath('../../../modelconvert'))
-#print sys.path
+
 # -- General configuration ------------------------------------------------
 
 # If your documentation needs a minimal Sphinx version, state it here.
