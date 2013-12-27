@@ -1,3 +1,6 @@
 #!/bin/sh
 
-http POST localhost:5000/api/v1/jobs < fixtures/api_simple_payload.json
+http POST http://localhost:5000/api/v1/payload \
+  Content-Type:application/octet-stream \
+  X-Filename:test.ply \
+  < fixtures/herkules.ply
