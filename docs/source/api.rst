@@ -95,23 +95,24 @@ Basic Workflow
 
 The basic workflow to use the pipeline is as follows:
 
-Drop some files to the server::
+Post a file to the server using a bucket::
 
-    POST <base_uri>/payload
+    POST <base_uri>/buckets
     X-Filename: somefile.ply
     Content-Type: application/octet-stream
 
-You get back a JSON response containing a cleartext message and a payload 
-bucket ID. Save the ID and the filename you used. You can upload a zip file 
+You get back a JSON response containing a cleartext message, a bucket ID and
+the filename of your uploaded date within the bucket. Save the ID and the 
+filename in your application, you will need it later. You can upload a zip file 
 as well.
 
 .. Upload more files using the bucket ID you got back from the first call::
-..     POST <base_uri>/payload/<bucket_id>
+..     POST <base_uri>/buckets/<bucket_id>
 ..     X-Filename: anotherfile.ply
 ..     Content-Type: application/octet-stream
 
 .. note:: For the moment, use a zip file to upload multiple models and/or assets
-    to the server. The POST to a bucketID is not implemented yet.
+    to the server. The POST more files to a existing bucket is not implemented yet.
 
 Get a list of templates to select from::
 
@@ -144,7 +145,7 @@ query the backend about the status of a job::
 
     GET <base_uri>/jobs/123
 
-Don't query the pipeline to often this way (about every 5-10 seconds is 
+Do not query the pipeline to often this way (about every 5-10 seconds is 
 proabably enough). To save transport overhead, you can resport to making a 
 HEAD request only in order to check status. If status is 200 then you
 can issue an addtional request to get the rest of the information.
@@ -167,6 +168,8 @@ information::
 With the download and preview URLs you then can get the completed job
 output and download it or redirect a browser to the preview HTML page.
 
+All URLs returned by the API are absolute, you do not need to keep track
+of base URLs, just use the returend values.
 
 For a detailed and up-to date description of JSON fields and responses, 
 see below.
@@ -229,5 +232,10 @@ POST /jobs
 GET /jobs/<task-id>
 -------------------
 
-
 .. autofunction:: modelconvert.api.views.job_status()
+
+----------------------
+GET /stream/<task-id>/
+----------------------
+
+.. autofunction:: modelconvert.api.views.stream()
