@@ -219,15 +219,12 @@ def add_job():
             "payload": "bucket://1234afdsafdsfdsa232", 
 
             // for the moment you also need to specify the filename you want 
-            // to process UNLESS you uploaded a zip files, in that case, you
-            // must not provide a filename here
             "payload_filename: "herkules.ply"
             
-            // to load from a URI use this instead:
+            // alternatively, to load from a URI use this instead:
             "payload": "http://someplace.zip", 
 
             // all the following are optional:
-
             "email_to": "some@address.com",
 
             // array of strings representing meshlab filters. leave out
@@ -239,7 +236,7 @@ def add_job():
                 "Remove Isolated pieces (wrt Face Num.)",
                 "Remove Unreferenced Vertex",
                 "Extract Information"
-            ],
+            ]
 
             // one out of the list of names you get with /bundles
             // always use the "name" field you get from GET /bundles as the name
@@ -256,7 +253,7 @@ def add_job():
             //        "aopt.command": "{command} {input} {output} -what -ever={0} -is -required",
             //        "meshlab.enabled": false,
             //   }
-            // },
+            // }
         }
 
     For exmaple a simple payload to convert a single model without meshalb
@@ -264,7 +261,7 @@ def add_job():
 
         {
             "payload": "http://domain.tld/model.obj",
-            "template": "basic",
+            "template": "basic"
         }
 
     In return you will get a json response with various data about
