@@ -124,7 +124,7 @@ Add a job to the processing queue and start it::
     POST <base_uri>/jobs
     {
         "payload": "bucket://<bucket_id>",
-        "payload_filename": "herkules.ply"
+        "payload_filename": "herkules.ply",
         "template": "basic"
     }
 
@@ -133,7 +133,7 @@ You will get back more information about this job::
     {
         "task_id": "123",
         "job_url":   "full.host/v1/jobs/123",       
-        "progress_url": "full.host/v1/stream/123",  
+        "progress_url": "full.host/v1/stream/123"
     }
 
 The most imporant information is the ``job_url`` which is used to freuqently 
@@ -155,7 +155,7 @@ information::
 
     {   
         "download_url":"http:/domain.tld/somplace/download.zip",
-        "preview_url": "htt://domain.tld/someplace/index.html",
+        "preview_url": "htt://domain.tld/someplace/index.html"
     }
 
 With the download and preview URLs you then can get the completed job
