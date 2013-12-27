@@ -142,9 +142,12 @@ query the backend about the status of a job::
     GET <base_uri>/jobs/123
 
 Don't query the pipeline to often this way (about every 5-10 seconds is 
-proabably enough). 
-Use the ``progress_url`` to get realtime-push messages about
-the status. This URL implements the EventSource push protocol.
+proabably enough). To save transport overhead, you can resport to making a 
+HEAD request only in order to check status. If status is 200 then you
+can issue an addtional request to get the rest of the information.
+
+Additionally you can make use of the ``progress_url`` to get realtime-push 
+messages about the status. This URL implements the EventSource push protocol.
 
 .. warning:: Do not use the push messages to determine if the conversion is complete 
     as they are not relieable enougth to do so.

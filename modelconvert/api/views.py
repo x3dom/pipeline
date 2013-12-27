@@ -7,7 +7,7 @@ import urlparse
 import werkzeug
 import requests
 
-from flask import (Blueprint, request, redirect, abort, Response, jsonify, current_app)
+from flask import (Blueprint, request, redirect, abort, Response, jsonify, current_app, url_for)
 
 from modelconvert import tasks, security
 
@@ -389,8 +389,8 @@ def add_job():
     resp = jsonify(
         message="Task added sucessfully.",
         task_id=retval.task_id,
-        job_url='',
-        progress_url='',
+        job_url=url_for('.job_status', _external=True, task_id=retval.task_id),
+        progress_url=url_for('.stream', _external=True, channel=retval.task_id)
     )
     resp.status_code = 200 # ok
     return resp
@@ -417,20 +417,31 @@ def job_status(task_id):
         }
     """
     result = tasks.convert_model.AsyncResult(task_id)
-    if result.ready() and result.successful():
-        status_code = 200
+
+    if result.failed():
+        current_app.logger.error("Conversion failed. {0}".format(result.info))
+        resp = jsonify(
+            message="Conversion failed. {0}".format(result.info),
+            state=result.state,
+        )
+        status_code = 500
+
+    elif result.ready() and result.successful():
+        filenames = result.info['filenames']
+        hash = result.info['hash']
         resp = jsonify(
             message="Conversion Ready.",
             state=result.state,
-            download_url ='',
-            preview_url =''
+            download_url=url_for('frontend.download', _external=True, hash=hash, filename=filenames[1]),
+            preview_url =url_for('frontend.preview', _external=True, hash=hash, filename=filenames[0])
         )
+        status_code = 200
 
     else:
         resp = jsonify(
             message="Conversion in progress",
             state=result.state,
-            progress_url=''
+            progress_url=url_for('.stream', _external=True, channel=task_id)
         )
         status_code = 102
 
