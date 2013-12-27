@@ -673,10 +673,15 @@ Publications
 ============
 The following publications describe this system further:
 
+* Andreas Aderhold, Massimiliano Corsini, Katarzyna Wilkosinska, Yvonne Jung and
+  Holger Graf. The Common Implementation Framework as Service – Towards 
+  Novel Applications for Streamlined Presentation of 3D Content on the Web.
+  in *Proceedings HCI International 2014:* DUXU. Accepted, too be published.
+
 * Andreas Aderhold, Yvonne Jung, Katarzyna Wilkosinska, and Dieter W. Fellner. 
   Distributed 3d model optimization for the web with the common implementation 
-  framework for online virtual museums. In Proceedings Digital Heritage 2013, 
-  volume 2, pages 719-726. IEEE & Eurographics. 
+  framework for online virtual museums. In *Proceedings Digital Heritage 2013, 
+  volume 2, pages 719-726.* IEEE & Eurographics. 
 
 * K. Wilkosinska, A. Aderhold, H. Graf, and Y. Jung, "Towards a common 
   implementation framework for online virtual museums" in *Proceedings HCI 
