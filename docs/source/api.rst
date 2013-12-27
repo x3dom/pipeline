@@ -49,14 +49,16 @@ Payloads and Buckets
 ~~~~~~~~~~~~~~~~~~~~
 
 In order to process some uploaded files by the pipeline the files need
-to be stored in the first place. We achieve this by using upload buckets
-Think of a bucket as of a remote upload floder you can drop files to.
+to be stored somewhere in the first place. We achieve this by providing upload 
+buckets. Think of a bucket as of a remote upload floder you can drop files to.
+Much similar to a S3 bucket, but much more temporary and entirely managed by 
+the pipeline service.
 
-A payload instead consists of a on or a entire set of files which are used
-as input payload for the pipeline. Currently the API recognizes two different
-payloads: buckets and http URLs. In order to distinguish the input payload
-type, we use the URI scheme. For example to feed the pipeline with the 
-contents of a payload bucket, the corrcet way to tell this the API is::
+A payload forms the input set of files to be fed to the pipeline. Currently 
+the API recognizes two different payloads types: buckets and http URLs. 
+In order to distinguish the input payload type, we use the URI scheme. 
+For example to feed the pipeline with the contents of a payload bucket, the 
+corrcet way to tell this the API is::
 
     bucket://<bucket_id>
 
@@ -71,10 +73,10 @@ and other parts e.g.::
     http://domain.tld/some/model.ply
 
 
-The storage medium can be completely transparent. In the future it's planned
-to add more storage backends to the system like Amazon S3, Glacier,
-SVN, WebDAV, Hadoop, etc. For the time being only HTTP and bucket:// 
-resources are workig.
+The storage backend can be completely transparent. In the future it is 
+planned to add more storage backends to the system like Amazon S3, Glacier,
+SVN, WebDAV, Hadoop, etc. For the time being only HTTP and pipeline managed
+buckets are working.
 
 
 ~~~~
@@ -82,7 +84,8 @@ Jobs
 ~~~~
 Jobs kick off the pipleline processing and bundle all relevant information
 as well as provide a interface for interacting with a current processing job.
-For exmaple get status information, pause, delete or restart a job.
+For exmaple get status information, pause, delete or restart a job. Jobs 
+are excuted asynchronously and distributed by the Celery queue system.
 
 
 
@@ -178,10 +181,10 @@ Overview
 ===========   =========================    =================     ==========================================================
 GET            /                            200                   API version, help URL and other relevant information
 GET            /bundles                     200                   Returns a JSON formatted list of application bundles
-POST           /payloads                    200,500,420,415       Upload a file to the server
-GET            /payloads                    200,404               NOOP: A list of payload buckets so far
-GET            /payloads/<bucket-id>        200,404               NOOP: A list of files in the bucket with the resp. ID
-POST           /payloads/<bucket-id>        ^ + 404               NOOP: Upload another file to a specific resource bucket
+POST           /buckets                     200,500,420,415       Upload a file to the server which creates a bucket
+GET            /buckets                     200,404               NOOP: A list of payload buckets so far
+GET            /buckets/<bucket-id>         200,404               NOOP: A list of files in the bucket with the resp. ID
+POST           /buckets/<bucket-id>         ^ + 404               NOOP: Upload another file to a specific resource bucket
                                                                   (noop as of yet)
 GET            /jobs                        200,404               Returns a list of jobs, 404 if no jobs are found
 POST           /jobs                        200,                  Add a new job to the queuing system. By default
@@ -205,15 +208,15 @@ GET            /stream/<task-id>/                                 Live updates o
 
 
 -------------
-POST /payload
+POST /buckets
 -------------
-.. autofunction:: modelconvert.api.views.drop_payload()
+.. autofunction:: modelconvert.api.views.add_bucket()
 
 
 -------------------------
-POST /payload/<bucket_id>
+POST /buckets/<bucket_id>
 -------------------------
-.. autofunction:: modelconvert.api.views.add_to_payload()
+.. autofunction:: modelconvert.api.views.add_to_bucket()
 
 
 ----------

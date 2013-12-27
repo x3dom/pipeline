@@ -40,8 +40,13 @@ def event_stream(channel):
     for message in pubsub.listen():
         yield 'retry: 3000\ndata: %s\n\n' % message['data']
 
+
 @api.route('/v1/stream/<channel>/')
 def stream(channel):
+    """
+    Push EventSource formatted messages to the client. This can be used
+    to display real-time status information.
+    """
     return Response(event_stream(channel), mimetype="text/event-stream")
 
 
@@ -49,7 +54,7 @@ def stream(channel):
 @api.route('/v1/bundles', methods= ['GET'])
 def list_bundles():
     """
-    The bundles are still hardcoded. This needs to be rectified in a future
+    The bundles are still hardcoded at this time. This needs to be rectified in a future
     version when bundles are self contained python modules which are dynamically
     loaded.
     """
@@ -111,13 +116,13 @@ def list_bundles():
     #     return Response('', status=415, mimetype='application/json')
 
 
-@api.route('/v1/payload', methods=['POST'])
-def drop_payload():
+@api.route('/v1/buckets', methods=['POST'])
+def add_bucket():
     """
     This methods allows for uploading arbitrary files to the server
     which later are used for processing::
 
-        POST /payloads
+        POST /buckets
 
     The HTTP request requires a filename header to identify the file::
 
@@ -134,17 +139,8 @@ def drop_payload():
     want to upload other assets to the bucket which are name dependent
     (for exmaple when using the metadata template).
 
-    After successful upload, a payload_bucket ID is returned which is 
-    then used in the POST /jobs call to start off processing of the
-    bucket.
-
-    Additionally with the use of this id it is possible to upload 
-    multiple files to the same bucket sequentially. e.g.::
-
-        POST /payloads/id123/
-
-    This feature is not yet implemented. For the moment, if you like
-    to upload multiple files to the same bucket, please use a ZIP file.
+    After successful upload, a bucket ID among with a status message and
+    the filename under which the data is stored within he bucket.
     """
     
     # create a UUID like hash for temporary file storage (bucket id)
@@ -169,6 +165,7 @@ def drop_payload():
         
     if security.is_allowed_file(filename):
         filename = werkzeug.secure_filename(filename)
+        ofilename = filename
         upload_directory = os.path.join(current_app.config['UPLOAD_PATH'], hash)
         os.mkdir(upload_directory)
         filename = os.path.join(upload_directory, filename)
@@ -180,6 +177,7 @@ def drop_payload():
             resp = jsonify(
                 message="Payload dropped sucessfully",
                 bucket_id=hash,
+                filename=ofilename,
             )
             resp.status_code = 200 # ok
             return resp
@@ -197,10 +195,19 @@ def drop_payload():
 
 
 
-@api.route('/v1/payload/<bucket_id>', methods=['POST'])
-def add_to_payload(bucket_id=None):
+@api.route('/v1/buckets/<bucket_id>', methods=['POST'])
+def add_to_bucket(bucket_id=None):
     """
     Not implemented yet.
+
+    Additionally with the use of this id it is possible to upload 
+    multiple files to the same bucket sequentially. e.g.::
+
+        POST /buckets/id123
+
+    This feature is not yet implemented. For the moment, if you like
+    to upload multiple files to the same bucket, please use a ZIP file.
+
     """
     resp = jsonify(message="This functionality is not implemented yet. Please upload a ZIP file with all files you need.")
     resp.status_code = 501 # not impl.
