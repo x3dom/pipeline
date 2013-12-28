@@ -40,6 +40,7 @@ Main Features
 * Asynchronous process
 * Server-Sent Events for fast status updates
 * Upload archives with many models and textures at once
+* New RESTful HTTP `API`_
 
 And soon:
 
@@ -627,7 +628,7 @@ Contributing
 Developing patches should follow this workflow:
 
     1. Fork on GitHub (click Fork button)
-    2. Clone to computer: ``git clone git@github.com:«github account»/x3dom/pipeline.git modelconvert``
+    2. Clone to computer: ``git clone git@github.com:«github account»/x3dom/pipeline.git pipeline``
     3. cd into your repo: ``cd x3dom``
     4. Set up remote upstream: ``git remote add -f upstream git://github.com/x3dom/pipeline.git``
     5. Create a branch for the new feature: ``git checkout -b my_new_feature``
@@ -683,9 +684,9 @@ The following publications describe this system further:
   framework for online virtual museums. In *Proceedings Digital Heritage 2013, 
   volume 2, pages 719-726.* IEEE & Eurographics. 
 
-* K. Wilkosinska, A. Aderhold, H. Graf, and Y. Jung, "Towards a common 
-  implementation framework for online virtual museums" in *Proceedings HCI 
-  International 2013:* DUXU, Part II, ser. LNCS, A. Marcus, Ed., 
+* Katarzyna Wilkosinska, Andreas Aderhold, Holger Graf, and Yvonne Jung, 
+  "Towards a common implementation framework for online virtual museums" 
+  in *Proceedings HCI International 2013:* DUXU, Part II, ser. LNCS, A. Marcus, Ed., 
   vol. 8013. Heidelberg: Springer, 2013, pp. 321–330. 
   `Online. <http://link.springer.com/chapter/10.1007%2F978-3-642-39241-2_36>`_
 
@@ -694,13 +695,14 @@ The following publications describe this system further:
 Acknowledgements
 ================
 
-Portions of the this work was carried out in the project v-must, which has received 
+Portions of the this work have been carried out in the project v-must, which has received 
 funding from the European Community's Seventh Framework Programme (FP7 2007/2013) 
 under grant agreement 270404.
 
 Icons by `Glyphish`_
 
 
+.. _API: http://pipeline.readthedocs.org/en/latest/api.html
 .. _Flask: http://flask.pocoo.org
 .. _docs: http://pipeline.rtfd.org
 .. _Celery: http://celeryproject.org
