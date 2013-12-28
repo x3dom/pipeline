@@ -24,7 +24,7 @@ network installation.
 ------
 Basics
 ------
-Pipeline REST requests are HTTP requests as defined per `RFC 2616<http://www.ietf.org/rfc/rfc2616.txt>`_.
+Pipeline REST requests are HTTP requests as defined per `RFC 2616 <http://www.ietf.org/rfc/rfc2616.txt>`_.
 A typical REST action consists of sending an HTTP request to the Pipeline and 
 waiting for the response. Like any HTTP request, a REST request to the Pipeline
 system contains a request method, a URI, request headers, and maybe a 
