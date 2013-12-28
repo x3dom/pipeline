@@ -4,7 +4,6 @@
 ===
 API
 ===
-
 The pipeline can be driven through the HTTP protocol using a restful approach.
 It is therefore possible to use the advanced distributed queing system as well
 as the application assembling functionality through 3rd party applications or
@@ -25,13 +24,22 @@ network installation.
 ------
 Basics
 ------
-To acceess the API you need to send a properly encoded HTTP request to the 
-service endpoint. The encoding of the request neesd to be UTF-8 and the 
-mimetype needs to be set to ``application/json``. You can use the cURL tool
-to test your requests, e.g::
+Pipeline REST requests are HTTP requests as defined per `RFC 2616<http://www.ietf.org/rfc/rfc2616.txt>`_.
+A typical REST action consists of sending an HTTP request to the Pipeline and 
+waiting for the response. Like any HTTP request, a REST request to the Pipeline
+system contains a request method, a URI, request headers, and maybe a 
+query string or request body. The response contains an HTTP status code, 
+response headers, and maybe a response body.
+
+To acceess the Pipeline through the API you need to send a properly encoded 
+HTTP request to the service endpoint. The encoding of the request neesd to be 
+UTF-8 and the mimetype needs to be set to ``application/json`` or sometimes
+``application/octet-stream``. You can use  the cURL tool to test your 
+requests, e.g::
 
     curl -H "Content-type: application/json" -X GET \
         http://localhost:5000/api/v1/bundles
+
 
 ~~~~~~~~~
 Resources
