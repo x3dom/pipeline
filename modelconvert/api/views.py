@@ -179,7 +179,7 @@ def add_bucket():
                 bucket_id=hash,
                 filename=ofilename,
             )
-            resp.status_code = 200 # ok
+            resp.status_code = 201 # created
             return resp
         except IOError:
             current_app.logger.error("Can not save {0}. Abort.".format(filename))
@@ -396,7 +396,7 @@ def add_job():
         job_url=url_for('.job_status', _external=True, task_id=retval.task_id),
         progress_url=url_for('.stream', _external=True, channel=retval.task_id)
     )
-    resp.status_code = 200 # ok
+    resp.status_code = 201 # created
     return resp
 
 

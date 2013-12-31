@@ -192,13 +192,13 @@ Overview
 ===========   =========================    =================     ==========================================================
 GET            /                            200                   API version, help URL and other relevant information
 GET            /bundles                     200                   Returns a JSON formatted list of application bundles
-POST           /buckets                     200,500,420,415       Upload a file to the server which creates a bucket
 GET            /buckets                     200,404               NOOP: A list of payload buckets so far
+POST           /buckets                     201,500,420,415       Upload a file to the server which creates a bucket
 GET            /buckets/<bucket-id>         200,404               NOOP: A list of files in the bucket with the resp. ID
-POST           /buckets/<bucket-id>         ^ + 404               NOOP: Upload another file to a specific resource bucket
+POST           /buckets/<bucket-id>         ^ + 201, 404          NOOP: Upload another file to a specific resource bucket
                                                                   (noop as of yet)
 GET            /jobs                        200,404               Returns a list of jobs, 404 if no jobs are found
-POST           /jobs                        200,                  Add a new job to the queuing system. By default
+POST           /jobs                        201,400,416,403       Add a new job to the queuing system. By default
                                                                   processing starts immediately.
 GET            /jobs/<task-id>              200, 102              Returns status of a job with given GUID. Will return 
                                                                   HTTP status code 102 if the job can't be found or is 
