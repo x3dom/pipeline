@@ -342,8 +342,8 @@ def add_job():
                 os.mkdir(upload_directory)
                 filename = os.path.join(upload_directory, filename)
 
-                with open(filename, "wb") as data:
-                    data.write(r.content)
+                with open(filename, "wb") as fdata:
+                    fdata.write(r.content)
 
                 options.update(hash=hash)
         else:
@@ -369,7 +369,7 @@ def add_job():
         return resp
 
     
-    if 'email_to' in data['payload']:
+    if 'email_to' in data:
         # we need to add at least captcha system to protect from 
         # spammers, for now setting the sender env var enables the
         # email system, use with care behind pw protected 
