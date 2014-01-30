@@ -16,3 +16,6 @@ MAIL_PORT="1025"
 # note loading from URI does not have this limitation
 # chunked upload is preferred
 MAX_CONTENT_LENGTH=268435456
+
+# allow loading from all hosts in development
+ALLOWED_DOWNLOAD_HOSTS="*"
