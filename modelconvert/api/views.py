@@ -384,7 +384,7 @@ def add_job():
     if not 'template' in data:
         options.update(template='basic')
     else:
-        options.update(template=data.template)
+        options.update(template=data['template'])
 
   
 
