@@ -182,6 +182,7 @@ def convert_model(input_file, options=None):
 
     meshlab_log = bundle_config.getboolean(TASK_CONFIG_SECTION, 'meshlab.log')
     aopt_log = bundle_config.getboolean(TASK_CONFIG_SECTION, 'aopt.log')
+    #nexus_log = bundle_config.getboolean(TASK_CONFIG_SECTION, 'nexus.log')
 
 
     # {{{ ZIPFILES
@@ -451,8 +452,8 @@ def convert_model(input_file, options=None):
     logger.info("Working directory: {0}".format(working_directory) )
     logger.info("Aopt binary: {0}".format(current_app.config['AOPT_BINARY']))
     logger.info("Meshlab binary: {0}".format(current_app.config['MESHLAB_BINARY']))
+    logger.info("Nexus binary: {0}".format(current_app.config['NEXUS_BINARY']))
 
-    
     if meshlab:
         #inputfile = outputfile could lead to problems later on
         
@@ -562,6 +563,42 @@ def convert_model(input_file, options=None):
     # end Meshlab
     # ------------------------------------------------------------------
 
+    # NEXUS TEMPLATE CONVERSION (a template which needs processing..)
+    # ------------------------------------------------------------------
+    
+    if template == "nexus":
+        update_progress("Starting NEXUS conversion")
+        logger.info("Nexus processing is started!")
+        
+        env = os.environ.copy()
+        for model in models_to_convert:
+            nexus_input_file = os.path.join(model['input_path'], model['input'])
+            name = model['name'] + ".nxs"
+            output_file = os.path.join(output_directory, name)
+            proc = subprocess.Popen([
+                current_app.config['NEXUS_BINARY'], 
+                nexus_input_file,
+                "-o",
+                output_file
+                ],
+                env=env, 
+                stdout=subprocess.PIPE, 
+                stderr=subprocess.STDOUT)
+            
+            output = proc.communicate()[0]
+            returncode = proc.wait()
+
+            if returncode == 0:
+                msg = "Model " + model['name'] + " successfully converted."
+                update_progress(msg)
+                logger.info(msg)
+            else:
+                update_progress("Nexus failed!")
+                logger.error("Nexus problem: {0} return: {1}".format(nexus_input_file, returncode))
+
+    # END NEXUS PROCESSING
+    # ------------------------------------------------------------------
+
     # ------------------------------------------------------------------
     # Aopt call
     # this should live in its own task (or maybe transcoder in the future)
@@ -569,119 +606,121 @@ def convert_model(input_file, options=None):
     update_progress("Starting AOPT conversion")
 
     status = -100
+    if template != "nexus":
+        for model in models_to_convert:
 
-    for model in models_to_convert:
+            update_progress("Converting: {0}".format(model['input']))
 
-        update_progress("Converting: {0}".format(model['input']))
+            aopt_geo_prefix = "{0}_bin".format(model['name'])
+            os.mkdir(os.path.join(output_directory, aopt_geo_prefix))
 
-        aopt_geo_prefix = "{0}_bin".format(model['name'])
-        os.mkdir(os.path.join(output_directory, aopt_geo_prefix))
+            infile  = os.path.join(model['input_path'], model['input'])
+            outfile = os.path.join(output_directory, model['output'])
 
-        infile  = os.path.join(model['input_path'], model['input'])
-        outfile = os.path.join(output_directory, model['output'])
+            ## Config aopt call {{{
 
-        ## Config aopt call {{{
+            ### FIXME: naive impl for the config stuff        
+            ### build a custom config parser, set defaults on init
+            ### maybe useing argparse to reconstruct arguments
+            ### http://stackoverflow.com/questions/14823363/is-it-possible-to-reconstruct-a-command-line-with-pythons-argparse
+            ### however, probably would make it less straight forward
 
-        ### FIXME: naive impl for the config stuff        
-        ### build a custom config parser, set defaults on init
-        ### maybe useing argparse to reconstruct arguments
-        ### http://stackoverflow.com/questions/14823363/is-it-possible-to-reconstruct-a-command-line-with-pythons-argparse
-        ### however, probably would make it less straight forward
+            aopt_geo_output = bundle_config.get(TASK_CONFIG_SECTION, 'aopt.geoOutput')
+            
+            aopt_geo_param = bundle_config.get(TASK_CONFIG_SECTION, 'aopt.geoParams')
+            # validation check not really necessary, since all combinations are possible and invalid ones are just ignored...
+            aopt_geo_valid = ['sa', 'sac', 'sacp', 'i']
+            if not aopt_geo_param in aopt_geo_valid:
+                logger.warning("AOPT binGeo param {0} invalid, useing default 'sa'".format(aopt_geo_param))
+                #aopt_geo_param = 'sa'   
 
-        aopt_geo_output = bundle_config.get(TASK_CONFIG_SECTION, 'aopt.geoOutput')
-        
-        aopt_geo_param = bundle_config.get(TASK_CONFIG_SECTION, 'aopt.geoParams')
-        # validation check not really necessary, since all combinations are possible and invalid ones are just ignored...
-        aopt_geo_valid = ['sa', 'sac', 'sacp', 'i']
-        if not aopt_geo_param in aopt_geo_valid:
-            logger.warning("AOPT binGeo param {0} invalid, useing default 'sa'".format(aopt_geo_param))
-            #aopt_geo_param = 'sa'   
-
-        # set output mode
-        if aopt_geo_output == 'pop':
-            aopt_geo_switch = '-K' # POP
-        else:  # assume binary
-            aopt_geo_switch = '-G' # binary
-
-
-        aopt_gencam = bundle_config.getboolean(TASK_CONFIG_SECTION, 'aopt.genCam')
-        aopt_flatten_graph =  bundle_config.getboolean(TASK_CONFIG_SECTION, 'aopt.flattenGraph')        
+            # set output mode
+            if aopt_geo_output == 'pop':
+                aopt_geo_switch = '-K' # POP
+            else:  # assume binary
+                aopt_geo_switch = '-G' # binary
 
 
-        aopt_cmd = [
-            current_app.config['AOPT_BINARY'], 
-            '-i', 
-            infile
-        ]
-        
-        
-        if aopt_flatten_graph:
-            aopt_cmd.append('-F')
-            aopt_cmd.append('Scene:"cacheopt(true)"')
-        
-        aopt_cmd.append('-f')
-        aopt_cmd.append('PrimitiveSet:creaseAngle:4')
-        aopt_cmd.append('-f')
-        aopt_cmd.append('PrimitiveSet:normalPerVertex:TRUE')
-        
-        if aopt_gencam:
-            aopt_cmd.append('-V')
-        
-        aopt_cmd.append(aopt_geo_switch)
-        aopt_cmd.append(aopt_geo_prefix + '/:' + aopt_geo_param)
-        
-        aopt_cmd.append('-x')
-        aopt_cmd.append(outfile)
-        
-
-        # }}} end config aopt call
-
-        # aopt_cmd = [
-        #     current_app.config['AOPT_BINARY'], 
-        #     '-i', 
-        #     infile, 
-        #     '-F',
-        #     'Scene:"cacheopt(true)"',
-        #     '-f',
-        #     'PrimitiveSet:creaseAngle:4',              
-        #     '-f',
-        #     'PrimitiveSet:normalPerVertex:TRUE',
-        #     '-V',
-        #     '-G',
-        #     aopt_bingeo + '/:sacp',
-        #     '-x', 
-        #     outfile
-        # ]
-
-        try:
-        
-            update_progress("Running AOPT on: {0}".format(model['input']))
-            #status = subprocess.call(aopt_cmd)
+            aopt_gencam = bundle_config.getboolean(TASK_CONFIG_SECTION, 'aopt.genCam')
+            aopt_flatten_graph =  bundle_config.getboolean(TASK_CONFIG_SECTION, 'aopt.flattenGraph')        
 
 
-            process = subprocess.Popen(aopt_cmd, 
-               stdout=subprocess.PIPE, 
-               stderr=subprocess.STDOUT) 
-            output = process.communicate()[0] 
+            aopt_cmd = [
+                current_app.config['AOPT_BINARY'], 
+                '-i', 
+                infile
+            ]
+            
+            
+            if aopt_flatten_graph:
+                aopt_cmd.append('-F')
+                aopt_cmd.append('Scene:"cacheopt(true)"')
+            
+            aopt_cmd.append('-f')
+            aopt_cmd.append('PrimitiveSet:creaseAngle:4')
+            aopt_cmd.append('-f')
+            aopt_cmd.append('PrimitiveSet:normalPerVertex:TRUE')
+            
+            if aopt_gencam:
+                aopt_cmd.append('-V')
+            
+            aopt_cmd.append(aopt_geo_switch)
+            aopt_cmd.append(aopt_geo_prefix + '/:' + aopt_geo_param)
+            
+            aopt_cmd.append('-x')
+            aopt_cmd.append(outfile)
+            
 
-            status = process.wait()
+            # }}} end config aopt call
 
-            # create a aopt log in debug mode
-            # this is a secuirty concern as long as aopt does include
-            # full path names in the log output
-            if current_app.config['DEBUG'] or aopt_log:
-                with open(os.path.join(output_directory, 'aopt.log'), 'a+') as f:
-                    f.write(output)
+            # aopt_cmd = [
+            #     current_app.config['AOPT_BINARY'], 
+            #     '-i', 
+            #     infile, 
+            #     '-F',
+            #     'Scene:"cacheopt(true)"',
+            #     '-f',
+            #     'PrimitiveSet:creaseAngle:4',              
+            #     '-f',
+            #     'PrimitiveSet:normalPerVertex:TRUE',
+            #     '-V',
+            #     '-G',
+            #     aopt_bingeo + '/:sacp',
+            #     '-x', 
+            #     outfile
+            # ]
+
+            try:
+            
+                update_progress("Running AOPT on: {0}".format(model['input']))
+                #status = subprocess.call(aopt_cmd)
 
 
-            logger.info("Aopt return: {0}".format(status))
-            logger.info(output)
+                process = subprocess.Popen(aopt_cmd, 
+                   stdout=subprocess.PIPE, 
+                   stderr=subprocess.STDOUT) 
+                output = process.communicate()[0] 
 
-        except OSError:
-            update_progress("Failure to execute AOPT")
-            err_msg = "Error: AOPT not found or not executable {0}".format(repr(aopt_cmd))
-            logger.error(err_msg)
-            raise ConversionError(err_msg)
+                status = process.wait()
+
+                # create a aopt log in debug mode
+                # this is a secuirty concern as long as aopt does include
+                # full path names in the log output
+                if current_app.config['DEBUG'] or aopt_log:
+                    with open(os.path.join(output_directory, 'aopt.log'), 'a+') as f:
+                        f.write(output)
+
+
+                logger.info("Aopt return: {0}".format(status))
+                logger.info(output)
+
+            except OSError:
+                update_progress("Failure to execute AOPT")
+                err_msg = "Error: AOPT not found or not executable {0}".format(repr(aopt_cmd))
+                logger.error(err_msg)
+                raise ConversionError(err_msg)
+    else:
+        status = 0
 
 
     if status < 0:

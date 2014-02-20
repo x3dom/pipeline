@@ -267,6 +267,36 @@ On Mac OS X there's no need to setup xvfb nor to start X.
 
 
 -----
+Nexus
+-----
+
+Nexus is a software package for the creation and the visualization of a batched multiresolution mesh structure. 
+The main goal of such structure is to handle the geometric primitives such that the CPU bottleneck in multiresolution visualization is greatly reduced.
+Main features of this library are: out-of-core interactive visualization, multiple instancing of models, http streaming, compression, color per vertex, opensg Nexus node.
+
+This software package is the base of the Nexus conversion template, which gets in input a PLY model and produce
+in output a NXS (Nexus) model. This model can be easily visualized using the html web page provided, based on the 3DHOP (3D Heritage Online Presenter)
+online visualization system.
+
+So, to compile the Nexus builder, i.e. the component the Nexus conversion service needs, you have to download it at the following web address:
+
+http://vcg.isti.cnr.it/nexus/download/nexus.tgz
+
+and unzip them. 
+
+Then, you should just type, from the nexus2.0/nxsbuilder directory:
+
+.. code-block:: bash
+    
+    $ qmake nxsbuilder.pro
+    $ make
+
+To make the compilation easier, as suggested for the compilation of Meshlab, the Qt Creator IDE can be used. 
+
+Unless it's not already in the PATH, note down the absolute path to the ``meshlabserver`` binary, you'll need it later
+to adjust the NEXUS_BINARY configuration.
+
+-----
 Redis
 -----
 

@@ -1,0 +1,39 @@
+<h1>Your models are ready :)</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Input name</th>
+            <th>Detected format</th>
+            <th>Preview Link</th>
+            <th>Generated Inline file</th>
+            <th>Metadata</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        {% for model in models %}
+            <tr>
+            <td>{{ loop.index }}</td>
+            <td>{{ model.input }}</td>
+            <td>{{ model.input_format }}</td>
+            <td><a href="{{ model.preview }}">{{ model.preview }}</a></td>
+            <td>{{ model.name}}.nxs</td>
+            <td>
+                {% if model.metadata %}
+                    {% for meta in model.metadata %}
+                        <ul class="unstyled">
+                            <li>{{ meta.file }} <small>({{ meta.type }})</small></li>
+                        </ul>
+                    {% endfor %}
+                {% else %}
+                    No metadata found
+                {% endif %}
+            </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<p><i class="icon-download"></i><a href="{{ job.archive_uri }}">Download the whole package as ZIP</a></p>
