@@ -105,9 +105,15 @@ The basic workflow to use the pipeline is as follows:
 
 Post a file to the server using a bucket::
 
-    POST <base_uri>/buckets
-    X-Filename: somefile.ply
+    POST /api/v1/buckets HTTP/1.1
+    Accept: application/json
+    Accept-Encoding: gzip, deflate, compress
+    Content-Length: 12888639
     Content-Type: application/octet-stream
+    Host: pipelineserver.tld
+    X-Filename: test.ply
+
+    <binary data not shown>
 
 You get back a JSON response containing a cleartext message, a bucket ID and
 the filename of your uploaded date within the bucket. Save the ID and the 
@@ -124,7 +130,10 @@ as well.
 
 Get a list of templates to select from::
 
-    GET <base_uri>/bundles
+    GET /api/v1/bundles
+    Accept: application/json
+    Accept-Encoding: gzip, deflate, compress
+    Host: pipelineserver.tld
 
 You can alos perform this step before uploading. For exmaple you could
 call the URL one time your application starts and cache the results. 
@@ -133,7 +142,11 @@ for processing when starting a job.
 
 Add a job to the processing queue and start it::
 
-    POST <base_uri>/jobs
+    POST /api/v1/jobs
+    Accept: application/json
+    Accept-Encoding: gzip, deflate, compress
+    Host: pipelineserver.tld
+
     {
         "payload": "bucket://<bucket_id>",
         "payload_filename": "herkules.ply",
@@ -151,7 +164,10 @@ You will get back more information about this job::
 The most imporant information is the ``job_url`` which is used to freuqently 
 query the backend about the status of a job::
 
-    GET <base_uri>/jobs/123
+    GET /api/v1/jobs/123
+    Accept: application/json
+    Accept-Encoding: gzip, deflate, compress
+    Host: pipelineserver.tld
 
 Do not query the pipeline to often this way (about every 5-10 seconds is 
 proabably enough). To save transport overhead, you can resport to making a 
