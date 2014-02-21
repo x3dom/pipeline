@@ -293,7 +293,7 @@ Then, you should just type, from the nexus2.0/nxsbuilder directory:
 
 To make the compilation easier, as suggested for the compilation of Meshlab, the Qt Creator IDE can be used. 
 
-Unless it's not already in the PATH, note down the absolute path to the ``meshlabserver`` binary, you'll need it later
+Unless it's not already in the PATH, note down the absolute path to the ``nxsbuilder`` binary, you'll need it later
 to adjust the NEXUS_BINARY configuration.
 
 -----
