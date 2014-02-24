@@ -548,6 +548,9 @@ MESHLAB_DISPLAY         X11 display port for meshlabserver. Set this to
                         to run a Xvfb instance there.
                         default: ':99'
 
+NEXUS_BINARY            Absolute path to the nexus converter binary.
+                        default: nxsbuild (PATH lookup)
+
 ALLOWED_DOWNLOAD_HOSTS  A list of hosts which are allowed to download
                         files from. Basic secuirty for the "download model
                         from URL functionality". You need to set this with

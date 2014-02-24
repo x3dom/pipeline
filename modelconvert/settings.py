@@ -187,7 +187,7 @@ UPLOAD_PATH = env_var('UPLOAD_PATH', path('../tmp/uploads'))
 DOWNLOAD_PATH = env_var('DOWNLOAD_PATH', path('../tmp/downloads'))
 
 AOPT_BINARY = env_var('AOPT_BINARY', 'aopt')
-NEXUS_BINARY = env_var('NEXUS_BINARY', '/opt/build/nexus2.0/bin/nxsbuild')
+NEXUS_BINARY = env_var('NEXUS_BINARY', 'nxsbuild')
 MESHLAB_BINARY = env_var('MESHLAB_BINARY', 'meshlabserver')
 MESHLAB_DISPLAY = env_var('MESHLAB_DISPLAY', ':99')
 
