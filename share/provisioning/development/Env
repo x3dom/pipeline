@@ -2,6 +2,7 @@ DEBUG="True"
 DEVELOPMENT_MODE="True"
 MESHLAB_BINARY="/opt/build/meshlab/src/distrib/meshlabserver"
 AOPT_BINARY="/opt/instantReality/bin/aopt"
+NEXUS_BINARY="/opt/nexus/nxsbuilder/nxsbuild"
 MESHLAB_DISPLAY=":99"
 ADMINS=root@localhost
 PYTHONWARNINGS="d"
