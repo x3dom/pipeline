@@ -125,8 +125,8 @@ wget --directory=/tmp http://vcg.isti.cnr.it/nexus/download/$NEXUS.tgz
 cd /opt/build
 tar xvfz /tmp/$NEXUS.tgz
 ln -s $NEXUS nexus
-cd nexus/nxbuilder
-qmake nxsbuilder.pro
+cd /opt/build/nexus/nxsbuild
+qmake nxsbuild.pro
 make
 
 
