@@ -119,6 +119,16 @@ cd /opt/build/meshlab/src
 qmake -recursive meshlabserver_vmust.pro
 make
 
+wget --directory=/tmp http://vcg.isti.cnr.it/nexus/download/nexus.tgz
+cd /opt/build
+tar xvfz /tmp/nexus.tgz
+ln -f -s nexus2.0 nexus
+cd /opt/build/nexus/nxsbuild
+qmake nxsbuild.pro
+make
+
+
+
 cd $_CWD
 
 # note we do not install meshlab anywhere but use it directly from build
