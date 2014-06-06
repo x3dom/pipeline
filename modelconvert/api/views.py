@@ -358,10 +358,11 @@ def add_job():
             resp = jsonify(message="Please specify the payload_filename attribute in your request.")
             resp.status_code = 400 # bad
             return resp
-
-        filename = data['payload_filename']  #refactor this
+			
         current_app.logger.debug("Using Bucket ID: {0} with entry point filename".format(url.netloc, filename))
         options.update(hash=url.netloc)
+		upload_directory = os.path.join(current_app.config['UPLOAD_PATH'], url.netloc)
+		filename = os.path.join(upload_directory, data['payload_filename'])
     else:
         current_app.logger.error("Unknown payload resource identifier")
         resp = jsonify(message="No recognizable payload URI provided. Please use bucket:// or http://")
